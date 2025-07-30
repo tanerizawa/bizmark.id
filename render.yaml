@@ -1,0 +1,43 @@
+# render.yaml - Configuration for Render.com deployment
+services:
+  - name: bizmark-api
+    type: web
+    env: node
+    region: singapore # Pilih region yang dekat dengan pengguna di Indonesia
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start:prod
+    healthCheckPath: /api/v1/health # Pastikan endpoint health sudah tersedia
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        fromService:
+          name: bizmark-api
+          type: web
+          envVarKey: PORT
+      - key: DATABASE_URL
+        sync: false # Akan diatur secara manual di dashboard Render
+      - key: JWT_SECRET
+        sync: false # Akan diatur secara manual di dashboard Render
+      - key: JWT_REFRESH_SECRET
+        sync: false # Akan diatur secara manual di dashboard Render
+      - key: JWT_EXPIRES_IN
+        value: 3600
+      - key: REDIS_URL
+        sync: false # Akan diatur secara manual di dashboard Render
+      - key: ENABLE_DOCS
+        value: true
+      - key: APP_URL
+        sync: false # Frontend URL
+      - key: API_URL
+        sync: false # Backend URL
+    autoDeploy: true
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1 # Ukuran disk untuk penyimpanan lokal
+
+databases:
+  - name: bizmark-db
+    plan: starter # Gunakan plan sesuai kebutuhan
+    ipAllowList: [] # Akses dari mana saja atau batasi IP
