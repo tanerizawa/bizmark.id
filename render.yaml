@@ -1,4 +1,6 @@
 # render.yaml - Configuration for Render.com deployment
+# Documentation: https://render.com/docs/blueprint-spec
+
 services:
   - name: bizmark-api
     type: web
@@ -56,8 +58,7 @@ services:
       - key: REDIS_URL
         fromService:
           name: bizmark-redis
-          type: redis
-          property: connectionString
+          envVarKey: REDIS_URL
       # Secrets (set manually in Render dashboard)
       - key: JWT_SECRET
         sync: false
@@ -69,15 +70,15 @@ services:
         sync: false
     autoDeploy: true
 
+  - name: bizmark-redis
+    type: redis
+    region: singapore
+    plan: starter
+    ipAllowList: []
+
 databases:
   - name: bizmark-db
     databaseName: bizmark_production
     user: bizmark_user
     plan: starter
     region: singapore
-    
-  - name: bizmark-redis
-    type: redis
-    plan: starter
-    region: singapore
-    maxmemoryPolicy: allkeys-lru
