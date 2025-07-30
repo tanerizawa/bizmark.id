@@ -4,9 +4,10 @@ services:
     type: web
     env: node
     region: singapore # Pilih region yang dekat dengan pengguna di Indonesia
-    buildCommand: cd backend && npm install && npm run build
+    plan: starter # Free tier untuk testing, upgrade ke paid plan untuk production
+    buildCommand: cd backend && npm install --no-audit && npm run build
     startCommand: cd backend && npm run start:prod
-    healthCheckPath: /api/v1/health # Pastikan endpoint health sudah tersedia
+    healthCheckPath: /api/v1/health/live # Endpoint sederhana untuk health check
     envVars:
       - key: NODE_ENV
         value: production
@@ -15,29 +16,67 @@ services:
           name: bizmark-api
           type: web
           envVarKey: PORT
-      - key: DATABASE_URL
-        sync: false # Akan diatur secara manual di dashboard Render
-      - key: JWT_SECRET
-        sync: false # Akan diatur secara manual di dashboard Render
-      - key: JWT_REFRESH_SECRET
-        sync: false # Akan diatur secara manual di dashboard Render
-      - key: JWT_EXPIRES_IN
-        value: 3600
-      - key: REDIS_URL
-        sync: false # Akan diatur secara manual di dashboard Render
+      - key: API_PREFIX
+        value: api
+      - key: API_VERSION
+        value: v1
+      - key: LOG_LEVEL
+        value: info
       - key: ENABLE_DOCS
         value: true
+      - key: JWT_EXPIRES_IN
+        value: 3600
+      - key: BCRYPT_ROUNDS
+        value: 14
+      - key: MAX_LOGIN_ATTEMPTS
+        value: 3
+      - key: LOCKOUT_TIME
+        value: 1800000
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 50
+      - key: MAX_FILE_SIZE
+        value: 10485760
+      - key: ALLOWED_FILE_TYPES
+        value: pdf,doc,docx,jpg,jpeg,png
+      - key: DB_POOL_MIN
+        value: 5
+      - key: DB_POOL_MAX
+        value: 20
+      - key: HEALTH_CHECK_TIMEOUT
+        value: 5000
+      - key: METRICS_ENABLED
+        value: true
+      # Secrets - akan diatur manual di dashboard Render
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: REDIS_URL
+        sync: false
       - key: APP_URL
-        sync: false # Frontend URL
+        sync: false
       - key: API_URL
-        sync: false # Backend URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
     autoDeploy: true
     disk:
       name: data
-      mountPath: /data
-      sizeGB: 1 # Ukuran disk untuk penyimpanan lokal
+      mountPath: /opt/render/project/data
+      sizeGB: 1
 
 databases:
   - name: bizmark-db
-    plan: starter # Gunakan plan sesuai kebutuhan
-    ipAllowList: [] # Akses dari mana saja atau batasi IP
+    plan: starter # Free PostgreSQL untuk testing
+    ipAllowList: [] # Allow all IPs (secure dengan username/password)
+
+  - name: bizmark-redis
+    type: redis
+    plan: starter # Free Redis untuk testing
+    ipAllowList: []

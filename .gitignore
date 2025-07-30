@@ -51,12 +51,17 @@ backend/.nyc_output
 # ===========================
 
 # Environment variables
+# Environment files
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.example
+.env.development
+.env.test
+.env.production
+.env.staging
+
+# Generated environment files (DO NOT COMMIT)
+render-env-*.txt
+production-secrets-*.txt
 
 # Backend environment
 backend/.env
