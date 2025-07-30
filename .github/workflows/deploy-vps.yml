@@ -3,21 +3,26 @@ name: Deploy to Ubuntu VPS
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Memungkinkan trigger manual dari GitHub
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18.x'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
           
       - name: Install dependencies
         run: |
@@ -35,17 +40,18 @@ jobs:
           npm test
           
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v0.1.5
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT }}
+          # VPS connection secrets - configure in GitHub repository settings
+          host: ${{ secrets.VPS_HOST }}          # VPS IP address
+          username: ${{ secrets.VPS_USERNAME }}  # SSH username
+          key: ${{ secrets.VPS_SSH_KEY }}        # SSH private key
+          port: ${{ secrets.VPS_PORT }}          # SSH port (default: 22)
           script: |
-            cd /path/to/bizmark
+            cd /var/www/bizmark.id
             git pull origin main
             cd backend
-            npm ci --production
+            npm ci --only=production
             npm run build
             
             # Apply database migrations
