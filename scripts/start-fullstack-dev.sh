@@ -41,7 +41,7 @@ start_backend() {
     
     # Start Docker services
     echo "🐳 Starting Docker containers..."
-    npm run docker:dev:up
+    docker compose -f docker-compose.dev.yml up -d
     
     # Wait for services
     echo "⏳ Waiting for services to start..."
@@ -55,18 +55,18 @@ start_backend() {
     
     # Run migrations and seed
     echo "🗄️  Setting up database..."
-    npm run migration:run || echo "⚠️  Migration check complete"
+    npm run migration:run || npm run typeorm migration:run || echo "⚠️  Migration check complete"
     npm run seed || echo "⚠️  Seed check complete"
     
     # Start backend server in background
     echo "🚀 Starting backend server..."
-    npm run start:dev &
+    npm run start:dev || npm start &
     BACKEND_PID=$!
     
     # Wait for backend to be ready
     echo "⏳ Waiting for backend to be ready..."
     for i in {1..30}; do
-        if curl -f http://localhost:3001/health > /dev/null 2>&1; then
+        if curl -f http://localhost:3001/api/v1/health > /dev/null 2>&1; then
             echo "✅ Backend is ready!"
             break
         fi
@@ -139,7 +139,7 @@ cleanup() {
     
     # Stop Docker containers
     cd "$BACKEND_DIR"
-    npm run docker:dev:down || true
+    docker compose -f docker-compose.dev.yml down || true
     echo "✅ Docker containers stopped"
 }
 

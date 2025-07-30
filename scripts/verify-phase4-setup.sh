@@ -117,7 +117,7 @@ echo "---------------------"
 check_item "Node.js" "command -v node"
 check_item "npm" "command -v npm"
 check_item "Docker" "command -v docker"
-check_item "Docker Compose" "docker compose version"
+check_item "Docker Compose" "docker compose version > /dev/null 2>&1"
 check_item "curl" "command -v curl"
 
 echo ""
@@ -125,7 +125,7 @@ echo "🐳 Docker Status"
 echo "---------------"
 
 # Check Docker status
-check_item "Docker Running" "docker info"
+check_item "Docker Running" "docker info > /dev/null 2>&1" false
 
 echo ""
 echo "📦 Dependencies"

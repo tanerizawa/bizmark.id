@@ -5,7 +5,11 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
+    "webpackConfigPath": "webpack.config.js",
     "assets": ["**/*.hbs", "**/*.json"],
     "watchAssets": true
+  },
+  "watchMode": {
+    "ignored": ["node_modules", "dist", "coverage", ".git"]
   }
 }
