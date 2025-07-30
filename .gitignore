@@ -1,0 +1,417 @@
+# Bizmark.id - SaaS Platform Perizinan UMKM
+# Comprehensive .gitignore for Next.js + NestJS Full-Stack Application
+
+# ===========================
+# DEPENDENCIES & NODE MODULES
+# ===========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ===========================
+# FRONTEND (Next.js) SPECIFIC
+# ===========================
+
+# Next.js build outputs
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+
+# Next.js cache
+frontend/.next/cache/
+
+# Static files
+frontend/public/uploads/
+frontend/public/temp/
+
+# Vercel deployment
+frontend/.vercel
+
+# Next.js telemetry
+frontend/.next-telemetry-consent
+frontend/.next-telemetry-disabled
+
+# ===========================
+# BACKEND (NestJS) SPECIFIC
+# ===========================
+
+# NestJS build outputs
+backend/dist/
+backend/build/
+
+# Coverage directory used by tools like istanbul
+backend/coverage/
+backend/.nyc_output
+
+# ===========================
+# ENVIRONMENT & CONFIG FILES
+# ===========================
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.example
+
+# Backend environment
+backend/.env
+backend/.env.local
+backend/.env.development
+backend/.env.production
+backend/.env.test
+
+# Frontend environment
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Configuration files with sensitive data
+config/local.json
+config/production.json
+config/development.json
+
+# ===========================
+# DATABASE & STORAGE
+# ===========================
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL dumps
+*.sql
+*.dump
+
+# Redis dumps
+dump.rdb
+
+# MinIO/Object Storage local data
+minio-data/
+storage/
+uploads/
+
+# ===========================
+# DOCKER & CONTAINERIZATION
+# ===========================
+
+# Docker volumes and data
+docker-data/
+postgres-data/
+redis-data/
+minio-data/
+
+# Docker override files
+docker-compose.override.yml
+
+# ===========================
+# LOGS & MONITORING
+# ===========================
+
+# Log files
+logs/
+*.log
+*.log.*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# PM2 logs
+.pm2/
+
+# Application logs
+backend/logs/
+frontend/logs/
+
+# ===========================
+# TESTING & COVERAGE
+# ===========================
+
+# Test coverage
+coverage/
+.nyc_output/
+.coverage/
+
+# Jest cache
+.jest/
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+# ===========================
+# IDE & EDITOR FILES
+# ===========================
+
+# Visual Studio Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ===========================
+# OPERATING SYSTEM FILES
+# ===========================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================
+# SECURITY & CERTIFICATES
+# ===========================
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.jks
+
+# GPG keys
+*.gpg
+*.asc
+
+# JWT secrets
+jwt-secret.txt
+secrets/
+
+# ===========================
+# BACKUP & TEMPORARY FILES
+# ===========================
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
+*.rej
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Archive files (development)
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# ===========================
+# PACKAGE MANAGERS
+# ===========================
+
+# npm
+package-lock.json (optional - uncomment if needed)
+.npm/
+
+# Yarn
+yarn.lock (optional - uncomment if needed)
+.yarn/
+.yarn-integrity
+.pnp.*
+
+# pnpm
+pnpm-lock.yaml
+.pnpm-store/
+
+# ===========================
+# BUILD TOOLS & BUNDLERS
+# ===========================
+
+# Webpack
+.webpack/
+
+# Rollup
+.rollup.cache/
+
+# Parcel
+.parcel-cache/
+.cache/
+
+# Turbopack
+.turbo/
+
+# ===========================
+# RUNTIME & CACHE
+# ===========================
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Babel cache
+.babel-cache/
+
+# SWC cache
+.swc/
+
+# ===========================
+# DOCUMENTATION BUILD
+# ===========================
+
+# Storybook build outputs
+storybook-static/
+
+# Docusaurus
+.docusaurus/
+docs/build/
+
+# ===========================
+# DEPLOYMENT & CI/CD
+# ===========================
+
+# Deployment artifacts
+deploy/
+deployment/
+
+# GitHub Actions cache
+.github/workflows/cache/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+# ===========================
+# MONITORING & ANALYTICS
+# ===========================
+
+# Sentry
+.sentryclirc
+
+# Application monitoring
+newrelic_agent.log
+
+# ===========================
+# LOCAL DEVELOPMENT
+# ===========================
+
+# Local development overrides
+local/
+local.config.js
+local.config.ts
+
+# Development databases
+dev.db
+development.db
+
+# Local scripts
+local-scripts/
+dev-scripts/
+
+# ===========================
+# PRODUCTION SPECIFIC
+# ===========================
+
+# Production builds (if not needed in repo)
+# frontend/build/
+# backend/dist/
+
+# Production logs
+production.log
+error.log
+access.log
+
+# ===========================
+# CUSTOM PROJECT FILES
+# ===========================
+
+# Design files
+*.sketch
+*.fig
+*.xd
+*.psd
+
+# Documentation drafts
+docs/drafts/
+*.draft.md
+
+# Research and notes
+research/
+notes/
+TODO.md
+NOTES.md
+
+# ===========================
+# BUSINESS & LEGAL
+# ===========================
+
+# Business documents (sensitive)
+business-plan/
+financial-projections/
+contracts/
+legal-docs/
+
+# ===========================
+# END OF .gitignore
+# ===========================
+
+# Note: Uncomment specific lines above if needed for your development workflow
+# This .gitignore is comprehensive and covers most use cases for a Next.js + NestJS application
