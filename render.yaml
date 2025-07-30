@@ -54,12 +54,9 @@ services:
         fromDatabase:
           name: bizmark-db
           property: connectionString
-      # Redis connection (auto-configured by Render)  
+      # Redis connection (set manually in Render dashboard)
       - key: REDIS_URL
-        fromService:
-          name: bizmark-redis
-          type: redis
-          envVarKey: REDIS_URL
+        sync: false
       # Secrets (set manually in Render dashboard)
       - key: JWT_SECRET
         sync: false
