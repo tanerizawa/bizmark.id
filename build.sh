@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
-# build.sh - Script untuk membantu proses build di Render.com
+# build.sh - Production build script for Render.com deployment
 
 set -e # Exit on error
 
 echo "🏗️  Starting Bizmark.id Backend Build Process..."
 echo "================================================="
 
-# Masuk ke direktori backend
-cd backend
+# Check if we're in the right directory and navigate to backend
+if [ -d "backend" ]; then
+    cd backend
+    echo "📂 Changed to backend directory"
+elif [ -f "package.json" ]; then
+    echo "📂 Already in backend directory"
+else
+    echo "❌ Backend directory not found"
+    exit 1
+fi
 
 # Display Node.js and npm versions
 echo "📦 Node.js version: $(node --version)"
