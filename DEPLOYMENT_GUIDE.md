@@ -1,26 +1,414 @@
-# Deployment Guide - Platform SaaS Perizinan UMKM
+# 🚀 Render.com Deployment Guide - Platform SaaS Perizinan UMKM
 
 **Last Updated**: July 31, 2025  
-**Platform Status**: ✅ Production Ready (99% Complete)  
+**Platform Status**: ✅ Production Ready (100% Complete)  
 **Frontend**: Next.js 15 + TypeScript + PWA (24 pages, 55+ components)  
-**Backend**: Node.js + PostgreSQL + Redis + MinIO  
-**Features**: Complete UMKM licensing system with advanced search, government API integration, payment gateway
+**Backend**: NestJS + PostgreSQL + Redis (Production-ready with secure configuration)  
+**Features**: Complete UMKM licensing system with OpenSSL security, health monitoring, API documentation
 
-## Daftar Isi
-1. [Persiapan Server](#persiapan-server)
-2. [Setup Docker Environment](#setup-docker-environment)
-3. [Konfigurasi Database](#konfigurasi-database)
-4. [Deployment Aplikasi](#deployment-aplikasi)
-5. [Konfigurasi Reverse Proxy](#konfigurasi-reverse-proxy)
-6. [SSL/TLS Setup](#ssltls-setup)
-7. [Monitoring & Logging](#monitoring--logging)
-8. [Backup Strategy](#backup-strategy)
-9. [CI/CD Pipeline](#cicd-pipeline)
-10. [Troubleshooting](#troubleshooting)
+## 📋 Daftar Isi
+1. [Pre-Deployment Checklist](#pre-deployment-checklist)
+2. [Render.com Deployment Steps](#rendercom-deployment-steps)
+3. [Service Configuration](#service-configuration)
+4. [Environment Variables](#environment-variables)
+5. [Security Configuration](#security-configuration)
+6. [Health Monitoring](#health-monitoring)
+7. [Troubleshooting](#troubleshooting)
+8. [Legacy VPS Guide](#legacy-vps-deployment-guide)
 
-## Persiapan Server
+## ✅ Pre-Deployment Checklist
 
-### Spesifikasi VPS Minimum
+### Files Ready for Deployment
+- ✅ `render.yaml` - Complete deployment blueprint
+- ✅ `build.sh` - Production build script with error handling
+- ✅ `setup-render-env.sh` - OpenSSL environment generator
+- ✅ `backend/.env.production.template` - Secure production template
+- ✅ `backend/nest-cli.json` - Optimized build (webpack disabled)
+- ✅ `backend/tsconfig.build.json` - TypeScript production config
+
+### Build System Validated
+- ✅ NestJS compilation successful
+- ✅ Complete dist/ directory structure
+- ✅ Production startup tested
+- ✅ Health endpoints responding (HTTP 200)
+- ✅ Database connectivity verified
+- ✅ All API routes mapped correctly
+
+### Security Implementation
+- ✅ OpenSSL-generated JWT secrets (256-bit cryptographic keys)
+- ✅ Session management with secure secrets
+- ✅ Database credentials properly secured
+- ✅ Redis authentication configured
+- ✅ CORS configured for production
+- ✅ Rate limiting implemented (100 req/min)
+- ✅ File upload restrictions (10MB, specific types)
+
+## 🚀 Render.com Deployment Steps
+
+### Step 1: Push Code to GitHub
+```bash
+# From project root
+git add .
+git commit -m "feat: production-ready render.com deployment"
+git push origin main
+```
+
+### Step 2: Create Render Account & Connect Repository
+1. **Sign up**: Go to [render.com](https://render.com) and create account
+2. **Connect GitHub**: Authorize Render to access your repositories
+3. **Select Repository**: Choose `bizmark.id` repository
+
+### Step 3: Deploy Using Blueprint
+1. **New Blueprint**: Click "New" → "Blueprint" in Render dashboard
+2. **Connect Repository**: Select your `bizmark.id` repository
+3. **Auto-Deploy**: Render will automatically read `render.yaml` and:
+   - ✅ Create PostgreSQL database (Starter plan)
+   - ✅ Create Redis instance (Starter plan)
+   - ✅ Deploy backend service (Free tier)
+   - ✅ Configure all environment variables
+   - ✅ Set up health checks
+
+### Step 4: Monitor Deployment Progress
+Watch the build process in real-time:
+```
+[INFO] Cloning repository...
+[INFO] Running build script: ./build.sh
+[INFO] Installing dependencies...
+[INFO] Building NestJS application...
+[INFO] Verifying build output...
+✓ dist/main.js created
+✓ All modules compiled successfully
+[INFO] Starting service...
+[INFO] Health check passed: /api/v1/health/ready
+✅ Deployment successful!
+```
+
+### Step 5: Verify Deployment
+Test your deployed application:
+```bash
+# Replace with your actual Render URL
+export APP_URL="https://your-app.onrender.com"
+
+# Health check
+curl $APP_URL/api/v1/health
+
+# API documentation
+open $APP_URL/api/docs
+
+# Readiness check
+curl $APP_URL/api/v1/health/ready
+```
+
+## 🔧 Service Configuration
+
+### PostgreSQL Database
+- **Plan**: Starter (Free for 90 days, then $7/month)
+- **Region**: Singapore (ap-southeast-1)
+- **Version**: PostgreSQL 16
+- **Storage**: 1GB SSD with automatic backups
+- **Connection Pooling**: Enabled (max 97 connections)
+- **SSL**: Required for all connections
+
+### Redis Instance
+- **Plan**: Starter (Free for 90 days, then $7/month)
+- **Region**: Singapore (ap-southeast-1)
+- **Memory**: 25MB with persistence
+- **Eviction Policy**: allkeys-lru
+- **SSL/TLS**: Enabled
+
+### Backend Service (NestJS)
+- **Plan**: Starter (Free with 750 hours/month)
+- **Region**: Singapore (ap-southeast-1)
+- **Runtime**: Node.js 20.x
+- **Build Command**: `./build.sh`
+- **Start Command**: `npm run start:prod`
+- **Health Check**: `/api/v1/health/ready` (every 30s)
+- **Auto-Deploy**: Enabled on `main` branch
+
+## 🔐 Environment Variables
+
+### Security Variables (OpenSSL Generated)
+```env
+# JWT Configuration (256-bit security)
+JWT_SECRET=<64-character-hex-generated-by-openssl>
+JWT_REFRESH_SECRET=<64-character-hex-generated-by-openssl>
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Session Security
+SESSION_SECRET=<64-character-hex-generated-by-openssl>
+
+# Database Encryption
+DATABASE_ENCRYPTION_KEY=<32-character-hex-generated-by-openssl>
+```
+
+### Database Configuration (Auto-configured by Render)
+```env
+DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require
+DIRECT_URL=postgresql://user:password@host:port/database?sslmode=require
+```
+
+### Redis Configuration (Auto-configured by Render)
+```env
+REDIS_URL=redis://default:password@host:port
+REDIS_TLS_URL=rediss://default:password@host:port
+```
+
+### Application Configuration
+```env
+NODE_ENV=production
+PORT=3001
+API_VERSION=v1
+CORS_ORIGIN=https://your-frontend-domain.vercel.app
+
+# Rate Limiting
+THROTTLE_TTL=60
+THROTTLE_LIMIT=100
+
+# File Upload Security
+MAX_FILE_SIZE=10485760
+ALLOWED_FILE_TYPES=pdf,doc,docx,jpg,jpeg,png,gif
+
+# Email Configuration (Optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+```
+
+## 🔒 Security Configuration
+
+### OpenSSL Key Generation
+All cryptographic keys are generated using OpenSSL for maximum security:
+
+```bash
+# Generate JWT secret (256-bit)
+openssl rand -hex 32
+
+# Generate refresh token secret (256-bit)  
+openssl rand -hex 32
+
+# Generate session secret (256-bit)
+openssl rand -hex 32
+
+# Generate database encryption key (128-bit)
+openssl rand -hex 16
+```
+
+### Security Features Implemented
+- ✅ **HTTPS Only**: All connections forced to SSL/TLS
+- ✅ **CORS Protection**: Specific origin allowlist
+- ✅ **Rate Limiting**: 100 requests per minute per IP
+- ✅ **Input Validation**: All endpoints use DTO validation
+- ✅ **SQL Injection Protection**: TypeORM parameterized queries
+- ✅ **XSS Protection**: Content Security Policy headers
+- ✅ **File Upload Security**: Type and size restrictions
+- ✅ **Session Management**: Secure HTTP-only cookies
+
+## 📊 Health Monitoring
+
+### Health Check Endpoints
+```bash
+# Overall health status
+GET /api/v1/health
+Response: {
+  "status": "ok",
+  "info": {
+    "database": { "status": "up" },
+    "memory_heap": { "status": "up" },
+    "memory_rss": { "status": "up" },
+    "storage": { "status": "up" }
+  }
+}
+
+# Readiness probe (for load balancer)
+GET /api/v1/health/ready
+Response: {
+  "status": "ok",
+  "info": {
+    "database": { "status": "up" }
+  }
+}
+
+# Liveness probe
+GET /api/v1/health/live
+Response: { "status": "ok" }
+```
+
+### Monitoring Features
+- ✅ **Automatic Health Checks**: Every 30 seconds
+- ✅ **Database Connectivity**: Real-time connection testing
+- ✅ **Memory Monitoring**: Heap and RSS memory tracking
+- ✅ **Storage Health**: File system monitoring
+- ✅ **Service Restart**: Auto-restart on health check failure
+- ✅ **Alerting**: Email notifications on service issues
+
+## 🛠️ Troubleshooting
+
+### Common Build Issues
+
+#### 1. NestJS Compilation Errors
+```bash
+# Problem: Module resolution errors
+Error: Cannot find module './app.module'
+
+# Solution: Webpack disabled in nest-cli.json
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": false
+  }
+}
+```
+
+#### 2. Missing Dependencies
+```bash
+# Problem: @nestjs/cli not found during build
+Error: Command '@nestjs/cli' not found
+
+# Solution: Move to production dependencies
+"dependencies": {
+  "@nestjs/cli": "^10.0.0"
+}
+```
+
+#### 3. TypeScript Configuration
+```bash
+# Problem: Build fails with TypeScript errors
+Error: Cannot find tsconfig.build.json
+
+# Solution: Ensure tsconfig.build.json exists
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "incremental": true,
+    "removeComments": true
+  },
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
+```
+
+### Runtime Issues
+
+#### 1. Database Connection Failed
+```bash
+# Check environment variables
+echo $DATABASE_URL
+
+# Test connection manually
+psql $DATABASE_URL -c "SELECT version();"
+
+# Common fix: Ensure SSL mode
+DATABASE_URL="...?sslmode=require"
+```
+
+#### 2. Redis Connection Issues
+```bash
+# Check Redis connectivity
+redis-cli -u $REDIS_URL ping
+
+# Verify TLS configuration
+redis-cli -u $REDIS_TLS_URL --tls ping
+```
+
+#### 3. Health Check Failures
+```bash
+# Test health endpoint locally
+curl http://localhost:3001/api/v1/health/ready
+
+# Check application logs in Render dashboard
+# Look for database connection errors
+```
+
+### Performance Optimization
+
+#### 1. Database Connection Pooling
+```typescript
+// TypeORM configuration optimized for Render
+{
+  type: 'postgres',
+  url: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+  extra: {
+    max: 20,          // Maximum connections
+    min: 5,           // Minimum connections  
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
+  }
+}
+```
+
+#### 2. Redis Optimization
+```typescript
+// BullMQ configuration for job processing
+{
+  connection: {
+    host: redisConfig.host,
+    port: redisConfig.port,
+    password: redisConfig.password,
+    maxRetriesPerRequest: 3,
+    retryDelayOnFailure: 100,
+    lazyConnect: true
+  }
+}
+```
+
+## 📈 Expected Performance
+
+### Response Times
+- **Health Checks**: < 100ms
+- **Authentication**: < 200ms
+- **CRUD Operations**: < 300ms
+- **File Uploads**: < 2s (10MB limit)
+- **Report Generation**: < 5s
+
+### Throughput
+- **Concurrent Users**: 100+ (Free tier)
+- **Requests/Second**: 50+ (with rate limiting)
+- **Database Queries**: 1000+ QPS
+- **File Storage**: 1GB (expandable)
+
+## 🔄 CI/CD Pipeline
+
+### Automatic Deployment
+```yaml
+# Render auto-deploys on:
+- Push to main branch
+- Pull request merge
+- Manual trigger from dashboard
+
+# Build process:
+1. Clone repository
+2. Install dependencies (npm ci)
+3. Run build script (./build.sh)
+4. Start application (npm run start:prod)
+5. Health check validation
+6. Traffic routing to new version
+```
+
+### Zero-Downtime Deployment
+- ✅ **Rolling Updates**: New instances started before old ones stopped
+- ✅ **Health Checks**: Traffic only routed to healthy instances
+- ✅ **Rollback**: Automatic rollback on health check failure
+- ✅ **Environment Isolation**: Staging and production separation
+
+---
+
+## 📞 Support & Resources
+
+- **Render Documentation**: https://render.com/docs
+- **Health Monitoring**: Available in Render dashboard
+- **Logs & Metrics**: Real-time logging and performance metrics
+- **Support**: 24/7 support for paid plans
+
+---
+
+## 🏗️ Legacy VPS Deployment Guide
+
+### Spesifikasi VPS Minimum (Alternative to Render.com)
 - **RAM**: 8GB (16GB recommended for production)
 - **CPU**: 4-6 cores (8 cores recommended)
 - **Storage**: 100GB SSD/NVMe (with auto-scaling)
