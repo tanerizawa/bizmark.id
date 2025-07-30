@@ -77,9 +77,12 @@ fi
 log "🚀 Starting Next.js frontend on port $FRONTEND_PORT..."
 
 # Use different start methods based on available scripts
-if npm run | grep -q "dev"; then
-    log "Using development mode with Turbopack..."
-    npm run dev -- --port $FRONTEND_PORT --turbo
+if npm run | grep -q "dev" && [ "$NODE_ENV" != "production" ]; then
+    log "Using default development mode (webpack-based, stable)..."
+    npm run dev
+elif npm run | grep -q "dev:turbo"; then
+    log "Using Turbopack development mode (experimental)..."
+    npm run dev:turbo
 elif npm run | grep -q "start"; then
     log "Using production mode..."
     npm run start

@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
+import { MetadataRoute } from 'next';
 
-export async function GET() {
-  const manifest = {
+// Use MetadataRoute.Manifest type for Next.js metadata system
+export default function manifest(): MetadataRoute.Manifest {
+  return {
     name: 'Bizmark.id - Platform Perizinan UMKM',
     short_name: 'Bizmark.id',
     description: 'Platform digital untuk pengurusan izin usaha UMKM Indonesia',
@@ -19,49 +20,49 @@ export async function GET() {
         src: '/icons/icon-72x72.png',
         sizes: '72x72',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       },
       {
         src: '/icons/icon-96x96.png',
         sizes: '96x96',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       },
       {
         src: '/icons/icon-128x128.png',
         sizes: '128x128',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       },
       {
         src: '/icons/icon-144x144.png',
         sizes: '144x144',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       },
       {
         src: '/icons/icon-152x152.png',
         sizes: '152x152',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       },
       {
         src: '/icons/icon-192x192.png',
         sizes: '192x192',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       },
       {
         src: '/icons/icon-384x384.png',
         sizes: '384x384',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       },
       {
         src: '/icons/icon-512x512.png',
         sizes: '512x512',
         type: 'image/png',
-        purpose: 'maskable any'
+        purpose: 'any'
       }
     ],
     
@@ -94,14 +95,14 @@ export async function GET() {
         src: '/screenshots/desktop-dashboard.png',
         sizes: '1280x720',
         type: 'image/png',
-        platform: 'wide',
+        platform: 'windows',
         label: 'Dashboard UMKM'
       },
       {
         src: '/screenshots/mobile-dashboard.png',
         sizes: '360x640',
         type: 'image/png',
-        platform: 'narrow',
+        platform: 'android',
         label: 'Dashboard Mobile'
       }
     ],
@@ -109,21 +110,6 @@ export async function GET() {
     related_applications: [],
     prefer_related_applications: false,
     
-    display_override: ['window-controls-overlay', 'standalone', 'minimal-ui'],
-    
-    edge_side_panel: {
-      preferred_width: 400
-    },
-    
-    launch_handler: {
-      client_mode: 'navigate-existing'
-    }
+    display_override: ['window-controls-overlay', 'standalone', 'minimal-ui']
   };
-
-  return NextResponse.json(manifest, {
-    headers: {
-      'Content-Type': 'application/manifest+json',
-      'Cache-Control': 'public, max-age=31536000, immutable'
-    }
-  });
 }
