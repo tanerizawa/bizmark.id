@@ -1,10 +1,10 @@
 # render.yaml - Configuration for Bizmark.id SaaS Platform
 # Documentation: https://render.com/docs/blueprint-spec
 
-# Automatic preview environments with expiration
-previews:
-  generation: automatic
-  expireAfterDays: 7  # Auto-expire preview environments after 7 days without updates
+# Preview environments (Uncomment when using Team or higher workspace)
+# previews:
+#   generation: automatic
+#   expireAfterDays: 7  # Auto-expire preview environments after 7 days without updates
 
 services:
   # Main Backend API Service
@@ -145,10 +145,9 @@ databases:
   - name: bizmark-db
     databaseName: bizmark_production
     user: bizmark_user
-    plan: standard
+    plan: basic-1gb  # Updated to a supported plan (basic tier)
     postgresMajorVersion: "15"  # Explicitly specify version
     region: singapore
-    diskSizeGB: 15  # Explicitly define disk size
     ipAllowList:
       - source: 0.0.0.0/0
         description: allow all (production ready)
