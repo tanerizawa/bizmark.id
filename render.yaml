@@ -106,20 +106,8 @@ services:
       - fromGroup: bizmark-common-env
       - fromGroup: bizmark-security-env
       
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: sameorigin
-      - path: /*
-        name: X-XSS-Protection
-        value: "1; mode=block"
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+      # Note: Security headers must be configured in the application code
+      # for Node.js services (not in render.yaml)
 
   # Redis Service for Caching and Job Queue
   - type: keyvalue  # Best practice: use 'keyvalue' type instead of 'redis'
