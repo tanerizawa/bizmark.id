@@ -6,15 +6,43 @@
 import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'util';
 import 'whatwg-fetch';
+import React from 'react';
+
+// Jest types are available globally in test environment
+/// <reference types="jest" />
+
+// Type definitions for test utilities
+interface TestUtils {
+  mockUser: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+  };
+  mockApiResponse: (data: unknown, status?: number) => {
+    ok: boolean;
+    status: number;
+    json: () => Promise<unknown>;
+    text: () => Promise<string>;
+  };
+  waitFor: (callback: () => void, timeout?: number) => Promise<unknown>;
+}
+
+// Extend global namespace for test utilities
+declare global {
+  var testUtils: TestUtils;
+}
 
 // Polyfills for Node.js environment
-(global as any).TextEncoder = TextEncoder;
-(global as any).TextDecoder = TextDecoder;
+Object.assign(global, {
+  TextEncoder,
+  TextDecoder,
+});
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query: string) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -40,21 +68,25 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
-// Mock localStorage
-const localStorageMock = {
+// Mock localStorage with complete Storage interface
+const localStorageMock: Storage = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
   clear: jest.fn(),
+  length: 0,
+  key: jest.fn(),
 };
 global.localStorage = localStorageMock;
 
-// Mock sessionStorage
-const sessionStorageMock = {
+// Mock sessionStorage with complete Storage interface
+const sessionStorageMock: Storage = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
   clear: jest.fn(),
+  length: 0,
+  key: jest.fn(),
 };
 global.sessionStorage = sessionStorageMock;
 
@@ -105,8 +137,7 @@ jest.mock('next/navigation', () => ({
 // Mock next/image
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props: any) => {
-    // eslint-disable-next-line @next/next/no-img-element
+  default: (props: React.ComponentProps<'img'>) => {
     return React.createElement('img', props);
   },
 }));
@@ -126,7 +157,7 @@ global.testUtils = {
   },
   
   // Mock API responses
-  mockApiResponse: (data: any, status = 200) => ({
+  mockApiResponse: (data: unknown, status = 200) => ({
     ok: status >= 200 && status < 300,
     status,
     json: async () => data,
@@ -175,7 +206,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // Suppress console errors in tests unless explicitly needed
 const originalError = console.error;
 beforeAll(() => {
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     if (
       typeof args[0] === 'string' &&
       (args[0].includes('Warning: ReactDOM.render is no longer supported') ||

@@ -3,7 +3,6 @@
  * Critical tests for production readiness
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // Test Dashboard Component
@@ -143,9 +142,12 @@ describe('Production Readiness Tests', () => {
         register: jest.fn().mockResolvedValue({ active: true }),
       };
       
-      (global as any).navigator = {
-        serviceWorker: mockServiceWorker
-      };
+      Object.defineProperty(global, 'navigator', {
+        value: {
+          serviceWorker: mockServiceWorker
+        },
+        writable: true
+      });
 
       expect(navigator.serviceWorker).toBeDefined();
     });
