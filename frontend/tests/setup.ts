@@ -5,7 +5,7 @@
 
 import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'util';
-import React from 'react';
+import * as React from 'react';
 
 // Jest types are available globally in test environment
 /// <reference types="jest" />
