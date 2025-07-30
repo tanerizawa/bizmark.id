@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: bizmark-frontend:latest
+    container_name: bizmark-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"  # Frontend accessible at localhost:3000
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://api.bizmark.id
+    networks:
+      - bizmark-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  backend:
+    image: bizmark-backend:latest
+    container_name: bizmark-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3000"  # Backend accessible at localhost:3001
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://bizmark_user:${DB_PASSWORD}@postgres:5432/bizmark_production
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - CORS_ORIGIN=https://bizmark.id,https://www.bizmark.id,https://api.bizmark.id
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - /var/lib/bizmark/uploads:/app/uploads
+    networks:
+      - bizmark-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: bizmark-postgres
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"  # Only accessible from localhost
+    environment:
+      - POSTGRES_DB=bizmark_production
+      - POSTGRES_USER=bizmark_user
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - /var/lib/bizmark/postgres:/var/lib/postgresql/data
+    networks:
+      - bizmark-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bizmark_user -d bizmark_production"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: bizmark-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"  # Only accessible from localhost
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - /var/lib/bizmark/redis:/data
+    networks:
+      - bizmark-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  bizmark-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
+  uploads-data:
