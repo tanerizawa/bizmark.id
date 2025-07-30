@@ -48,6 +48,11 @@ bizmark.id/
 │   │   └── lib/              # Utility libraries
 │   └── middleware.ts         # Route protection
 ├── docs/                     # Documentation
+├── scripts/                  # Development and deployment scripts
+│   ├── start-fullstack-dev.sh # Full stack development startup
+│   ├── start-backend-dev.sh   # Backend-only development  
+│   └── test-integration.sh    # Integration testing
+└── README.md                 # Project documentation
 └── start-dev.sh             # Development script
 ```
 
@@ -56,9 +61,29 @@ bizmark.id/
 ### Prerequisites
 - Node.js 18+ 
 - Docker & Docker Compose
-- PostgreSQL (untuk production)
+- Git
 
-### Development Setup
+### Phase 4: Full Stack Development (Recommended)
+
+**🚀 One-Command Startup:**
+```bash
+git clone <repository-url>
+cd bizmark.id
+./scripts/start-fullstack-dev.sh
+```
+
+**🧪 Verify Integration:**
+```bash
+./scripts/test-integration.sh
+```
+
+**🌐 Access Applications:**
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001  
+- **API Documentation**: http://localhost:3001/api/docs
+- **Integration Dashboard**: http://localhost:3000/dashboard/backend-integration
+
+### Manual Development Setup
 
 1. **Clone repository**
 ```bash
@@ -66,7 +91,7 @@ git clone <repository-url>
 cd bizmark.id
 ```
 
-2. **Setup Backend**
+2. **Setup Backend**  
 ```bash
 cd backend
 npm install
@@ -82,18 +107,14 @@ cp .env.example .env.local
 # Edit .env.local file dengan konfigurasi yang sesuai
 ```
 
-4. **Start Development Environment**
-```bash
-# Dari root directory
-./start-dev.sh
-```
+4. **Start Services Manually**
 
-Atau jalankan secara manual:
-
-**Backend:**
+**Backend with Dependencies:**
 ```bash
 cd backend
 docker-compose -f docker-compose.dev.yml up -d  # Start databases
+npm run migration:run                            # Run migrations
+npm run seed                                     # Seed data
 npm run start:dev                                # Start NestJS
 ```
 
@@ -102,11 +123,6 @@ npm run start:dev                                # Start NestJS
 cd frontend
 npm run dev                                      # Start Next.js
 ```
-
-### Akses Aplikasi
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **API Documentation**: http://localhost:3001/api
 
 ## 📊 Fitur Utama
 
@@ -175,13 +191,21 @@ npm run dev                                      # Start Next.js
 - [x] Notification bell dengan unread count
 - [x] Notification preferences management
 
-#### Infrastructure
+#### Infrastructure & Backend Integration
 - [x] Docker development environment
 - [x] Production-ready database configuration
 - [x] Health check endpoints
 - [x] Redis caching implementation
 - [x] Comprehensive API documentation
 - [x] Context providers untuk state management
+- [x] **Phase 4: Backend Integration & Production Deployment**
+  - [x] Full-stack NestJS + Next.js integration
+  - [x] Comprehensive Backend API service layer
+  - [x] React hooks untuk seamless backend communication
+  - [x] Real-time backend connectivity monitoring
+  - [x] Automated development environment startup
+  - [x] Integration testing framework
+  - [x] Production-ready deployment configuration
 - [x] TypeScript strict type checking
 
 ### 🚧 Advanced Features in Progress
@@ -299,6 +323,16 @@ API menggunakan OpenAPI/Swagger specification dengan dokumentasi interaktif:
 
 ## 🧪 Testing
 
+### Integration Testing (Phase 4)
+```bash
+# Full integration test
+./scripts/test-integration.sh
+
+# Individual service tests
+curl http://localhost:3001/health      # Backend health
+curl http://localhost:3000              # Frontend check
+```
+
 ### Backend Testing
 ```bash
 cd backend
@@ -313,6 +347,35 @@ cd frontend
 npm run test             # Component tests
 npm run test:coverage    # Coverage report
 ```
+
+## 📈 Development Phases
+
+### ✅ Phase 1-3: Frontend Foundation (Complete)
+- User interface development
+- Component library
+- State management
+- Responsive design
+
+### ✅ Phase 4: Backend Integration & Production Deployment (Complete)
+- NestJS backend API integration
+- Database connectivity (PostgreSQL, Redis, MinIO)
+- Authentication flow
+- File upload system
+- Real-time monitoring dashboard
+- Automated development environment
+- Integration testing framework
+
+### 🚧 Phase 5: Advanced Features (Next)
+- Real-time notifications
+- Advanced workflow automation
+- Government API integrations
+- Enhanced reporting systems
+
+### 🔮 Phase 6: Scale & Optimization (Future)
+- Performance optimization
+- Load balancing
+- Advanced caching strategies
+- Monitoring & analytics
 
 ## 📋 Development Guidelines
 
