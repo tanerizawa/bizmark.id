@@ -1,16 +1,29 @@
-# render.yaml - Configuration for Render.com deployment
+# render.yaml - Configuration for Bizmark.id SaaS Platform
 # Documentation: https://render.com/docs/blueprint-spec
 
+# Automatic preview environments
+previews:
+  generation: automatic
+
 services:
-  - name: bizmark-api
-    type: web
-    env: node
+  # Main Backend API Service
+  - type: web
+    name: bizmark-api
+    runtime: node
     region: singapore
     plan: starter
     buildCommand: ./build.sh
     startCommand: cd backend && npm run start:prod
     healthCheckPath: /api/v1/health/ready
+    autoDeploy: true
+    branch: main
+    scaling:
+      minInstances: 1
+      maxInstances: 2
+      targetMemoryPercent: 70
+      targetCPUPercent: 70
     envVars:
+      # Application settings
       - key: NODE_ENV
         value: production
       - key: API_PREFIX
@@ -21,6 +34,8 @@ services:
         value: info
       - key: ENABLE_DOCS
         value: "true"
+        
+      # Security settings
       - key: JWT_EXPIRES_IN
         value: "15m"
       - key: JWT_REFRESH_EXPIRES_IN
@@ -31,14 +46,12 @@ services:
         value: "5"
       - key: LOCKOUT_TIME
         value: "900000"
+        
+      # Performance settings
       - key: THROTTLE_TTL
         value: "60"
       - key: THROTTLE_LIMIT
         value: "100"
-      - key: MAX_FILE_SIZE
-        value: "10485760"
-      - key: ALLOWED_FILE_TYPES
-        value: "pdf,doc,docx,jpg,jpeg,png,gif"
       - key: DB_POOL_MIN
         value: "5"
       - key: DB_POOL_MAX
@@ -47,32 +60,78 @@ services:
         value: "5000"
       - key: METRICS_ENABLED
         value: "true"
+        
+      # Upload settings
+      - key: MAX_FILE_SIZE
+        value: "10485760"
+      - key: ALLOWED_FILE_TYPES
+        value: "pdf,doc,docx,jpg,jpeg,png,gif"
+        
+      # CORS settings
       - key: CORS_CREDENTIALS
         value: "true"
+        
       # Database connection (auto-configured by Render)
       - key: DATABASE_URL
         fromDatabase:
           name: bizmark-db
           property: connectionString
-      # Redis connection (set manually in Render dashboard)
+          
+      # Redis connection (set manually in dashboard)
       - key: REDIS_URL
         sync: false
-      # Secrets (set manually in Render dashboard)
+        
+      # Security secrets (set manually in dashboard)
       - key: JWT_SECRET
-        sync: false
+        generateValue: true
       - key: JWT_REFRESH_SECRET
-        sync: false
+        generateValue: true
       - key: SESSION_SECRET
-        sync: false
+        generateValue: true
       - key: CORS_ORIGIN
         sync: false
-    autoDeploy: true
+        
+      # Load common environment variables
+      - fromGroup: bizmark-common-env
+      
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: sameorigin
+      - path: /*
+        name: X-XSS-Protection
+        value: "1; mode=block"
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
 
-  - name: bizmark-redis
-    type: redis
+  # Redis Service for Caching and Job Queue
+  - type: redis
+    name: bizmark-redis
     region: singapore
     plan: starter
     ipAllowList: []
+    maxmemoryPolicy: volatile-lru
+
+  # Scheduled Jobs Service (Optional)
+  - type: cron
+    name: bizmark-jobs
+    runtime: node
+    schedule: '0 */6 * * *'  # Every 6 hours
+    buildCommand: cd backend && npm ci
+    startCommand: cd backend && npm run jobs:run
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bizmark-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - fromGroup: bizmark-common-env
 
 databases:
   - name: bizmark-db
@@ -80,3 +139,18 @@ databases:
     user: bizmark_user
     plan: standard
     region: singapore
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: allow all (production ready)
+    # Uncomment for production with high availability requirements
+    # highAvailability:
+    #   enabled: true
+
+# Common Environment Variables
+envVarGroups:
+  - name: bizmark-common-env
+    envVars:
+      - key: APP_NAME
+        value: "Bizmark.id"
+      - key: SUPPORT_EMAIL
+        value: "support@bizmark.id"
