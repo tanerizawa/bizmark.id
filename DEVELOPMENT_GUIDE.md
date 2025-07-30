@@ -248,8 +248,13 @@ npm run start:dev
 
 #### Frontend Development
 ```bash
-# Create new component
-npx create-next-component ComponentName
+# Install dependencies
+cd frontend
+npm install
+
+# Setup environment
+cp .env.example .env.local
+# Edit .env.local dengan konfigurasi yang sesuai
 
 # Run dalam development mode
 npm run dev
@@ -257,6 +262,28 @@ npm run dev
 # Build untuk production
 npm run build
 npm run start
+
+# Lint check
+npm run lint
+
+# Type check
+npm run type-check
+```
+
+#### Full Stack Development
+```bash
+# Start semua services dengan script otomatis
+./start-dev.sh
+
+# Atau manual:
+# Terminal 1 - Backend + Database
+cd backend
+docker-compose -f docker-compose.dev.yml up -d
+npm run start:dev
+
+# Terminal 2 - Frontend
+cd frontend
+npm run dev
 ```
 
 ### 4. Database Migrations

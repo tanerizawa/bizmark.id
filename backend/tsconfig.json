@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["*"],
+      "@/auth/*": ["modules/auth/*"],
+      "@/users/*": ["modules/users/*"],
+      "@/licenses/*": ["modules/licenses/*"],
+      "@/documents/*": ["modules/documents/*"],
+      "@/common/*": ["common/*"],
+      "@/database/*": ["database/*"],
+      "@/config/*": ["config/*"],
+      "@/entities/*": ["entities/*"],
+      "@/dto/*": ["dto/*"]
+    }
+  }
+}
