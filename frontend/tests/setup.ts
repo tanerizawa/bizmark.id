@@ -5,11 +5,13 @@
 
 import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'util';
-import 'whatwg-fetch';
 import React from 'react';
 
 // Jest types are available globally in test environment
 /// <reference types="jest" />
+
+// Mock fetch API for Node.js environment
+global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 // Type definitions for test utilities
 interface TestUtils {
