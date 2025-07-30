@@ -78,5 +78,5 @@ databases:
   - name: bizmark-db
     databaseName: bizmark_production
     user: bizmark_user
-    plan: starter
+    plan: standard
     region: singapore
