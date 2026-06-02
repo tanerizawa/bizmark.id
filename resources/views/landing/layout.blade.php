@@ -4,9 +4,14 @@
 // --- Dark/Light Mode Initialization ---
 // Must run synchronously before paint to prevent flash
 (function() {
-    var theme = localStorage.getItem('bizmark_theme');
-    if (!theme) {
-        theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    // Force light mode on landing page (root path)
+    if (window.location.pathname === '/') {
+        var theme = 'light';
+    } else {
+        var theme = localStorage.getItem('bizmark_theme');
+        if (!theme) {
+            theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
     }
     if (theme === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
