@@ -1,17 +1,17 @@
 <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/92 backdrop-blur-lg border-b transition-all duration-300 border-transparent">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
-            <a href="/new" class="flex items-center gap-2.5 flex-shrink-0">
+            <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
                 <img src="{{ asset('images/logo-mark.svg') }}" alt="Bizmark.ID" class="w-7 h-7">
                 <span class="text-lg font-extrabold tracking-tight text-[#2D2A24]">Bizmark.ID</span>
             </a>
 
             <div class="hidden lg:flex items-center gap-1">
-                <a href="/new/layanan" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Layanan</a>
-                <a href="/new/proses" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Proses</a>
-                <a href="/new/harga" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Harga</a>
-                <a href="/new/blog" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Blog</a>
-                <a href="/new/tentang" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Tentang</a>
+                <a href="/layanan" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Layanan</a>
+                <a href="/proses" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Proses</a>
+                <a href="/harga" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Harga</a>
+                <a href="/blog" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Blog</a>
+                <a href="/tentang" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Tentang</a>
             </div>
 
             <div class="flex items-center gap-3">
@@ -31,11 +31,11 @@
 
     <div id="mobileMenu" class="lg:hidden hidden border-t border-[#E5E0DB] bg-white">
         <div class="px-4 py-3 space-y-1">
-            <a href="/new/layanan" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Layanan</a>
-            <a href="/new/proses" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Proses</a>
-            <a href="/new/harga" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Harga</a>
-            <a href="/new/blog" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Blog</a>
-            <a href="/new/tentang" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Tentang</a>
+            <a href="/layanan" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Layanan</a>
+            <a href="/proses" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Proses</a>
+            <a href="/harga" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Harga</a>
+            <a href="/blog" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Blog</a>
+            <a href="/tentang" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Tentang</a>
             <hr class="border-[#E5E0DB] my-2">
             <a href="/konsultasi-gratis" class="block px-3 py-2.5 text-sm font-semibold text-[#0D9488]">Cek Kebutuhan Izin</a>
         </div>

@@ -164,23 +164,29 @@ Route::prefix('permohonan')->group(function () {
     Route::get('/api/status/{requestNumber}', [App\Http\Controllers\ServiceCostRequestController::class, 'checkStatus'])->name('permohonan.status');
 });
 
-// New Redesign Routes (staging at /new)
-Route::prefix('new')->middleware('locale:id')->name('new.')->group(function () {
-    Route::get('/', [App\Http\Controllers\NewLandingController::class, 'home'])->name('home');
-    Route::get('/layanan', [App\Http\Controllers\NewLandingController::class, 'services'])->name('services');
-    Route::get('/proses', [App\Http\Controllers\NewLandingController::class, 'process'])->name('process');
-    Route::get('/harga', [App\Http\Controllers\NewLandingController::class, 'pricing'])->name('pricing');
-    Route::get('/tentang', [App\Http\Controllers\NewLandingController::class, 'about'])->name('about');
-    Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog');
-    Route::get('/kontak', [App\Http\Controllers\NewLandingController::class, 'contact'])->name('contact');
+// === MIGRATED: New Design Routes (now at root) ===
+
+// Landing Page
+Route::middleware('locale:id')->get('/', [App\Http\Controllers\NewLandingController::class, 'home'])->name('landing.id');
+
+// Subpages (with backward-compatible old route names for existing templates)
+Route::middleware('locale:id')->group(function () {
+    Route::get('/layanan', [App\Http\Controllers\NewLandingController::class, 'services'])->name('services.index.id');
+    Route::get('/proses', [App\Http\Controllers\NewLandingController::class, 'process'])->name('process.id');
+    Route::get('/harga', [App\Http\Controllers\NewLandingController::class, 'pricing'])->name('pricing.id');
+    Route::get('/tentang', [App\Http\Controllers\NewLandingController::class, 'about'])->name('about.id');
+    Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog.index.id');
+    Route::get('/kontak', [App\Http\Controllers\NewLandingController::class, 'contact'])->name('contact.new');
 });
 
-// Landing Page (Public) - Indonesian Default - Responsive (No Mobile Redirect)
-Route::middleware('locale:id')->get('/', function (\Illuminate\Http\Request $request) {
-    // Fully responsive landing page — serves all devices
-    // Manual mobile override handled by DeviceDetection middleware (?mobile=1)
-    return app(PublicArticleController::class)->landing($request);
-})->name('landing.id');
+// Phase-out redirects: /new/* → /*
+Route::permanentRedirect('/new', '/');
+Route::permanentRedirect('/new/layanan', '/layanan');
+Route::permanentRedirect('/new/proses', '/proses');
+Route::permanentRedirect('/new/harga', '/harga');
+Route::permanentRedirect('/new/tentang', '/tentang');
+Route::permanentRedirect('/new/blog', '/blog');
+Route::permanentRedirect('/new/kontak', '/kontak');
 
 // Service Inquiry - Free AI Analysis (Landing Page Lead Generation)
 Route::prefix('konsultasi-gratis')->group(function () {

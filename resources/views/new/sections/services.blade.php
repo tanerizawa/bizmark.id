@@ -9,7 +9,7 @@
             <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-tight text-[#2D2A24] mb-3">
                 Perizinan dikelola penuh. Dijamin para ahli.
             </h2>
-            <p class="text-base text-[#6B6560] leading-relaxed">Enam kategori perizinan. Satu tim khusus per proyek. SLA jelas sejak hari pertama.</p>
+            <p class="text-base text-[#6B6560] leading-relaxed">Enam kategori perizinan. Satu tim khusus per proyek. <strong>SLA jelas sejak hari pertama.</strong></p>
         </div>
 
         @php
@@ -35,7 +35,7 @@
                 <h3 class="text-base font-bold text-[#2D2A24] mb-2">{{ $svc['title'] }}</h3>
                 <ul class="space-y-1.5 mb-3 flex-1">
                     @foreach($svc['items'] as $item)
-                    <li class="flex items-center gap-2 text-xs text-[#6B6560]">
+                    <li class="flex items-center gap-2 text-xs text-[#6B6560] font-medium">
                         <svg class="w-3 h-3 text-[#0D9488] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         {{ $item }}
                     </li>

@@ -27,7 +27,7 @@
                     </div>
                     <div>
                         <p class="text-sm font-semibold text-[#0D9488] mb-1">Solusi</p>
-                        <p class="text-sm text-[#6B6560] leading-relaxed mb-3">Buat file SHP standar OSS-RBA dalam hitungan menit menggunakan alat pemetaan interaktif kami.</p>
+                        <p class="text-sm text-[#6B6560] leading-relaxed mb-3"><strong>Buat</strong> file SHP <em>standar OSS-RBA</em> dalam hitungan menit menggunakan alat pemetaan interaktif kami.</p>
                         <a href="/polygon-shp-maker" class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0D9488] hover:text-[#0F766E] transition-colors">
                             Pelajari
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -53,7 +53,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-semibold text-[#0D9488] mb-1">Solusi</p>
-                        <p class="text-xs text-[#6B6560] leading-relaxed mb-2">AI memetakan 1.000+ kode KBLI ke kebutuhan izin spesifik Anda.</p>
+                        <p class="text-xs text-[#6B6560] leading-relaxed mb-2"><strong>AI memetakan</strong> 1.000+ kode KBLI <em>ke kebutuhan izin spesifik Anda</em>.</p>
                         <a href="/konsultasi-gratis" class="inline-flex items-center gap-1 text-xs font-semibold text-[#0D9488]">Cek sekarang <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-semibold text-[#0D9488] mb-1">Solusi</p>
-                        <p class="text-xs text-[#6B6560] leading-relaxed mb-2">Laporan mingguan + notifikasi di setiap tahap.</p>
+                        <p class="text-xs text-[#6B6560] leading-relaxed mb-2"><strong>Laporan mingguan + notifikasi</strong> <em>di setiap tahap</em>.</p>
                         <a href="/proses" class="inline-flex items-center gap-1 text-xs font-semibold text-[#0D9488]">Pelajari SLA <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
                     </div>
                 </div>

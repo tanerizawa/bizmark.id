@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12">
             <div class="col-span-2 md:col-span-3 lg:col-span-1">
-                <a href="/new" class="flex items-center gap-2.5 mb-4">
+                <a href="/" class="flex items-center gap-2.5 mb-4">
                     <img src="{{ asset('images/logo-mark.svg') }}" alt="Bizmark.ID" class="w-6 h-6">
                     <span class="text-base font-extrabold tracking-tight text-[#2D2A24]">Bizmark.ID</span>
                 </a>
@@ -23,11 +23,11 @@
             <div>
                 <h4 class="text-xs font-semibold uppercase tracking-wider text-[#6B6560] mb-4">Navigasi</h4>
                 <ul class="space-y-2.5">
-                    <li><a href="/new" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Beranda</a></li>
-                    <li><a href="/new/layanan" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Layanan</a></li>
-                    <li><a href="/new/proses" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Proses</a></li>
-                    <li><a href="/new/harga" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Harga</a></li>
-                    <li><a href="/new/tentang" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Tentang</a></li>
+                    <li><a href="/" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Beranda</a></li>
+                    <li><a href="/layanan" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Layanan</a></li>
+                    <li><a href="/proses" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Proses</a></li>
+                    <li><a href="/harga" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Harga</a></li>
+                    <li><a href="/tentang" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Tentang</a></li>
                 </ul>
             </div>
 
@@ -37,7 +37,7 @@
                     <li><a href="/konsultasi-gratis" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Cek Perizinan AI</a></li>
                     <li><a href="/permohonan" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Permohonan</a></li>
                     <li><a href="/login" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Portal Klien</a></li>
-                    <li><a href="/new/blog" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Blog</a></li>
+                    <li><a href="/blog" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Blog</a></li>
                 </ul>
             </div>
 

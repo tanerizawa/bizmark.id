@@ -15,7 +15,7 @@
                     <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#F0ECE6] text-[#6B6560]">UMKM</span>
                 </div>
                 <h3 class="text-base font-bold text-[#2D2A24] mb-2">UMKM / Startup</h3>
-                <p class="text-sm text-[#6B6560] leading-relaxed mb-4">Registrasi NIB, pengaturan OSS-RBA, dokumen lingkungan dasar, izin usaha tahap awal.</p>
+                <p class="text-sm text-[#6B6560] leading-relaxed mb-4">Registrasi <strong>NIB</strong>, pengaturan <strong>OSS-RBA</strong>, dokumen lingkungan dasar, izin usaha tahap awal.</p>
                 <div class="flex items-center gap-2 mb-4">
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#CCFBF1] text-[#115E59]">NIB</span>
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#CCFBF1] text-[#115E59]">OSS-RBA</span>
@@ -31,7 +31,7 @@
                     <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/20 text-white">Korporasi</span>
                 </div>
                 <h3 class="text-base font-bold mb-2">Korporasi Menengah & Besar</h3>
-                <p class="text-sm text-white/80 leading-relaxed mb-4">AMDAL, pengelolaan limbah B3, UKL-UPL, PBG, SLF — kepatuhan lingkungan dan bangunan menyeluruh.</p>
+                <p class="text-sm text-white/80 leading-relaxed mb-4">AMDAL, pengelolaan limbah B3, UKL-UPL, <strong>PBG</strong>, <strong>SLF</strong> — kepatuhan lingkungan dan bangunan menyeluruh.</p>
                 <div class="flex items-center gap-2 mb-4">
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/20 text-white">AMDAL</span>
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/20 text-white">PBG</span>
@@ -47,7 +47,7 @@
                     <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#F0ECE6] text-[#6B6560]">PMA</span>
                 </div>
                 <h3 class="text-base font-bold text-[#2D2A24] mb-2">Perusahaan PMA / Investasi Asing</h3>
-                <p class="text-sm text-[#6B6560] leading-relaxed mb-4">Pendaftaran BKPM, izin sektoral, pendampingan bilingual di setiap tahap.</p>
+                <p class="text-sm text-[#6B6560] leading-relaxed mb-4">Pendaftaran <strong>BKPM</strong>, izin sektoral, <strong>pendampingan bilingual</strong> di setiap tahap.</p>
                 <div class="flex items-center gap-2 mb-4">
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#CCFBF1] text-[#115E59]">BKPM</span>
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#CCFBF1] text-[#115E59]">KPA</span>

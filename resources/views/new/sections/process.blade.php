@@ -7,15 +7,15 @@
             <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-tight text-[#2D2A24] mb-3">
                 Proses yang mengutamakan kejelasan.
             </h2>
-            <p class="text-base text-[#6B6560] leading-relaxed">Empat langkah jelas. Satu tim bertanggung jawab. Hasil terukur dengan SLA.</p>
+            <p class="text-base text-[#6B6560] leading-relaxed">Empat langkah jelas. <strong>Satu tim bertanggung jawab.</strong> Hasil terukur dengan SLA.</p>
         </div>
 
         @php
             $steps = [
-                ['num' => '01', 'time' => '1-2 hari', 'title' => 'Kajian Awal & Pemetaan', 'desc' => 'Kami telaah konteks usaha, kode KBLI, dan celah perizinan Anda — tanpa biaya.'],
-                ['num' => '02', 'time' => '2-3 hari', 'title' => 'Proposal & Kesepakatan', 'desc' => 'Lingkup pekerjaan, biaya, dan SLA jelas — semua terdokumentasi sebelum mulai.'],
-                ['num' => '03', 'time' => 'Variatif', 'title' => 'Pelaksanaan & Pelaporan', 'desc' => 'Laporan mingguan, manajer proyek khusus, tindak lanjut lapangan.', 'highlight' => true],
-                ['num' => '04', 'time' => '1 minggu', 'title' => 'Terbit & Serah Terima', 'desc' => 'Izin diserahkan lengkap dengan peta jalan kepatuhan dan dukungan berkelanjutan.'],
+                ['num' => '01', 'time' => '1-2 hari', 'title' => 'Kajian Awal & Pemetaan', 'desc' => 'Kami telaah konteks usaha, kode KBLI, dan celah perizinan Anda — <strong>tanpa biaya</strong>.'],
+                ['num' => '02', 'time' => '2-3 hari', 'title' => 'Proposal & Kesepakatan', 'desc' => 'Lingkup pekerjaan, biaya, dan <strong>SLA jelas</strong> — semua terdokumentasi sebelum mulai.'],
+                ['num' => '03', 'time' => 'Variatif', 'title' => 'Pelaksanaan & Pelaporan', 'desc' => 'Laporan mingguan, <strong>manajer proyek khusus</strong>, tindak lanjut lapangan.', 'highlight' => true],
+                ['num' => '04', 'time' => '1 minggu', 'title' => 'Terbit & Serah Terima', 'desc' => 'Izin diserahkan lengkap dengan <strong>peta jalan kepatuhan</strong> dan dukungan berkelanjutan.'],
             ];
         @endphp
 

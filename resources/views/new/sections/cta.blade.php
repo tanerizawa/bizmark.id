@@ -9,7 +9,7 @@
             <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-tight text-white mb-4">
                 Siap mengurus perizinan<br>usaha Anda?
             </h2>
-            <p class="text-base text-white/80 max-w-lg mx-auto mb-8">Jalankan cek perizinan AI gratis dalam hitungan detik — atau hubungi tim spesialis untuk asesmen mendalam.</p>
+            <p class="text-base text-white/80 max-w-lg mx-auto mb-8">Jalankan cek perizinan AI gratis dalam hitungan detik — atau <strong>hubungi tim spesialis</strong> untuk asesmen mendalam.</p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <a href="/konsultasi-gratis" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#0D9488] text-sm font-semibold rounded-xl hover:bg-white/90 transition-all duration-200 shadow-lg hover:scale-[1.02]">

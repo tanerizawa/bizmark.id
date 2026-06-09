@@ -10,16 +10,16 @@
             <div class="max-w-xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#CCFBF1] mb-6">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#0D9488]"></span>
-                    <span class="text-xs font-semibold text-[#115E59] tracking-wide">Gratis Selamanya · Tanpa Daftar</span>
+                    <span class="text-xs font-semibold text-[#115E59] tracking-wide"><strong>Gratis</strong> Selamanya · <strong>Tanpa Daftar</strong></span>
                 </div>
 
                 <h1 class="text-[clamp(2.25rem,4vw,3.5rem)] font-extrabold leading-[1.08] tracking-tight text-[#2D2A24] mb-5">
                     Peta lengkap perizinan usaha Anda.<br>
-                    <span class="text-[#0D9488]">Dalam 2 menit. Gratis.</span>
+                    <span class="text-[#0D9488]"><em>Dalam 2 menit. Gratis.</em></span>
                 </h1>
 
                 <p class="text-base sm:text-lg text-[#6B6560] leading-relaxed mb-6 max-w-lg">
-                    Bizmark.ID adalah operating system perizinan usaha di Indonesia. Pakai alat AI kami sendiri — atau serahkan kepada tim spesialis saat Anda butuh eksekusi lapangan.
+                    Bizmark.ID adalah <strong>operating system perizinan usaha</strong> di Indonesia. Pakai alat AI kami sendiri — atau serahkan kepada tim spesialis saat Anda butuh eksekusi lapangan.
                 </p>
 
                 <form action="/konsultasi-gratis" method="GET" class="flex items-center gap-2 bg-white rounded-xl p-1.5 focus-within:shadow-[0_0_0_2px_#0D9488,0_4px_16px_rgba(13,148,136,0.12)] shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-200 mb-4 max-w-lg">
@@ -35,7 +35,7 @@
 
                 <div class="flex items-center gap-2 text-xs text-[#9C9690]">
                     <svg class="w-3.5 h-3.5 text-[#0D9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    AI petakan syarat, instansi & timeline · Gratis · Cukup info kontak (~30 detik)
+                    <span class="font-semibold text-[#6B6560]">AI</span> petakan syarat, instansi & timeline · <span class="font-semibold text-[#6B6560]">Gratis</span> · Cukup info kontak (~30 detik)
                 </div>
             </div>
 
