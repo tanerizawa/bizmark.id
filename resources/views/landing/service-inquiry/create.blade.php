@@ -3,6 +3,11 @@
 @section('title', 'Cek Kebutuhan Izin Usaha — Gratis | Bizmark.ID')
 @section('description', 'Cek kebutuhan perizinan usaha Anda secara gratis menggunakan AI Bizmark.ID. Hasil dalam 30 detik, akurat, dan tanpa biaya apa pun.')
 
+@push('styles')
+@vite('resources/css/landing.css')
+@vite('resources/css/landing-theme.css')
+@endpush
+
 @section('content')
 <div class="inquiry-page font-sans bg-white text-gray-900 min-h-screen flex flex-col">
     @php
