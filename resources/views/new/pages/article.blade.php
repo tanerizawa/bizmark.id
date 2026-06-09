@@ -7,7 +7,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ $article->title }}">
 <meta property="og:description" content="{{ $article->excerpt }}">
-<meta property="og:image" content="{{ $article->featured_image }}">
+<meta property="og:image" content="{{ $article->featured_image_url ?? Storage::url($article->featured_image) }}">
 <meta name="twitter:title" content="{{ $article->title }}">
 <meta name="twitter:description" content="{{ $article->excerpt }}">
 <script type="application/ld+json">
@@ -16,7 +16,7 @@
     "@@type": "Article",
     "headline": "{{ $article->title }}",
     "description": "{{ $article->meta_description ?? $article->excerpt ?? Str::limit(strip_tags($article->content), 160) }}",
-    "image": "{{ $article->featured_image }}",
+    "image": "{{ Storage::url($article->featured_image) }}",
     "datePublished": "{{ ($article->published_at ?? $article->created_at)->toIso8601String() }}",
     "dateModified": "{{ $article->updated_at->toIso8601String() }}",
     "author": {"@@type": "Organization", "name": "Bizmark.ID", "url": "https://bizmark.id"},
@@ -58,7 +58,7 @@
         {{-- Featured Image --}}
         @if($article->featured_image)
         <div class="mb-8 rounded-xl overflow-hidden bg-[#F0ECE6]">
-            <img src="{{ $article->featured_image }}" alt="{{ $article->title }}" class="w-full h-auto object-cover" loading="eager">
+            <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}" class="w-full h-auto object-cover" loading="eager">
         </div>
         @endif
 
@@ -96,7 +96,7 @@
                 <a href="/blog/{{ $related->slug }}" class="card-borderless overflow-hidden group">
                     @if($related->featured_image)
                     <div class="aspect-[16/10] overflow-hidden bg-[#F0ECE6]">
-                        <img src="{{ $related->featured_image }}" alt="{{ $related->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy">
+                        <img src="{{ Storage::url($related->featured_image) }}" alt="{{ $related->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy">
                     </div>
                     @endif
                     <div class="p-4">

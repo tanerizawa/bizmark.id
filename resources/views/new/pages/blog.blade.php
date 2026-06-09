@@ -17,7 +17,7 @@
             <a href="/blog/{{ $article->slug }}" class="group bg-white rounded-xl border border-[#E5E0DB] overflow-hidden hover:border-[#0D9488]/20 hover:shadow-sm transition-all duration-200">
                 @if($article->featured_image)
                 <div class="aspect-[16/10] overflow-hidden bg-[#F0ECE6]">
-                    <img src="{{ $article->featured_image }}" alt="{{ $article->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                    <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                 </div>
                 @endif
                 <div class="p-5">

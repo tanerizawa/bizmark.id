@@ -17,7 +17,7 @@
             <a href="/blog/{{ $article->slug }}" class="card-borderless overflow-hidden group">
                 @if($article->featured_image)
                 <div class="aspect-[16/10] overflow-hidden bg-[#F0ECE6]">
-                    <img src="{{ $article->featured_image }}" alt="{{ $article->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy">
+                    <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy">
                 </div>
                 @endif
                 <div class="p-5">
