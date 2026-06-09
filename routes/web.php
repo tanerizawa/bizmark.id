@@ -56,7 +56,7 @@ Route::middleware('locale:id')->group(function () {
     Route::get('/blog', [PublicArticleController::class, 'index'])->name('blog.index.id');
     Route::get('/blog/kategori/{category}', [PublicArticleController::class, 'category'])->name('blog.category.id');
     Route::get('/blog/tag/{tag}', [PublicArticleController::class, 'tag'])->name('blog.tag.id');
-    Route::get('/blog/{slug}', [PublicArticleController::class, 'show'])->name('blog.article.id');
+    Route::get('/blog/{slug}', [App\Http\Controllers\NewLandingController::class, 'article'])->name('blog.article.id');
 
     // Legal Pages (ID)
     Route::get('/kebijakan-privasi', function () {
@@ -99,7 +99,7 @@ Route::prefix('en')->middleware('locale:en')->group(function () {
     Route::get('/blog', [PublicArticleController::class, 'index'])->name('blog.index.en');
     Route::get('/blog/category/{category}', [PublicArticleController::class, 'category'])->name('blog.category.en');
     Route::get('/blog/tag/{tag}', [PublicArticleController::class, 'tag'])->name('blog.tag.en');
-    Route::get('/blog/{slug}', [PublicArticleController::class, 'show'])->name('blog.article.en');
+    Route::get('/blog/{slug}', [App\Http\Controllers\NewLandingController::class, 'article'])->name('blog.article.en');
 
     // PMA Inquiry Form (English)
     Route::get('/inquiry', [App\Http\Controllers\PMAInquiryController::class, 'create'])->name('pma.inquiry.create');
@@ -178,15 +178,6 @@ Route::middleware('locale:id')->group(function () {
     Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog.index.id');
     Route::get('/kontak', [App\Http\Controllers\NewLandingController::class, 'contact'])->name('contact.new');
 });
-
-// Phase-out redirects: /new/* → /*
-Route::permanentRedirect('/new', '/');
-Route::permanentRedirect('/new/layanan', '/layanan');
-Route::permanentRedirect('/new/proses', '/proses');
-Route::permanentRedirect('/new/harga', '/harga');
-Route::permanentRedirect('/new/tentang', '/tentang');
-Route::permanentRedirect('/new/blog', '/blog');
-Route::permanentRedirect('/new/kontak', '/kontak');
 
 // Service Inquiry - Free AI Analysis (Landing Page Lead Generation)
 Route::prefix('konsultasi-gratis')->group(function () {

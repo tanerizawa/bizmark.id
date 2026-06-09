@@ -70,4 +70,23 @@ class NewLandingController extends Controller
     {
         return view('new.pages.contact');
     }
+
+    public function article($slug)
+    {
+        $article = \App\Models\Article::published()
+            ->with('author')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $article->incrementViews();
+
+        $relatedArticles = \App\Models\Article::published()
+            ->where('id', '!=', $article->id)
+            ->where('category', $article->category)
+            ->orderBy('published_at', 'desc')
+            ->take(3)
+            ->get();
+
+        return view('new.pages.article', compact('article', 'relatedArticles'));
+    }
 }
