@@ -1,3 +1,23 @@
+@php
+    // Parse headings from article content for dynamic Table of Contents
+    $tocItems = [];
+    $modifiedContent = $article->content;
+
+    if (preg_match_all('/<h([23])\s*[^>]*>(.*?)<\/h[23]>/si', $article->content, $matches, PREG_SET_ORDER)) {
+        foreach ($matches as $i => $m) {
+            $level = (int)$m[1];
+            $text = strip_tags($m[2]);
+            $id = 'heading-' . $i . '-' . Str::slug($text);
+
+            $tocItems[] = ['level' => $level, 'text' => $text, 'id' => $id];
+
+            $originalTag = $m[0];
+            $replacement = '<h' . $level . ' id="' . $id . '">' . $m[2] . '</h' . $level . '>';
+            $modifiedContent = str_replace($originalTag, $replacement, $modifiedContent);
+        }
+    }
+@endphp
+
 @extends('new.layouts.app')
 
 @section('title', ($article->meta_title ?: $article->title) . ' - Bizmark.ID')
@@ -24,36 +44,37 @@
     "mainEntityOfPage": {"@@type": "WebPage", "@@id": "{{ url()->current() }}"}
 }
 </script>
+<style>
+.toc-list { list-style: none; padding: 0; margin: 0; }
+.toc-list li { margin-bottom: 0.375rem; }
+.toc-list a {
+    display: block;
+    font-size: 0.8125rem;
+    color: #6B6560;
+    transition: color 0.2s, padding-left 0.2s;
+    padding: 0.2rem 0;
+    border-left: 2px solid transparent;
+    padding-left: 0.5rem;
+}
+.toc-list a:hover,
+.toc-list a.active {
+    color: #0D9488;
+    border-left-color: #0D9488;
+    padding-left: 1rem;
+}
+.toc-h3 { padding-left: 1rem !important; }
+.toc-h3:hover,
+.toc-h3.active { padding-left: 1.5rem !important; }
+</style>
 @endpush
 
 @section('content')
 <div class="pt-28 pb-12 sm:pt-32 sm:pb-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {{-- Desktop: 3-column grid --}}
-        <div class="lg:grid lg:grid-cols-[280px_1fr_280px] lg:gap-8 xl:gap-10">
+        <div class="lg:grid lg:grid-cols-[1fr_300px] lg:gap-8 xl:gap-10">
 
-            {{-- Left Sidebar (desktop only) --}}
-            <aside class="hidden lg:block">
-                <div class="sticky top-24 space-y-6">
-                    {{-- Recent Articles --}}
-                    @if(isset($recentArticles) && $recentArticles->count() > 0)
-                    <div>
-                        <h4 class="text-xs font-semibold uppercase tracking-wider text-[#9C9690] mb-3">Artikel Terbaru</h4>
-                        <ul class="space-y-2.5">
-                            @foreach($recentArticles as $recent)
-                            <li>
-                                <a href="/blog/{{ $recent->slug }}" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors leading-snug block">{{ $recent->title }}</a>
-                                <span class="text-[10px] text-[#9C9690]">{{ $recent->published_at?->format('d M Y') }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-                </div>
-            </aside>
-
-            {{-- Main Content --}}
-            <main class="min-w-0">
+            {{-- Main Content (expanded left) --}}
+            <main class="min-w-0 max-w-4xl">
                 {{-- Breadcrumb --}}
                 <div class="flex items-center gap-2 text-xs text-[#9C9690] mb-6">
                     <a href="/" class="hover:text-[#0D9488] transition-colors">Beranda</a>
@@ -87,9 +108,9 @@
                 </div>
                 @endif
 
-                {{-- Content --}}
+                {{-- Content (with heading IDs injected) --}}
                 <div class="article-prose">
-                    {!! $article->content !!}
+                    {!! $modifiedContent !!}
                 </div>
 
                 {{-- Share --}}
@@ -109,69 +130,33 @@
                 </div>
             </main>
 
-            {{-- Right Sidebar (desktop only) --}}
+            {{-- Right Sidebar: Dynamic Table of Contents --}}
             <aside class="hidden lg:block">
-                <div class="sticky top-24 space-y-6">
-                    {{-- Categories --}}
-                    @if(isset($categories) && $categories->count() > 0)
-                    <div>
-                        <h4 class="text-xs font-semibold uppercase tracking-wider text-[#9C9690] mb-3">Kategori</h4>
-                        <ul class="space-y-1.5">
-                            @foreach($categories as $cat)
+                <div class="sticky top-24">
+                    @if(count($tocItems) > 0)
+                    <nav aria-label="Daftar Isi">
+                        <h4 class="text-xs font-semibold uppercase tracking-wider text-[#9C9690] mb-3">Daftar Isi</h4>
+                        <ul class="toc-list">
+                            @foreach($tocItems as $item)
                             <li>
-                                <a href="/blog/kategori/{{ urlencode($cat) }}" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">{{ $cat }}</a>
+                                <a href="#{{ $item['id'] }}"
+                                   class="{{ $item['level'] === 3 ? 'toc-h3' : '' }}"
+                                   @click.prevent="
+                                       document.getElementById('{{ $item['id'] }}')?.scrollIntoView({ behavior: 'smooth' });
+                                       document.querySelectorAll('.toc-list a').forEach(a => a.classList.remove('active'));
+                                       $el.classList.add('active');
+                                   ">
+                                    {{ $item['text'] }}
+                                </a>
                             </li>
                             @endforeach
                         </ul>
-                    </div>
+                    </nav>
                     @endif
-
-                    {{-- Newsletter Mini --}}
-                    <div class="p-4 rounded-xl bg-[#FCFAF8] border border-[#F0ECE6]">
-                        <h4 class="text-xs font-semibold uppercase tracking-wider text-[#9C9690] mb-2">Buletin</h4>
-                        <p class="text-xs text-[#6B6560] leading-relaxed mb-3">Ringkasan bulanan perubahan regulasi.</p>
-                        <form action="/subscribe" method="POST" class="flex flex-col gap-2">
-                            @csrf
-                            <input type="email" name="email" required placeholder="Email"
-                                   class="px-3 py-2 bg-white border border-[#E5E0DB] rounded-lg text-xs text-[#2D2A24] placeholder:text-[#9C9690] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488]/20 transition-all">
-                            <button type="submit" class="w-full px-3 py-2 bg-[#0D9488] text-white text-xs font-semibold rounded-lg hover:bg-[#0F766E] transition-colors">
-                                Langganan
-                            </button>
-                        </form>
-                    </div>
                 </div>
             </aside>
 
         </div>
     </div>
 </div>
-
-{{-- Related Articles --}}
-@if(isset($relatedArticles) && $relatedArticles->count() > 0)
-<section class="pb-12 sm:pb-16 lg:pb-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-xl font-bold text-[#2D2A24] mb-6">Artikel Terkait</h2>
-            <div class="grid sm:grid-cols-3 gap-4 sm:gap-5">
-                @foreach($relatedArticles as $related)
-                <a href="/blog/{{ $related->slug }}" class="card-borderless overflow-hidden group">
-                    @if($related->featured_image)
-                    <div class="aspect-[16/10] overflow-hidden bg-[#F0ECE6]">
-                        <img src="{{ Storage::url($related->featured_image) }}" alt="{{ $related->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy">
-                    </div>
-                    @endif
-                    <div class="p-4">
-                        <h3 class="text-sm font-bold text-[#2D2A24] leading-snug">{{ $related->title }}</h3>
-                        <p class="text-xs text-[#6B6560] mt-1">{{ $related->published_at?->format('d M Y') }}</p>
-                    </div>
-                </a>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
-@endif
-
-{{-- CTA --}}
-@include('new.sections.newsletter')
 @endsection
