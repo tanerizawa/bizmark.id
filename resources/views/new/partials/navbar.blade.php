@@ -8,6 +8,7 @@
 
             <div class="hidden lg:flex items-center gap-1">
                 <a href="/layanan" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Layanan</a>
+                <a href="/alat" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Alat</a>
                 <a href="/proses" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Proses</a>
                 <a href="/harga" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Harga</a>
                 <a href="/blog" class="px-3 py-2 text-sm font-medium text-[#6B6560] hover:text-[#2D2A24] rounded-lg hover:bg-[#F0ECE6] transition-colors">Blog</a>
@@ -32,6 +33,7 @@
     <div id="mobileMenu" class="lg:hidden hidden border-t border-[#E5E0DB] bg-white">
         <div class="px-4 py-3 space-y-1">
             <a href="/layanan" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Layanan</a>
+            <a href="/alat" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Alat</a>
             <a href="/proses" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Proses</a>
             <a href="/harga" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Harga</a>
             <a href="/blog" class="block px-3 py-2.5 text-sm font-medium text-[#6B6560] rounded-lg hover:bg-[#F0ECE6]">Blog</a>

@@ -175,6 +175,7 @@ Route::middleware('locale:id')->group(function () {
     Route::get('/proses', [App\Http\Controllers\NewLandingController::class, 'process'])->name('process.id');
     Route::get('/harga', [App\Http\Controllers\NewLandingController::class, 'pricing'])->name('pricing.id');
     Route::get('/tentang', [App\Http\Controllers\NewLandingController::class, 'about'])->name('about.id');
+    Route::get('/alat', [App\Http\Controllers\NewLandingController::class, 'tools'])->name('tools.id');
     Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog.index.id');
     Route::get('/kontak', [App\Http\Controllers\NewLandingController::class, 'contact'])->name('contact.new');
 });

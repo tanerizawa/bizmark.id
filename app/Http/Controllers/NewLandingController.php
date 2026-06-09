@@ -66,6 +66,11 @@ class NewLandingController extends Controller
         return view('new.pages.blog', compact('articles'));
     }
 
+    public function tools()
+    {
+        return view('new.pages.tools');
+    }
+
     public function contact()
     {
         return view('new.pages.contact');

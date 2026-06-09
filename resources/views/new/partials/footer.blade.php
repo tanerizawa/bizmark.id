@@ -25,6 +25,7 @@
                 <ul class="space-y-2.5">
                     <li><a href="/" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Beranda</a></li>
                     <li><a href="/layanan" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Layanan</a></li>
+                    <li><a href="/alat" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Alat</a></li>
                     <li><a href="/proses" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Proses</a></li>
                     <li><a href="/harga" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Harga</a></li>
                     <li><a href="/tentang" class="text-sm text-[#6B6560] hover:text-[#0D9488] transition-colors">Tentang</a></li>
