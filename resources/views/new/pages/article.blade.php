@@ -63,7 +63,7 @@
         @endif
 
         {{-- Content --}}
-        <div class="prose prose-sm sm:prose-base max-w-none text-[#2D2A24] leading-relaxed [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-[#2D2A24] [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#2D2A24] [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:text-[#6B6560] [&_p]:leading-relaxed [&_p]:mb-4 [&_a]:text-[#0D9488] [&_a]:hover:text-[#0F766E] [&_ul]:text-[#6B6560] [&_ol]:text-[#6B6560] [&_li]:mb-1.5 [&_blockquote]:border-l-4 [&_blockquote]:border-[#0D9488] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[#6B6560] [&_blockquote]:bg-[#FCFAF8] [&_blockquote]:py-3 [&_blockquote]:px-4 [&_blockquote]:rounded-r-xl [&_img]:rounded-xl [&_img]:border [&_img]:border-[#F0ECE6] [&_hr]:border-[#F0ECE6] [&_hr]:my-8">
+        <div class="article-prose">
             {!! $article->content !!}
         </div>
 
