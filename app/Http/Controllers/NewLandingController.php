@@ -87,6 +87,19 @@ class NewLandingController extends Controller
             ->take(3)
             ->get();
 
-        return view('new.pages.article', compact('article', 'relatedArticles'));
+        $recentArticles = \App\Models\Article::published()
+            ->where('id', '!=', $article->id)
+            ->orderBy('published_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $categories = \App\Models\Article::published()
+            ->select('category')
+            ->whereNotNull('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+
+        return view('new.pages.article', compact('article', 'relatedArticles', 'recentArticles', 'categories'));
     }
 }
