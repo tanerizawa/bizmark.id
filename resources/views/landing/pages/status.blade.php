@@ -1,4 +1,4 @@
-@extends('landing.layout')
+@extends('new.layouts.app')
 
 @php
     $locale = $locale ?? app()->getLocale();
@@ -43,7 +43,7 @@
 @endphp
 
 @section('title', $pageTitle . ' — Bizmark.ID')
-@section('meta_description', $pageDescription)
+@section('description', $pageDescription)
 @section('og_title', $pageTitle . ' — Bizmark.ID')
 @section('og_description', $pageDescription)
 

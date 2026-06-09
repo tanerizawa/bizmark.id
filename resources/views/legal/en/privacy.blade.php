@@ -1,7 +1,7 @@
-@extends('landing.layout')
+@extends('new.layouts.app')
 
 @section('title', 'Privacy Policy - Bizmark.ID')
-@section('meta_description', 'Bizmark.ID Privacy Policy regarding the collection, use, and protection of your personal data.')
+@section('description', 'Bizmark.ID Privacy Policy regarding the collection, use, and protection of your personal data.')
 
 @section('content')
 @php

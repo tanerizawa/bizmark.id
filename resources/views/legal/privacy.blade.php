@@ -1,7 +1,7 @@
-@extends('landing.layout')
+@extends('new.layouts.app')
 
 @section('title', 'Kebijakan Privasi - Bizmark.ID')
-@section('meta_description', 'Kebijakan Privasi PT Cangah Pajaratan Mandiri (Bizmark.ID) tentang pengumpulan, penggunaan, dan perlindungan data pribadi Anda.')
+@section('description', 'Kebijakan Privasi PT Cangah Pajaratan Mandiri (Bizmark.ID) tentang pengumpulan, penggunaan, dan perlindungan data pribadi Anda.')
 
 @section('content')
 @php

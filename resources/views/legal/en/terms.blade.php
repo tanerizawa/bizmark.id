@@ -1,7 +1,7 @@
-@extends('landing.layout')
+@extends('new.layouts.app')
 
 @section('title', 'Terms & Conditions - Bizmark.ID')
-@section('meta_description', 'Terms and Conditions for using Bizmark.ID permit consultation services.')
+@section('description', 'Terms and Conditions for using Bizmark.ID permit consultation services.')
 
 @section('content')
 @php

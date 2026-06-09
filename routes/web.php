@@ -100,17 +100,9 @@ Route::prefix('en')->middleware('locale:en')->group(function () {
     })->name('terms.conditions.en');
 
     // Static Pages (EN)
-    Route::get('/process', function () {
-        return view('landing.pages.process', ['locale' => 'en']);
-    })->name('process.en');
-
-    Route::get('/about', function () {
-        return view('landing.pages.about', ['locale' => 'en']);
-    })->name('about.en');
-
-    Route::get('/pricing', function () {
-        return view('landing.pages.pricing', ['locale' => 'en']);
-    })->name('pricing.en');
+    Route::get('/process', [App\Http\Controllers\NewLandingController::class, 'process'])->name('process.en');
+    Route::get('/about', [App\Http\Controllers\NewLandingController::class, 'about'])->name('about.en');
+    Route::get('/pricing', [App\Http\Controllers\NewLandingController::class, 'pricing'])->name('pricing.en');
 
     Route::get('/status', function () {
         return view('landing.pages.status', ['locale' => 'en']);

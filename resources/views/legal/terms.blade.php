@@ -1,7 +1,7 @@
-@extends('landing.layout')
+@extends('new.layouts.app')
 
 @section('title', 'Syarat & Ketentuan - Bizmark.ID')
-@section('meta_description', 'Syarat dan Ketentuan penggunaan layanan konsultasi perizinan PT Cangah Pajaratan Mandiri (Bizmark.ID).')
+@section('description', 'Syarat dan Ketentuan penggunaan layanan konsultasi perizinan PT Cangah Pajaratan Mandiri (Bizmark.ID).')
 
 @section('content')
 @php
