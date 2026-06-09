@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/css/landing.css',
                 'resources/css/landing-theme.css',
                 'resources/css/client.css',
+                'resources/css/new.css',
                 'resources/js/app.js',
                 'resources/js/client.js',
             ],
