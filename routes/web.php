@@ -164,6 +164,17 @@ Route::prefix('permohonan')->group(function () {
     Route::get('/api/status/{requestNumber}', [App\Http\Controllers\ServiceCostRequestController::class, 'checkStatus'])->name('permohonan.status');
 });
 
+// New Redesign Routes (staging at /new)
+Route::prefix('new')->middleware('locale:id')->name('new.')->group(function () {
+    Route::get('/', [App\Http\Controllers\NewLandingController::class, 'home'])->name('home');
+    Route::get('/layanan', [App\Http\Controllers\NewLandingController::class, 'services'])->name('services');
+    Route::get('/proses', [App\Http\Controllers\NewLandingController::class, 'process'])->name('process');
+    Route::get('/harga', [App\Http\Controllers\NewLandingController::class, 'pricing'])->name('pricing');
+    Route::get('/tentang', [App\Http\Controllers\NewLandingController::class, 'about'])->name('about');
+    Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog');
+    Route::get('/kontak', [App\Http\Controllers\NewLandingController::class, 'contact'])->name('contact');
+});
+
 // Landing Page (Public) - Indonesian Default - Responsive (No Mobile Redirect)
 Route::middleware('locale:id')->get('/', function (\Illuminate\Http\Request $request) {
     // Fully responsive landing page — serves all devices
