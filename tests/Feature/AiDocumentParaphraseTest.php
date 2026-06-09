@@ -112,7 +112,6 @@ class AiDocumentParaphraseTest extends TestCase
 
         try {
             $job->handle(
-                app(\App\Services\OpenRouterService::class),
                 app(\App\Services\TemplateExtractor::class),
                 app(\App\Services\ProjectContextBuilder::class),
             );

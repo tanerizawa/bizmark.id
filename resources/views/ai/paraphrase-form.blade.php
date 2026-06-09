@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Parafrase Dokumen dengan AI - ' . $project->name)
 

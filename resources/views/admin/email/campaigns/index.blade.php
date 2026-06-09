@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Email Campaigns')
 @section('page-title', 'Email Campaigns')

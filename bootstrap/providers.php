@@ -12,4 +12,5 @@ return [
     App\Modules\ContentSeo\Providers\ContentSeoServiceProvider::class,
     App\Modules\Email\Providers\EmailServiceProvider::class,
     App\Modules\AI\Providers\AIServiceProvider::class,
+    App\Providers\AiProviderServiceProvider::class,
 ];

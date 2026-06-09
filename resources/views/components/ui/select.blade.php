@@ -2,69 +2,75 @@
     'name' => '',
     'label' => '',
     'placeholder' => '',
-    'options' => [],            // [['value' => '1', 'label' => 'Option 1'], ...] OR ['value' => 'label']
+    'options' => [],
     'value' => '',
     'error' => null,
-    'size' => 'md',             // sm | md | lg
+    'size' => 'md',
+    'compact' => false,
     'required' => false,
     'disabled' => false,
     'helperText' => '',
-    'leadingIcon' => null,      // Font Awesome class
+    'leadingIcon' => null,
     'multiple' => false,
-    'searchable' => false,      // Will add Alpine.js filter
+    'searchable' => false,
     'class' => '',
 ])
 
 @php
-    $selectClasses = 'block w-full rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0 appearance-none bg-no-repeat';
-    $selectClasses .= " bg-[url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e\")]";
+$selectBase = 'block w-full rounded-xl border transition-all duration-200 font-sans appearance-none bg-no-repeat';
+$selectBase .= ' bg-[var(--surface)] text-[var(--text-primary)]';
+$selectBase .= ' focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)] focus:outline-none';
 
-    $sizeClasses = [
-        'sm' => 'px-3 py-1.5 text-sm pr-8 bg-[length:16px_12px] bg-[right_0.5rem_center]',
-        'md' => 'px-4 py-2.5 text-sm pr-10 bg-[length:16px_12px] bg-[right_0.75rem_center]',
-        'lg' => 'px-5 py-3.5 text-base pr-12 bg-[length:16px_12px] bg-[right_1rem_center]',
-    ];
+$chevron = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e";
 
-    $stateClasses = $error
-        ? 'border-red-300 dark:border-red-500 text-red-900 dark:text-red-400 focus:ring-red-500 focus:border-red-500'
-        : 'border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]';
+$sizeClasses = [
+    'sm' => 'px-3 py-1.5 text-sm pr-8 bg-[length:16px_12px] bg-[right_0.5rem_center]',
+    'md' => 'px-4 py-2.5 text-sm pr-10 bg-[length:16px_12px] bg-[right_0.75rem_center]',
+    'lg' => 'px-5 py-3.5 text-base pr-12 bg-[length:16px_12px] bg-[right_1rem_center]',
+];
 
-    $disabledClasses = $disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900' : '';
+$compactClasses = $compact ? 'px-2.5 py-1.5 text-[0.8125rem] rounded-md pr-8 bg-[length:16px_12px] bg-[right_0.5rem_center]' : '';
 
-    $classes = trim("{$selectClasses} {$sizeClasses[$size]} {$stateClasses} {$disabledClasses} {$class}");
+$stateBorder = $error
+    ? 'border-[var(--color-error)] ring-1 ring-[var(--color-error)]'
+    : 'border-[var(--border-medium)]';
 
-    // Normalize options: if simple array ['val' => 'label'], convert to [['value' => 'val', 'label' => 'label']]
-    $normalizedOptions = [];
-    foreach ($options as $key => $option) {
-        if (is_array($option) && isset($option['value'])) {
-            $normalizedOptions[] = $option;
-        } elseif (is_array($option) && isset($option['label'])) {
-            $normalizedOptions[] = $option;
-        } else {
-            $normalizedOptions[] = ['value' => $key, 'label' => $option];
-        }
+$selectClasses = trim($selectBase . ' ' . ($compact ? $compactClasses : $sizeClasses[$size]) . ' ' . $stateBorder . ' bg-[url(\"' . $chevron . '\")] ' . $class);
+
+$labelClasses = $compact
+    ? 'block text-xs font-medium text-[var(--text-secondary)] mb-1'
+    : 'block text-sm font-semibold text-[var(--text-primary)] mb-1.5';
+
+$normalizedOptions = [];
+foreach ($options as $key => $option) {
+    if (is_array($option) && isset($option['value'])) {
+        $normalizedOptions[] = $option;
+    } elseif (is_array($option) && isset($option['label'])) {
+        $normalizedOptions[] = $option;
+    } else {
+        $normalizedOptions[] = ['value' => $key, 'label' => $option];
     }
+}
 @endphp
 
 <div class="w-full">
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+        <label for="{{ $name }}" class="{{ $labelClasses }}">
             {{ $label }}
             @if($required)
-                <span class="text-red-500 ml-0.5">*</span>
+                <span class="text-[var(--color-error)] ml-0.5">*</span>
             @endif
         </label>
     @endif
 
     <div class="relative">
         @if($leadingIcon)
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 z-10">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-[var(--text-tertiary)] z-10">
                 <i class="{{ $leadingIcon }}"></i>
             </div>
         @endif
 
         @if($searchable)
-            {{-- Searchable select with Alpine.js --}}
             <div
                 x-data="{
                     open: false,
@@ -91,14 +97,11 @@
                     @keydown.escape="open = false"
                     :aria-expanded="open"
                     aria-haspopup="listbox"
-                    :class="{
-                        'ring-2 ring-[var(--color-primary)] border-[var(--color-primary)]': open,
-                    }"
-                    class="{{ $classes }} w-full text-left"
+                    class="{{ $selectClasses }} w-full text-left"
                 >
                     <span x-text="selectedValue ? ({{ json_encode($normalizedOptions) }}.find(o => o.value == selectedValue)?.label || '{{ $placeholder }}') : '{{ $placeholder }}'"
-                          :class="{'text-gray-400': !selectedValue}"
-                          class="{{ $value ? '' : 'text-gray-400' }}"
+                          :class="{'text-[var(--text-tertiary)]': !selectedValue}"
+                          class="{{ $value ? '' : 'text-[var(--text-tertiary)]' }}"
                     >{{ $value ? (collect($normalizedOptions)->firstWhere('value', $value)['label'] ?? $placeholder) : $placeholder }}</span>
                 </button>
 
@@ -108,7 +111,7 @@
                     x-show="open"
                     @click.outside="open = false"
                     x-transition
-                    class="absolute z-50 mt-1 w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-lg"
+                    class="absolute z-50 mt-1 w-full rounded-xl border border-[var(--border-medium)] bg-[var(--surface-raised)] shadow-lg"
                     role="listbox"
                 >
                     <div class="p-2">
@@ -116,13 +119,13 @@
                             type="text"
                             x-model="query"
                             placeholder="Cari..."
-                            class="w-full rounded-lg border border-gray-200 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                            class="w-full rounded-lg border border-[var(--border-subtle)] px-3 py-2 text-sm bg-[var(--surface)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)]"
                             @click.stop
                         />
                     </div>
 
                     <template x-if="filteredOptions.length === 0">
-                        <div class="px-3 py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                        <div class="px-3 py-4 text-sm text-[var(--text-tertiary)] text-center">
                             Tidak ada hasil
                         </div>
                     </template>
@@ -132,8 +135,8 @@
                             type="button"
                             @click="select(option.value)"
                             :class="{
-                                'bg-[var(--color-primary)]/10 text-[var(--color-primary)]': selectedValue == option.value,
-                                'hover:bg-gray-100 dark:hover:bg-gray-700': selectedValue != option.value,
+                                'bg-[var(--accent-glow)] text-[var(--accent-text)]': selectedValue == option.value,
+                                'hover:bg-[var(--surface-cool)] text-[var(--text-primary)]': selectedValue != option.value,
                             }"
                             class="w-full text-left px-3 py-2 text-sm rounded-lg transition-colors duration-150"
                             role="option"
@@ -150,7 +153,7 @@
                 @if($multiple) multiple @endif
                 @if($required) required @endif
                 @if($disabled) disabled @endif
-                {{ $attributes->merge(['class' => $classes]) }}
+                {{ $attributes->merge(['class' => $selectClasses]) }}
             >
                 @if($placeholder)
                     <option value="" disabled selected>{{ $placeholder }}</option>
@@ -168,10 +171,12 @@
     </div>
 
     @if($error)
-        <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $error }}</p>
+        <p class="mt-1.5 text-sm text-[var(--color-error)] flex items-center gap-1">
+            <i class="fas fa-exclamation-circle"></i> {{ $error }}
+        </p>
     @endif
 
     @if($helperText && !$error)
-        <p class="mt-1.5 text-sm text-gray-500 dark:text-gray-400">{{ $helperText }}</p>
+        <p class="mt-1.5 text-xs text-[var(--text-tertiary)]">{{ $helperText }}</p>
     @endif
 </div>

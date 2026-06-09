@@ -1,0 +1,247 @@
+/* ============================================
+   BIZMARK DESIGN SYSTEM — Design Tokens
+   Single Source of Truth
+   
+   Layer 1: Base Tokens — Raw brand values
+   Layer 2: Semantic Tokens — Context-mapped (light)
+   Layer 3: Component Tokens — Optional overrides
+   ============================================ */
+
+/* ============================================
+   LAYER 1: BASE TOKENS
+   Raw brand colors, spacing, typography, radius
+   ============================================ */
+:root {
+  /* ---- Brand Colors - Neuroscience Inspired ---- */
+  --color-primary: #5B8DBE;
+  --color-primary-light: #8CBAE1;
+  --color-primary-lighter: #B3D1EB;
+  --color-primary-dark: #3A5D82;
+  --color-primary-darker: #1A2D46;
+
+  --color-secondary: #E8956F;
+  --color-secondary-light: #F0A373;
+  --color-secondary-lighter: #F9BA96;
+  --color-secondary-dark: #C96535;
+  --color-secondary-darker: #A93500;
+
+  /* NOTE: Landing/editorial palette is defined in landing-theme.css and overrides
+     the values below for landing pages. These remain for legacy admin/non-landing
+     contexts. --color-accent is aliased to brand gold to prevent green drift if
+     a landing component falls through to the base layer. */
+  --color-accent: #b8860b;
+  --color-accent-light: #d4a843;
+  --color-accent-lighter: #e8c55a;
+  --color-accent-dark: #9a7209;
+  --color-accent-darker: #7a5c07;
+
+  /* ---- Status Colors ---- */
+  --color-success: #7CB342;
+  --color-warning: #D4A574;
+  --color-error: #C97C7C;
+  --color-info: #7BA3C0;
+
+  /* ---- Neutral Palette ---- */
+  --color-white: #FFFFFF;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  --color-black: #000000;
+
+  /* ---- Spacing (4px base unit) ---- */
+  --spacing-0: 0px;
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-5: 1.25rem;   /* 20px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
+  --spacing-10: 2.5rem;   /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+  --spacing-16: 4rem;     /* 64px */
+  --spacing-20: 5rem;     /* 80px */
+  --spacing-24: 6rem;     /* 96px */
+
+  /* ---- Border Radius ---- */
+  --radius-none: 0px;
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-3xl: 2rem;     /* 32px */
+  --radius-full: 9999px;  /* Pill */
+
+  /* ---- Typography ---- */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
+  --font-family-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 2rem;        /* 32px */
+  --font-size-4xl: 3rem;        /* 48px */
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+
+  /* ---- Shadows ---- */
+  --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.05);
+  --shadow-soft-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+  --shadow-soft-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+
+  /* ---- Transitions ---- */
+  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---- Z-Index Scale ---- */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* ============================================
+   LAYER 2: SEMANTIC TOKENS — LIGHT MODE
+   ============================================ */
+:root {
+  /* ---- Surfaces ---- */
+  --color-surface: #FDFBF8;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-secondary: #F5F3F8;
+  --color-surface-tertiary: #F0F4ED;
+  --color-surface-dark: #000000;
+
+  /* ---- Text ---- */
+  --color-text-primary: #1A1410;
+  --color-text-secondary: #6B5D52;
+  --color-text-tertiary: #9B8B7E;
+  --color-text-inverse: #FFFFFF;
+  --color-text-muted: #D9D0C4;
+
+  /* ---- Borders ---- */
+  --color-border: #E5E7EB;
+  --color-border-light: #F3F4F6;
+
+  /* ---- Background Utilities ---- */
+  --bg-primary: var(--color-primary);
+  --bg-surface: var(--color-surface);
+  --bg-surface-dark: var(--color-gray-800);
+  --bg-surface-elevated: var(--color-surface-elevated);
+
+  /* ---- Text Utilities ---- */
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-on-primary: var(--color-text-inverse);
+
+  /* ---- Border Utilities ---- */
+  --border-default: var(--color-border);
+}
+
+/* ============================================
+   LAYER 2: SEMANTIC TOKENS — DARK MODE
+   Admin panel: data-theme="dark" on <html>
+   Landing page: @media (prefers-color-scheme: dark)
+   ============================================ */
+[data-theme="dark"] {
+  --color-surface: #1C1C1E;
+  --color-surface-elevated: #2C2C2E;
+  --color-surface-secondary: #2C2C2E;
+  --color-surface-tertiary: #3A3A3C;
+  --color-surface-dark: #000000;
+
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: rgba(235, 235, 245, 0.6);
+  --color-text-tertiary: rgba(235, 235, 245, 0.3);
+  --color-text-inverse: #1A1410;
+
+  --color-border: rgba(84, 84, 88, 0.35);
+  --color-border-light: rgba(84, 84, 88, 0.18);
+
+  --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.3);
+  --shadow-soft-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-soft-xl: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+  --bg-primary: var(--color-primary-dark);
+  --bg-surface: var(--color-surface);
+  --bg-surface-dark: var(--color-gray-800);
+  --bg-surface-elevated: var(--color-surface-elevated);
+
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+
+  --border-default: var(--color-border);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-surface: #1C1C1E;
+    --color-surface-elevated: #2C2C2E;
+    --color-text-primary: #E5E5E5;
+    --color-text-secondary: rgba(235, 235, 245, 0.6);
+    --color-border: rgba(84, 84, 88, 0.35);
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST
+   ============================================ */
+@media (prefers-contrast: more) {
+  :root {
+    --color-primary: #003d5c;
+    --color-secondary: #8B4513;
+    --color-text-primary: #000000;
+    --color-text-secondary: #333333;
+    --color-border: #666666;
+  }
+
+  [data-theme="dark"] {
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #CCCCCC;
+    --color-border: #888888;
+  }
+}

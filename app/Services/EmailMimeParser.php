@@ -299,14 +299,16 @@ class EmailMimeParser
 
     /**
      * Convert dark mode styles to light mode for better readability
+     * IMPORTANT: Preserve email marketing template colors (like #f4f5ff, #673de6, etc)
      */
     protected function convertToLightMode(string $html): string
     {
-        // Remove dark background colors
-        $html = preg_replace('/background-color:\s*#(1c1c1e|000000|1c1c1c|2c2c2e|0d0d0d|111|222|333|eeeeee|eee)/i', 'background-color: #ffffff', $html);
-        $html = preg_replace('/background:\s*#(1c1c1e|000000|1c1c1c|2c2c2e|0d0d0d|111|222|333|eeeeee|eee)/i', 'background: #ffffff', $html);
+        // Remove ONLY pure dark background colors (black and very dark grays)
+        // DO NOT touch email marketing colors like #f4f5ff, #e0e0e0, etc
+        $html = preg_replace('/background-color:\s*#(1c1c1e|000000|1c1c1c|2c2c2e|0d0d0d|111|222|333)\b/i', 'background-color: #ffffff', $html);
+        $html = preg_replace('/background:\s*#(1c1c1e|000000|1c1c1c|2c2c2e|0d0d0d|111|222|333)\b/i', 'background: #ffffff', $html);
 
-        // Convert dark rgba backgrounds
+        // Convert dark rgba backgrounds (very dark ones only)
         $html = preg_replace('/background-color:\s*rgba?\(\s*28\s*,\s*28\s*,\s*30\s*[^)]*\)/i', 'background-color: #ffffff', $html);
         $html = preg_replace('/background:\s*rgba?\(\s*28\s*,\s*28\s*,\s*30\s*[^)]*\)/i', 'background: #ffffff', $html);
 
@@ -320,8 +322,8 @@ class EmailMimeParser
         $html = preg_replace('/color:\s*rgba?\(\s*28\s*,\s*28\s*,\s*28\s*[^)]*\)/i', 'color: #000000', $html);
         $html = preg_replace('/color:\s*rgba?\(\s*116\s*,\s*116\s*,\s*116\s*[^)]*\)/i', 'color: #666666', $html);
 
-        // Keep link colors visible (blue shades)
-        // But normalize them to consistent blue
+        // Keep link colors visible (blue shades) including purple marketing colors
+        // But normalize dark blues to consistent blue
         $html = preg_replace('/color:\s*#(2765cf|0066cc|0051d5|007aff)/i', 'color: #0066cc', $html);
 
         return $html;

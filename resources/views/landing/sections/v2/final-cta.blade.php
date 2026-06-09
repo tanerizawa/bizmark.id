@@ -20,7 +20,7 @@
     </div>
     <div class="container-wide relative">
         <div class="final-cta-shell max-w-5xl mx-auto text-center" data-aos="fade-up">
-            <span class="blue-rule mx-auto mb-4"></span>
+            <span class="eyebrow block mb-4 text-center">{{ $isEn ? 'Get Started' : 'Mulai' }}</span>
             <h2 id="final-cta-heading" class="display-xl mb-5">
                 {{ $isEn
                     ? 'Ready to move your permits forward?'

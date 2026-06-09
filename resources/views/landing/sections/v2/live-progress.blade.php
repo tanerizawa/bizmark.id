@@ -20,6 +20,7 @@
 
         {{-- Section header --}}
         <div class="text-center max-w-2xl mx-auto mb-5" data-aos="fade-up">
+            <span class="eyebrow block mb-3">{{ $isEn ? 'Platform Experience' : 'Pengalaman Platform' }}</span>
             <h2 id="live-progress-heading" class="display-md mb-4">
                 {{ $isEn ? 'Your permits, always visible.' : 'Progres izin Anda, selalu terlihat.' }}
             </h2>

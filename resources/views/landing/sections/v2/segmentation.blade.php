@@ -17,11 +17,7 @@
 <section class="section-v2-sm section-premium geo-motif" aria-labelledby="segment-heading">
     <div class="container-wide">
         <div class="max-w-2xl mx-auto mb-8 text-center">
-            <div class="chapter-mark" style="justify-content:center;">
-                <span class="chapter-mark__num">02</span>
-                <span class="chapter-mark__rule"></span>
-                <span>{{ $isEn ? 'Solutions by business type' : 'Solusi per Jenis Usaha' }}</span>
-            </div>
+            <span class="eyebrow block mb-3">{{ $isEn ? 'Solutions by business type' : 'Solusi per Jenis Usaha' }}</span>
             <h2 id="segment-heading" class="display-md mb-3">
                 {{ $isEn ? 'Which type of business are you?' : 'Usaha Anda termasuk yang mana?' }}
             </h2>

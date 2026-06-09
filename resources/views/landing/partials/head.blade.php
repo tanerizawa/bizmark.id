@@ -141,7 +141,7 @@
 </noscript>
 
 <!-- Tailwind CSS (compiled) -->
-@vite('resources/css/landing.css')
+@vite('resources/css/public.css')
 
 <!-- Critical CSS (Inline for LCP) -->
 @include('landing.partials.critical-css')

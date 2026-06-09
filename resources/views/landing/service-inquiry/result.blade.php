@@ -15,12 +15,12 @@
     <meta property="og:site_name" content="Bizmark.ID">
     <meta property="og:locale" content="id_ID">
 
-    <!-- Google Fonts preconnect (font loaded via Vite landing.css) -->
+    <!-- Google Fonts preconnect (font loaded via Vite public.css) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Vite: Tailwind CSS + Font Awesome + Alpine.js (from npm, not CDN) -->
-    @vite(['resources/css/landing.css', 'resources/js/app.js'])
+    @vite(['resources/css/public.css', 'resources/js/app.js'])
 
     <style>
         [x-cloak] { display: none !important; }
@@ -196,14 +196,20 @@
 
                 @php
                     $analysis = $inquiry->ai_analysis ?? [];
-                    $isStillProcessing = in_array($inquiry->status, ['processing', 'new']) && empty($analysis);
+                    $forceNoAnalysis = $forceNoAnalysis ?? false;
+                    $isStillProcessing = !$forceNoAnalysis && in_array($inquiry->status, ['processing', 'new']) && empty($analysis);
                     $hasError = $inquiry->status === 'error' && empty($analysis);
                     $hasAnalysis = !empty($analysis);
+                    $noAiSource = $forceNoAnalysis && empty($analysis);
                 @endphp
 
                 @if($hasAnalysis)
                     <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
                         <i class="fas fa-check-circle"></i> Analisis Selesai
+                    </div>
+                @elseif($noAiSource)
+                    <div class="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 text-gray-600 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+                        <i class="fas fa-info-circle"></i> Tidakada Analisis AI
                     </div>
                 @elseif($isStillProcessing)
                     <div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-800 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
@@ -334,7 +340,7 @@
                         fetch('/konsultasi-gratis/api/status/' + inquiryNum)
                             .then(function(r) { return r.json(); })
                             .then(function(d) {
-                                if (d.status === 'completed' || d.status === 'analyzed' || d.status === 'error') {
+                                if (d.status === 'completed' || d.status === 'analyzed' || d.status === 'error' || d.status === 'no_analysis') {
                                     sessionStorage.removeItem(reloadKey);
                                     window.location.reload();
                                 }
@@ -345,6 +351,33 @@
                     setTimeout(pollPage, 3000);
                 })();
             </script>
+        </div>
+
+        @elseif($noAiSource)
+        {{-- No AI Analysis State (e.g. SHP maker source) --}}
+        <div class="max-w-2xl mx-auto text-center">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 sm:p-12 transition-all duration-300">
+                <div class="w-16 h-16 mx-auto mb-6 bg-gray-50 rounded-full flex items-center justify-center">
+                    <i class="fas fa-map-marked-alt text-2xl text-gray-400"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Analisis AI Tidak Tersedia</h2>
+                <p class="text-gray-500 mb-6">
+                    Inquiry ini dibuat melalui <strong>{{ $inquiry->source === 'shp_maker' ? 'Polygon SHP Maker' : $inquiry->source }}</strong> dan tidak melalui proses analisis AI.
+                </p>
+                <p class="text-gray-400 text-sm mb-6">
+                    Data Anda telah tersimpan dan akan ditindaklanjuti oleh tim kami jika diperlukan.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="{{ route('landing.service-inquiry.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-300">
+                        <i class="fas fa-robot"></i> Coba Analisis AI
+                    </a>
+                    @if($inquiry->source === 'shp_maker')
+                    <a href="{{ route('polygon.shp.index') }}" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition">
+                        <i class="fas fa-draw-polygon"></i> Kembali ke SHP Maker
+                    </a>
+                    @endif
+                </div>
+            </div>
         </div>
 
         @elseif($hasError)

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Tambah Akun Kas')
 @section('content')
 <div style="display:flex;flex-direction:column;gap:16px">

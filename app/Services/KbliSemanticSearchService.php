@@ -42,7 +42,7 @@ class KbliSemanticSearchService
         // 2. pgvector cosine similarity search
         try {
             $rows = DB::select(<<<'SQL'
-                SELECT id, code, title, category, description,
+                SELECT id, code, activities, category, description,
                        ROUND((1 - (embedding <=> ?::vector))::numeric, 4) AS similarity
                 FROM kbli
                 WHERE embedding IS NOT NULL
@@ -104,7 +104,7 @@ class KbliSemanticSearchService
                 ],
                 [
                     'role' => 'user',
-                    'content' => "Query: \"{$query}\"\n\nKBLI: {$topResult->code} — {$topResult->title}\nDeskripsi: ".mb_substr($topResult->description ?? '', 0, 500),
+                    'content' => "Query: \"{$query}\"\n\nKBLI: {$topResult->code} — {$topResult->activities}\nDeskripsi: ".mb_substr($topResult->description ?? '', 0, 500),
                 ],
             ], ['max_tokens' => 200]);
 
@@ -123,11 +123,11 @@ class KbliSemanticSearchService
     private function keywordFallback(string $query, int $limit): array
     {
         $rows = DB::select(<<<'SQL'
-            SELECT id, code, title, category, description,
-                   0.5 AS similarity
+            SELECT id, code, activities, category, description,
+                    0.5 AS similarity
             FROM kbli
             WHERE is_active = true
-              AND (title ILIKE ? OR description ILIKE ?)
+              AND (activities ILIKE ? OR description ILIKE ?)
             LIMIT ?
         SQL, ["%{$query}%", "%{$query}%", $limit]);
 

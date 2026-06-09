@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Kbli;
+use App\Jobs\AnalyzeServiceInquiryJob;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class ServiceInquiryControllerTest extends TestCase
@@ -54,6 +56,8 @@ class ServiceInquiryControllerTest extends TestCase
 
     public function test_store_accepts_valid_optional_kbli_code(): void
     {
+        Queue::fake();
+
         Kbli::create([
             'code' => '62010',
             'description' => 'Aktivitas Pemrograman Komputer',
@@ -86,5 +90,7 @@ class ServiceInquiryControllerTest extends TestCase
                 'inquiry_number',
                 'message',
             ]);
+
+        Queue::assertPushed(AnalyzeServiceInquiryJob::class);
     }
 }

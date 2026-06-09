@@ -111,7 +111,7 @@
                             <h3 class="text-xl font-bold mb-2">Butuh Jawaban Cepat?</h3>
                             <p class="text-white/75 text-sm mb-5 leading-relaxed">Tim kami siap merespons dalam 5 menit melalui WhatsApp.</p>
                             <div class="space-y-2.5">
-                                <a href="{{ $contact['whatsapp_link'] ?? 'https://wa.me/6283879602855' }}" target="_blank" rel="noopener"
+                                <a href="{{ $contact['whatsapp_link'] ?? 'https://wa.me/6283879602855' }}" target="_blank" rel="noopener noreferrer"
                                    class="flex items-center justify-center gap-2.5 bg-white text-primary-600 font-semibold rounded-xl py-3 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm">
                                     <i class="fab fa-whatsapp text-green-500" aria-hidden="true"></i> Chat WhatsApp
                                 </a>
@@ -518,8 +518,8 @@
                         </div>
                         <p class="text-xs text-gray-400">
                             Dengan mengirim form ini, Anda setuju dengan 
-                            <a href="{{ route('privacy.policy.id') }}" class="text-primary-500 hover:underline" target="_blank">Kebijakan Privasi</a> dan 
-                            <a href="{{ route('terms.conditions.id') }}" class="text-primary-500 hover:underline" target="_blank">Syarat & Ketentuan</a> kami.
+                            <a href="{{ route('privacy.policy.id') }}" class="text-primary-500 hover:underline" target="_blank" rel="noopener noreferrer">Kebijakan Privasi</a> dan 
+                            <a href="{{ route('terms.conditions.id') }}" class="text-primary-500 hover:underline" target="_blank" rel="noopener noreferrer">Syarat & Ketentuan</a> kami.
                         </p>
                     </div>
                 </div>

@@ -17,26 +17,26 @@
 
     $cellRenderers = [
         'request_number' => function ($row) {
-            return '<span style="font-family:monospace;font-size:0.8rem;font-weight:700;color:var(--dark-text-primary);letter-spacing:.02em">' . e($row->request_number) . '</span>';
+            return '<span class="font-mono text-sm font-bold text-dark-text-primary tracking-wide">' . e($row->request_number) . '</span>';
         },
         'tanggal' => function ($row) {
-            return '<span style="font-size:0.8rem;color:var(--dark-text-primary)">' . e($row->created_at->format('d M Y')) . '</span>'
-                 . '<br><span style="font-size:0.7rem;color:var(--dark-text-secondary)">' . e($row->created_at->format('H:i')) . '</span>';
+            return '<span class="text-sm text-dark-text-primary">' . e($row->created_at->format('d M Y')) . '</span>'
+                 . '<br><span class="text-xs text-dark-text-secondary">' . e($row->created_at->format('H:i')) . '</span>';
         },
         'pemohon' => function ($row) {
             $type = $row->applicant_type === 'badan' ? 'Badan Usaha' : 'Perorangan';
             $typeColor = $row->applicant_type === 'badan' ? 'var(--apple-purple)' : 'var(--apple-teal)';
-            return '<span style="font-size:0.85rem;font-weight:600;color:var(--dark-text-primary);display:block">' . e($row->display_name) . '</span>'
-                 . '<span style="font-size:0.68rem;font-weight:600;color:' . $typeColor . '">' . e($type) . '</span>';
+            return '<span class="text-sm font-semibold text-dark-text-primary block">' . e($row->display_name) . '</span>'
+                 . '<span class="text-xs font-semibold" style="color:' . $typeColor . '">' . e($type) . '</span>';
         },
         'kontak' => function ($row) {
-            return '<span style="font-size:0.8rem;color:var(--dark-text-primary);display:block">' . e($row->email) . '</span>'
-                 . '<span style="font-size:0.7rem;color:var(--dark-text-secondary)">' . e($row->phone) . '</span>';
+            return '<span class="text-sm text-dark-text-primary block">' . e($row->email) . '</span>'
+                 . '<span class="text-xs text-dark-text-secondary">' . e($row->phone) . '</span>';
         },
         'kategori' => function ($row) {
             $cats = \App\Models\ServiceCostRequest::getServiceCategories();
             $label = $cats[$row->service_category] ?? $row->service_category;
-            return '<span style="font-size:0.8rem;color:var(--dark-text-primary)">' . e($label) . '</span>';
+            return '<span class="text-sm text-dark-text-primary">' . e($label) . '</span>';
         },
         'status' => function ($row) use ($statusMap) {
             $s = $statusMap[$row->status] ?? ['variant' => 'neutral', 'label' => ucfirst($row->status)];
@@ -44,42 +44,23 @@
         },
         'actions' => function ($row) {
             $url = route('admin.service-cost-requests.show', $row->request_number);
-            return '<a href="' . e($url) . '" style="display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;font-weight:600;color:var(--apple-blue);text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity=.7" onmouseout="this.style.opacity=1"><i class="fas fa-eye"></i>Detail</a>';
+            return '<a href="' . e($url) . '" class="lead-action-link"><i class="fas fa-eye" aria-hidden="true"></i>Detail</a>';
         },
     ];
 @endphp
 
 {{-- Stats Strip --}}
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
-    @php $statsData = [
-        ['label'=>'Total',    'value'=>$stats['total'],    'sub'=>'semua permohonan',  'color'=>'var(--dark-text-primary)',  'bg'=>'transparent',          'icon'=>'fa-file-alt'],
-        ['label'=>'Pending',  'value'=>$stats['pending'],  'sub'=>'perlu ditinjau',    'color'=>'var(--apple-orange)',       'bg'=>'var(--apple-orange)',   'icon'=>'fa-clock'],
-        ['label'=>'Reviewing','value'=>$stats['reviewing'],'sub'=>'sedang diproses',   'color'=>'var(--apple-blue)',         'bg'=>'var(--apple-blue)',     'icon'=>'fa-search'],
-        ['label'=>'Accepted', 'value'=>$stats['accepted'], 'sub'=>($stats['total']>0 ? round(($stats['accepted']/$stats['total'])*100).'% rate' : '—'), 'color'=>'var(--apple-green)', 'bg'=>'var(--apple-green)', 'icon'=>'fa-check-circle'],
-    ] @endphp
-    @foreach($statsData as $s)
-    <div style="background:linear-gradient(135deg,color-mix(in srgb,{{ $s['bg'] }} 12%,var(--dark-bg-secondary)) 0%,var(--dark-bg-secondary) 100%);border:1px solid color-mix(in srgb,{{ $s['bg'] }} 25%,var(--dark-separator));border-radius:14px;padding:16px 18px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:10px;right:14px;font-size:1rem;opacity:.2;color:{{ $s['color'] }}"><i class="fas {{ $s['icon'] }}"></i></div>
-        <p style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:{{ $s['color'] }};opacity:.8;margin:0">{{ $s['label'] }}</p>
-        <p style="font-size:2rem;font-weight:800;color:{{ $s['color'] }};margin:4px 0 2px;line-height:1">{{ $s['value'] }}</p>
-        <p style="font-size:0.68rem;color:var(--dark-text-secondary);margin:0">{{ $s['sub'] }}</p>
-    </div>
-    @endforeach
+<div class="lead-stats-grid">
+    <x-leads.stat-card :label="'Total'" :value="$stats['total']" :sub="'semua permohonan'" color="var(--dark-text-primary)" bg="transparent" icon="fa-file-alt" />
+    <x-leads.stat-card :label="'Pending'" :value="$stats['pending']" :sub="'perlu ditinjau'" color="var(--apple-orange)" bg="var(--apple-orange)" icon="fa-clock" />
+    <x-leads.stat-card :label="'Reviewing'" :value="$stats['reviewing']" :sub="'sedang diproses'" color="var(--apple-blue)" bg="var(--apple-blue)" icon="fa-search" />
+    <x-leads.stat-card :label="'Accepted'" :value="$stats['accepted']" :sub="$stats['total'] > 0 ? round(($stats['accepted']/$stats['total'])*100).'% rate' : '—'" color="var(--apple-green)" bg="var(--apple-green)" icon="fa-check-circle" />
 </div>
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-    @php $statsData2 = [
-        ['label'=>'Quoted',    'value'=>$stats['quoted'],    'color'=>'var(--apple-indigo)', 'bg'=>'var(--apple-indigo)', 'icon'=>'fa-file-invoice'],
-        ['label'=>'Rejected',  'value'=>$stats['rejected'],  'color'=>'var(--apple-red)',    'bg'=>'var(--apple-red)',    'icon'=>'fa-times-circle'],
-        ['label'=>'Minggu Ini','value'=>$stats['this_week'], 'color'=>'var(--dark-text-primary)', 'bg'=>'transparent',   'icon'=>'fa-calendar-week'],
-        ['label'=>'Bulan Ini', 'value'=>$stats['this_month'],'color'=>'var(--dark-text-primary)', 'bg'=>'transparent',   'icon'=>'fa-calendar'],
-    ] @endphp
-    @foreach($statsData2 as $s)
-    <div style="background:linear-gradient(135deg,color-mix(in srgb,{{ $s['bg'] }} 8%,var(--dark-bg-secondary)) 0%,var(--dark-bg-secondary) 100%);border:1px solid color-mix(in srgb,{{ $s['bg'] }} 20%,var(--dark-separator));border-radius:12px;padding:12px 16px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:8px;right:12px;font-size:.85rem;opacity:.18;color:{{ $s['color'] }}"><i class="fas {{ $s['icon'] }}"></i></div>
-        <p style="font-size:0.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:{{ $s['color'] }};opacity:.8;margin:0">{{ $s['label'] }}</p>
-        <p style="font-size:1.5rem;font-weight:700;color:{{ $s['color'] }};margin:2px 0 0;line-height:1.1">{{ $s['value'] }}</p>
-    </div>
-    @endforeach
+<div class="lead-stats-grid-secondary">
+    <x-leads.stat-card variant="secondary" :label="'Quoted'" :value="$stats['quoted']" color="var(--apple-indigo)" bg="var(--apple-indigo)" icon="fa-file-invoice" />
+    <x-leads.stat-card variant="secondary" :label="'Rejected'" :value="$stats['rejected']" color="var(--apple-red)" bg="var(--apple-red)" icon="fa-times-circle" />
+    <x-leads.stat-card variant="secondary" :label="'Minggu Ini'" :value="$stats['this_week']" color="var(--dark-text-primary)" bg="transparent" icon="fa-calendar-week" />
+    <x-leads.stat-card variant="secondary" :label="'Bulan Ini'" :value="$stats['this_month']" color="var(--dark-text-primary)" bg="transparent" icon="fa-calendar" />
 </div>
 
 {{-- Smart Search & Filter Toolbar --}}
@@ -90,33 +71,38 @@
         'applicant_type' => request('applicant_type'),
     ])->filter()->count();
 @endphp
-<form method="GET" action="{{ route('admin.leads.index') }}" style="margin-bottom:16px">
+<form method="GET" action="{{ route('admin.leads.index') }}" class="mb-4" x-data="{ searchQuery: '' }" x-init="searchQuery = new URLSearchParams(window.location.search).get('search') || ''"
+      @submit="$dispatch('form-submit', { tab: 'service-cost-requests' })">
     <input type="hidden" name="tab" value="service-cost-requests">
-    <div style="background:var(--dark-bg-secondary);border:1px solid var(--dark-separator);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="lead-filter-bar">
 
         {{-- Search --}}
-        <div style="position:relative;flex:1;min-width:220px">
-            <i class="fas fa-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.72rem;color:var(--dark-text-tertiary);pointer-events:none;z-index:1"></i>
-            <input type="text" name="search" id="scr-search" value="{{ request('search') }}"
+        <div class="lead-search-wrap">
+            <i class="fas fa-magnifying-glass lead-search-icon"></i>
+            <input type="text" name="search" id="scr-search" x-model="searchQuery"
                    placeholder="Nomor request, email, nama pemohon…"
-                   style="width:100%;padding:8px 36px 8px 34px;background:var(--dark-bg-tertiary);border:1px solid var(--dark-separator);border-radius:10px;color:var(--dark-text-primary);font-size:0.82rem;line-height:1.4;outline:none;box-sizing:border-box;transition:border-color .18s"
-                   onfocus="this.style.borderColor='var(--apple-orange)'"
-                   onblur="this.style.borderColor='var(--dark-separator)'">
+                   class="lead-search-input"
+                   @focus="$el.style.borderColor='var(--apple-orange)'"
+                   @blur="$el.style.borderColor='var(--dark-separator)'"
+                   @input.debounce.300ms="$el.closest('form').submit()">
             <button type="button"
-                    style="display:{{ request('search') ? 'flex' : 'none' }};position:absolute;right:9px;top:50%;transform:translateY(-50%);width:18px;height:18px;align-items:center;justify-content:center;background:var(--dark-text-tertiary);border:none;border-radius:50%;cursor:pointer;padding:0;color:var(--dark-bg-primary);font-size:0.55rem"
-                    onclick="document.getElementById('scr-search').value='';this.style.display='none';this.closest('form').submit()">
+                    class="lead-search-clear"
+                    :class="{ visible: searchQuery }"
+                    @click="searchQuery = ''; $nextTick(() => $el.closest('form').submit())"
+                    aria-label="Hapus pencarian">
                 <i class="fas fa-xmark"></i>
             </button>
         </div>
 
-        <div style="width:1px;height:26px;background:var(--dark-separator);flex-shrink:0"></div>
+        <div class="lead-filter-divider"></div>
 
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="lead-filter-group">
 
             {{-- Status pill --}}
-            <div style="position:relative">
-                <select name="status" onchange="this.closest('form').submit()"
-                        style="padding:6px 28px 6px 10px;background:{{ request('status') ? 'color-mix(in srgb,var(--apple-orange) 18%,var(--dark-bg-tertiary))' : 'var(--dark-bg-tertiary)' }};border:1px solid {{ request('status') ? 'color-mix(in srgb,var(--apple-orange) 45%,var(--dark-separator))' : 'var(--dark-separator)' }};border-radius:20px;color:{{ request('status') ? 'var(--apple-orange)' : 'var(--dark-text-secondary)' }};font-size:0.75rem;font-weight:{{ request('status') ? '600' : '500' }};outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;white-space:nowrap;transition:all .18s">
+            <div class="relative">
+                <select name="status" @change="$el.closest('form').submit()"
+                        class="lead-filter-pill @if(request('status')) lead-filter-pill-active @else lead-filter-pill-default @endif"
+                        @if(request('status')) style="background:color-mix(in srgb,var(--apple-orange) 18%,var(--dark-bg-tertiary));border-color:color-mix(in srgb,var(--apple-orange) 45%,var(--dark-separator));color:var(--apple-orange)" @endif>
                     <option value="">Status</option>
                     <option value="pending"   {{ request('status')=='pending'   ? 'selected':'' }}>Pending</option>
                     <option value="reviewing" {{ request('status')=='reviewing' ? 'selected':'' }}>Reviewing</option>
@@ -125,26 +111,25 @@
                     <option value="rejected"  {{ request('status')=='rejected'  ? 'selected':'' }}>Rejected</option>
                     <option value="cancelled" {{ request('status')=='cancelled' ? 'selected':'' }}>Cancelled</option>
                 </select>
-                <i class="fas fa-chevron-down" style="position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:0.5rem;color:{{ request('status') ? 'var(--apple-orange)' : 'var(--dark-text-tertiary)' }};pointer-events:none"></i>
+                <i class="fas fa-chevron-down lead-filter-pill-chevron" style="color:{{ request('status') ? 'var(--apple-orange)' : 'var(--dark-text-tertiary)' }}"></i>
             </div>
 
             {{-- Pemohon pill --}}
-            <div style="position:relative">
-                <select name="applicant_type" onchange="this.closest('form').submit()"
-                        style="padding:6px 28px 6px 10px;background:{{ request('applicant_type') ? 'color-mix(in srgb,var(--apple-purple) 18%,var(--dark-bg-tertiary))' : 'var(--dark-bg-tertiary)' }};border:1px solid {{ request('applicant_type') ? 'color-mix(in srgb,var(--apple-purple) 45%,var(--dark-separator))' : 'var(--dark-separator)' }};border-radius:20px;color:{{ request('applicant_type') ? 'var(--apple-purple)' : 'var(--dark-text-secondary)' }};font-size:0.75rem;font-weight:{{ request('applicant_type') ? '600' : '500' }};outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;white-space:nowrap;transition:all .18s">
+            <div class="relative">
+                <select name="applicant_type" @change="$el.closest('form').submit()"
+                        class="lead-filter-pill @if(request('applicant_type')) lead-filter-pill-active @else lead-filter-pill-default @endif"
+                        @if(request('applicant_type')) style="background:color-mix(in srgb,var(--apple-purple) 18%,var(--dark-bg-tertiary));border-color:color-mix(in srgb,var(--apple-purple) 45%,var(--dark-separator));color:var(--apple-purple)" @endif>
                     <option value="">Pemohon</option>
                     <option value="perorangan" {{ request('applicant_type')=='perorangan' ? 'selected':'' }}>Perorangan</option>
                     <option value="badan"      {{ request('applicant_type')=='badan'      ? 'selected':'' }}>Badan Usaha</option>
                 </select>
-                <i class="fas fa-chevron-down" style="position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:0.5rem;color:{{ request('applicant_type') ? 'var(--apple-purple)' : 'var(--dark-text-tertiary)' }};pointer-events:none"></i>
+                <i class="fas fa-chevron-down lead-filter-pill-chevron" style="color:{{ request('applicant_type') ? 'var(--apple-purple)' : 'var(--dark-text-tertiary)' }}"></i>
             </div>
 
             @if($scrActiveFilters > 0)
-            <a href="{{ route('admin.leads.index', ['tab' => 'service-cost-requests']) }}"
-               style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:color-mix(in srgb,var(--apple-red) 14%,var(--dark-bg-tertiary));border:1px solid color-mix(in srgb,var(--apple-red) 30%,var(--dark-separator));border-radius:20px;font-size:0.72rem;font-weight:600;color:var(--apple-red);text-decoration:none;white-space:nowrap"
-               onmouseover="this.style.opacity=.75" onmouseout="this.style.opacity=1">
+            <a href="{{ route('admin.leads.index', ['tab' => 'service-cost-requests']) }}" class="lead-filter-reset">
                 <i class="fas fa-xmark"></i>Reset
-                <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;background:var(--apple-red);color:#fff;border-radius:50%;font-size:0.6rem;font-weight:700">{{ $scrActiveFilters }}</span>
+                <span class="lead-filter-reset-count">{{ $scrActiveFilters }}</span>
             </a>
             @endif
         </div>
@@ -152,24 +137,37 @@
 </form>
 
 {{-- Data Table --}}
-<div style="background:var(--dark-bg-secondary);border:1px solid var(--dark-separator);border-radius:16px;overflow:hidden;margin-bottom:16px">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--dark-separator)">
-        <div>
-            <p style="font-size:0.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(235,235,245,0.85);margin:0">Data</p>
-            <h3 style="font-size:0.95rem;font-weight:700;color:var(--dark-text-primary);margin:3px 0 0">Daftar Permohonan Biaya</h3>
+<div x-data="{ loading: false }"
+     x-on:form-submit.window="if($event.detail.tab === 'service-cost-requests') loading = true"
+     x-init="$watch('loading', val => { if(val) setTimeout(() => loading = false, 8000) })"
+     class="lead-table-wrapper">
+    @php
+        $scrCount = '';
+        if ($serviceCostRequests instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            $scrCount = $serviceCostRequests->total() > 0
+                ? $serviceCostRequests->firstItem().'–'.$serviceCostRequests->lastItem().' dari '.$serviceCostRequests->total()
+                : '0 permohonan';
+        } else {
+            $scrCount = $serviceCostRequests->count().' entri';
+        }
+    @endphp
+    <x-leads.section-header eyebrow="Data" title="Daftar Permohonan Biaya" :count="$scrCount" />
+    {{-- Skeleton loading --}}
+    <div x-show="loading" class="lead-table-scroll">
+        @for($i = 0; $i < 5; $i++)
+        <div class="lead-skeleton-row">
+            <div class="lead-skeleton lead-skeleton-cell" style="width:60%"></div>
+            <div class="lead-skeleton lead-skeleton-cell" style="width:70%"></div>
+            <div class="lead-skeleton lead-skeleton-cell" style="width:80%"></div>
+            <div class="lead-skeleton lead-skeleton-cell" style="width:65%"></div>
+            <div class="lead-skeleton lead-skeleton-cell" style="width:50%"></div>
+            <div class="lead-skeleton lead-skeleton-cell" style="width:40%"></div>
+            <div class="lead-skeleton lead-skeleton-cell" style="width:30%"></div>
         </div>
-        <span style="font-size:0.75rem;color:var(--dark-text-secondary)">
-            @if($serviceCostRequests instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                @if($serviceCostRequests->total() === 0)
-                    0 permohonan
-                @else
-                    {{ $serviceCostRequests->firstItem() }}–{{ $serviceCostRequests->lastItem() }} dari {{ $serviceCostRequests->total() }}
-                @endif
-            @else
-                {{ $serviceCostRequests->count() }} entri
-            @endif
-        </span>
+        @endfor
     </div>
+    {{-- Actual table --}}
+    <div x-show="!loading" class="lead-table-scroll">
     <x-ui.table
         :columns="[
             ['key' => 'request_number', 'label' => 'Request #'],
@@ -185,10 +183,11 @@
         :striped="true"
         :hoverable="true"
         variant="compact"
-        empty-message="Tidak ada permohonan. Coba ubah filter."
+        empty-message='<div class="lead-empty-state"><i class="fas fa-file-invoice lead-empty-icon"></i><p class="lead-empty-title">Belum ada Permohonan Biaya</p><p class="lead-empty-desc">Permohonan akan muncul di sini ketika calon klien mengirimkan permohonan biaya melalui formulir website.</p></div>'
     />
+    </div>
     @if($serviceCostRequests instanceof \Illuminate\Pagination\LengthAwarePaginator && $serviceCostRequests->hasPages())
-        <div style="padding:14px 20px;border-top:1px solid var(--dark-separator)">
+        <div class="lead-table-pagination">
             <x-ui.pagination :paginator="$serviceCostRequests->appends(array_merge(request()->all(), ['tab'=>'service-cost-requests']))" variant="full" :show-info="true" />
         </div>
     @endif

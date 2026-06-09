@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $categoryLabel }} - Bizmark.ID</title>
     
-    @vite(['resources/css/landing.css', 'resources/css/landing-theme.css', 'resources/js/app.js'])
+    @vite(['resources/css/public.css', 'resources/css/landing-theme.css', 'resources/js/app.js'])
     
     <style>
         :root {

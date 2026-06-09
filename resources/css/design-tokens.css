@@ -1,121 +1,92 @@
-/* ============================================
-   BIZMARK DESIGN SYSTEM — Design Tokens
-   Single Source of Truth
-   
-   Layer 1: Base Tokens — Raw brand values
-   Layer 2: Semantic Tokens — Context-mapped (light)
-   Layer 3: Component Tokens — Optional overrides
-   ============================================ */
-
-/* ============================================
-   LAYER 1: BASE TOKENS
-   Raw brand colors, spacing, typography, radius
-   ============================================ */
 :root {
-  /* ---- Brand Colors - Neuroscience Inspired ---- */
-  --color-primary: #5B8DBE;
-  --color-primary-light: #8CBAE1;
-  --color-primary-lighter: #B3D1EB;
-  --color-primary-dark: #3A5D82;
-  --color-primary-darker: #1A2D46;
+  /* ── Core Brand ── */
+  --color-primary:       #0F172A;
+  --color-primary-light: #1E293B;
+  --color-primary-dark:  #0A0F1E;
 
-  --color-secondary: #E8956F;
-  --color-secondary-light: #F0A373;
-  --color-secondary-lighter: #F9BA96;
-  --color-secondary-dark: #C96535;
-  --color-secondary-darker: #A93500;
+  /* ── Neutral Scale (Slate) ── */
+  --color-white:     #FFFFFF;
+  --color-gray-50:   #F8FAFC;
+  --color-gray-100:  #F1F5F9;
+  --color-gray-200:  #E2E8F0;
+  --color-gray-300:  #CBD5E1;
+  --color-gray-400:  #94A3B8;
+  --color-gray-500:  #64748B;
+  --color-gray-600:  #475569;
+  --color-gray-700:  #334155;
+  --color-gray-800:  #1E293B;
+  --color-gray-900:  #0F172A;
+  --color-black:     #020617;
 
-  /* NOTE: Landing/editorial palette is defined in landing-theme.css and overrides
-     the values below for landing pages. These remain for legacy admin/non-landing
-     contexts. --color-accent is aliased to brand gold to prevent green drift if
-     a landing component falls through to the base layer. */
-  --color-accent: #b8860b;
-  --color-accent-light: #d4a843;
-  --color-accent-lighter: #e8c55a;
-  --color-accent-dark: #9a7209;
-  --color-accent-darker: #7a5c07;
+  /* ── Semantic Status ── */
+  --color-success:       #10B981;
+  --color-success-bg:    #D1FAE5;
+  --color-warning:       #F59E0B;
+  --color-warning-bg:    #FEF3C7;
+  --color-error:         #EF4444;
+  --color-error-bg:      #FEE2E2;
+  --color-info:          #3B82F6;
+  --color-info-bg:       #DBEAFE;
 
-  /* ---- Status Colors ---- */
-  --color-success: #7CB342;
-  --color-warning: #D4A574;
-  --color-error: #C97C7C;
-  --color-info: #7BA3C0;
+  /* ── Spacing (4px base unit) ── */
+  --space-0:   0px;
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-5:   1.25rem;
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10:  2.5rem;
+  --space-12:  3rem;
+  --space-16:  4rem;
+  --space-20:  5rem;
+  --space-24:  6rem;
 
-  /* ---- Neutral Palette ---- */
-  --color-white: #FFFFFF;
-  --color-gray-50: #F9FAFB;
-  --color-gray-100: #F3F4F6;
-  --color-gray-200: #E5E7EB;
-  --color-gray-300: #D1D5DB;
-  --color-gray-400: #9CA3AF;
-  --color-gray-500: #6B7280;
-  --color-gray-600: #4B5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1F2937;
-  --color-gray-900: #111827;
-  --color-black: #000000;
+  /* ── Border Radius ── */
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
 
-  /* ---- Spacing (4px base unit) ---- */
-  --spacing-0: 0px;
-  --spacing-1: 0.25rem;   /* 4px */
-  --spacing-2: 0.5rem;    /* 8px */
-  --spacing-3: 0.75rem;   /* 12px */
-  --spacing-4: 1rem;      /* 16px */
-  --spacing-5: 1.25rem;   /* 20px */
-  --spacing-6: 1.5rem;    /* 24px */
-  --spacing-8: 2rem;      /* 32px */
-  --spacing-10: 2.5rem;   /* 40px */
-  --spacing-12: 3rem;     /* 48px */
-  --spacing-16: 4rem;     /* 64px */
-  --spacing-20: 5rem;     /* 80px */
-  --spacing-24: 6rem;     /* 96px */
+  /* ── Typography ── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  /* ---- Border Radius ---- */
-  --radius-none: 0px;
-  --radius-sm: 0.375rem;  /* 6px */
-  --radius-md: 0.5rem;    /* 8px */
-  --radius-lg: 0.75rem;   /* 12px */
-  --radius-xl: 1rem;      /* 16px */
-  --radius-2xl: 1.5rem;   /* 24px */
-  --radius-3xl: 2rem;     /* 32px */
-  --radius-full: 9999px;  /* Pill */
+  --text-display-xl: clamp(2.5rem, 5.5vw, 4rem);
+  --text-display-lg: clamp(1.75rem, 3vw, 2.5rem);
+  --text-display-md: clamp(1.375rem, 2.25vw, 1.875rem);
+  --text-h1: clamp(1.5rem, 2.5vw, 2rem);
+  --text-h2: clamp(1.25rem, 2vw, 1.5rem);
+  --text-h3: 1.125rem;
+  --text-h4: 1rem;
+  --text-h5: 0.875rem;
+  --text-body:      1rem;
+  --text-body-sm:   0.875rem;
+  --text-body-xs:   0.75rem;
+  --text-caption:   0.6875rem;
+  --text-micro:     0.625rem;
 
-  /* ---- Typography ---- */
-  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
-  --font-family-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --leading-display: 1.04;
+  --leading-heading: 1.2;
+  --leading-body:    1.65;
+  --leading-tight:   1.4;
 
-  --font-size-xs: 0.75rem;      /* 12px */
-  --font-size-sm: 0.875rem;     /* 14px */
-  --font-size-base: 1rem;       /* 16px */
-  --font-size-lg: 1.125rem;     /* 18px */
-  --font-size-xl: 1.25rem;      /* 20px */
-  --font-size-2xl: 1.5rem;      /* 24px */
-  --font-size-3xl: 2rem;        /* 32px */
-  --font-size-4xl: 3rem;        /* 48px */
+  /* ── Shadows ── */
+  --shadow-sm:   0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:   0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg:   0 10px 15px rgba(0,0,0,0.1);
+  --shadow-xl:   0 20px 25px rgba(0,0,0,0.15);
 
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
+  /* ── Transitions ── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.7;
-
-  /* ---- Shadows ---- */
-  --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.05);
-  --shadow-soft-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
-  --shadow-soft-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
-
-  /* ---- Transitions ---- */
-  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* ---- Z-Index Scale ---- */
+  /* ── Z-Index Scale ── */
   --z-dropdown: 1000;
   --z-sticky: 1020;
   --z-fixed: 1030;
@@ -123,103 +94,129 @@
   --z-modal: 1050;
   --z-popover: 1060;
   --z-tooltip: 1070;
+
+  /* ── Content Widths ── */
+  --content-narrow: 45rem;
+  --content-main: 68.75rem;
+  --content-wide: 80rem;
 }
 
-/* ============================================
-   LAYER 2: SEMANTIC TOKENS — LIGHT MODE
-   ============================================ */
+/* ── ACCENT TOKEN SYSTEM ──
+   Each surface overrides these tokens.
+   Components use var(--accent) as sole accent color. */
+
 :root {
-  /* ---- Surfaces ---- */
-  --color-surface: #FDFBF8;
-  --color-surface-elevated: #FFFFFF;
-  --color-surface-secondary: #F5F3F8;
-  --color-surface-tertiary: #F0F4ED;
-  --color-surface-dark: #000000;
+  /* Public/Landing defaults */
+  --accent:        #B8860B;
+  --accent-dark:   #7A5908;
+  --accent-text:   #946708;
+  --accent-soft:   #D4A843;
+  --accent-glow:   rgba(184, 134, 11, 0.08);
+  --accent-rgb:    184, 134, 11;
 
-  /* ---- Text ---- */
-  --color-text-primary: #1A1410;
-  --color-text-secondary: #6B5D52;
-  --color-text-tertiary: #9B8B7E;
-  --color-text-inverse: #FFFFFF;
-  --color-text-muted: #D9D0C4;
+  --surface:       #FFFFFF;
+  --surface-warm:  #FAF8F3;
+  --surface-cool:  #F8FAFC;
+  --surface-raised: #FFFFFF;
 
-  /* ---- Borders ---- */
-  --color-border: #E5E7EB;
-  --color-border-light: #F3F4F6;
+  --text-primary:    #0F172A;
+  --text-secondary:  #475569;
+  --text-tertiary:   #64748B;
+  --text-inverse:    #FFFFFF;
 
-  /* ---- Background Utilities ---- */
-  --bg-primary: var(--color-primary);
-  --bg-surface: var(--color-surface);
-  --bg-surface-dark: var(--color-gray-800);
-  --bg-surface-elevated: var(--color-surface-elevated);
+  --border-subtle: #E2E8F0;
+  --border-medium: #CBD5E1;
+  --border-strong: #94A3B8;
 
-  /* ---- Text Utilities ---- */
-  --text-primary: var(--color-text-primary);
-  --text-secondary: var(--color-text-secondary);
-  --text-on-primary: var(--color-text-inverse);
-
-  /* ---- Border Utilities ---- */
-  --border-default: var(--color-border);
-}
-
-/* ============================================
-   LAYER 2: SEMANTIC TOKENS — DARK MODE
-   Admin panel: data-theme="dark" on <html>
-   Landing page: @media (prefers-color-scheme: dark)
-   ============================================ */
-[data-theme="dark"] {
-  --color-surface: #1C1C1E;
-  --color-surface-elevated: #2C2C2E;
-  --color-surface-secondary: #2C2C2E;
-  --color-surface-tertiary: #3A3A3C;
-  --color-surface-dark: #000000;
-
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: rgba(235, 235, 245, 0.6);
-  --color-text-tertiary: rgba(235, 235, 245, 0.3);
-  --color-text-inverse: #1A1410;
-
-  --color-border: rgba(84, 84, 88, 0.35);
-  --color-border-light: rgba(84, 84, 88, 0.18);
-
-  --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.3);
-  --shadow-soft-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
-  --shadow-soft-xl: 0 20px 50px rgba(0, 0, 0, 0.6);
-
-  --bg-primary: var(--color-primary-dark);
-  --bg-surface: var(--color-surface);
-  --bg-surface-dark: var(--color-gray-800);
-  --bg-surface-elevated: var(--color-surface-elevated);
-
-  --text-primary: var(--color-text-primary);
-  --text-secondary: var(--color-text-secondary);
-
-  --border-default: var(--color-border);
+  --tools:       #047857;
+  --tools-dark:  #065F46;
+  --tools-soft:  #10B981;
+  --tools-glow:  rgba(4, 120, 87, 0.08);
+  --tools-rgb:   4, 120, 87;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-surface: #1C1C1E;
-    --color-surface-elevated: #2C2C2E;
-    --color-text-primary: #E5E5E5;
-    --color-text-secondary: rgba(235, 235, 245, 0.6);
-    --color-border: rgba(84, 84, 88, 0.35);
+  :root {
+    --surface:       #0A0F1E;
+    --surface-warm:  #0F1629;
+    --surface-cool:  #0F1629;
+    --surface-raised: #131C35;
+
+    --accent:        #D4A843;
+    --accent-text:   #E8C55A;
+
+    --text-primary:    #F1F5F9;
+    --text-secondary:  #94A3B8;
+    --text-tertiary:   #64748B;
+
+    --border-subtle: rgba(255,255,255,0.07);
+    --border-medium: rgba(255,255,255,0.12);
+    --border-strong: rgba(255,255,255,0.22);
+
+    --tools: #34D399;
+
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.4);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.55);
+    --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
   }
 }
 
-/* ============================================
-   REDUCED MOTION
-   ============================================ */
+[data-theme="dark"] {
+  --surface:       #1C1C1E;
+  --surface-warm:  #2C2C2E;
+  --surface-cool:  #2C2C2E;
+  --surface-raised: rgba(28, 28, 30, 0.9);
+
+  --accent:        #007AFF;
+  --accent-dark:   #0051D5;
+  --accent-text:   #4DA3FF;
+  --accent-soft:   #5AC8FA;
+  --accent-glow:   rgba(0, 122, 255, 0.12);
+  --accent-rgb:    0, 122, 255;
+
+  --text-primary:    #FFFFFF;
+  --text-secondary:  rgba(235, 235, 245, 0.6);
+  --text-tertiary:   rgba(235, 235, 245, 0.3);
+
+  --border-subtle: rgba(84, 84, 88, 0.35);
+  --border-medium: rgba(84, 84, 88, 0.5);
+  --border-strong: rgba(84, 84, 88, 0.65);
+
+  --shadow-sm: 0 2px 15px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.48);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="client"] {
+  --surface:       #FFFFFF;
+  --surface-warm:  #F8FAFC;
+  --surface-cool:  #F1F5F9;
+  --surface-raised: #FFFFFF;
+
+  --accent:        #0A66C2;
+  --accent-dark:   #004182;
+  --accent-text:   #0A66C2;
+  --accent-soft:   #3B82F6;
+  --accent-glow:   rgba(10, 102, 194, 0.10);
+  --accent-rgb:    10, 102, 194;
+
+  --text-primary:    #0F172A;
+  --text-secondary:  #475569;
+  --text-tertiary:   #94A3B8;
+
+  --border-subtle: #E2E8F0;
+  --border-medium: #CBD5E1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --transition-fast: 0ms;
     --transition-base: 0ms;
     --transition-slow: 0ms;
   }
-
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -227,21 +224,16 @@
   }
 }
 
-/* ============================================
-   HIGH CONTRAST
-   ============================================ */
 @media (prefers-contrast: more) {
   :root {
-    --color-primary: #003d5c;
-    --color-secondary: #8B4513;
-    --color-text-primary: #000000;
-    --color-text-secondary: #333333;
-    --color-border: #666666;
+    --color-primary: #003D5C;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --border-medium: #666666;
   }
-
   [data-theme="dark"] {
-    --color-text-primary: #FFFFFF;
-    --color-text-secondary: #CCCCCC;
-    --color-border: #888888;
+    --text-primary: #FFFFFF;
+    --text-secondary: #CCCCCC;
+    --border-medium: #888888;
   }
 }

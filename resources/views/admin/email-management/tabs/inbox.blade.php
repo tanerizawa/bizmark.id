@@ -48,32 +48,69 @@
 
     if ($selectedEmail?->body_html) {
         $selectedHtmlBodyContent = (string) $selectedEmail->clean_body_html;
-        $selectedHtmlBodyContent = preg_replace('/<!doctype[^>]*>/i', '', $selectedHtmlBodyContent) ?? $selectedHtmlBodyContent;
-        $selectedHtmlBodyContent = preg_replace('/<(?:html|head|body|meta|title|link|base)\b[^>]*>/i', '', $selectedHtmlBodyContent) ?? $selectedHtmlBodyContent;
-        $selectedHtmlBodyContent = preg_replace('/<\/(?:html|head|body)>/i', '', $selectedHtmlBodyContent) ?? $selectedHtmlBodyContent;
+        
+        // Check if content already has complete HTML structure
+        $hasCompleteHtml = preg_match('/<html[^>]*>/i', $selectedHtmlBodyContent);
+        
+        // Count tracking pixels before removal
         $trackingPixelRemovedCount = preg_match_all('/<img\b(?=[^>]*\bwidth\s*=\s*["\"]?1["\"]?)(?=[^>]*\bheight\s*=\s*["\"]?1["\"]?)[^>]*>/i', $selectedHtmlBodyContent) ?: 0;
+        
+        // Remove tracking pixels
         $selectedHtmlBodyContent = preg_replace('/<img\b(?=[^>]*\bwidth\s*=\s*["\"]?1["\"]?)(?=[^>]*\bheight\s*=\s*["\"]?1["\"]?)[^>]*>/i', '', $selectedHtmlBodyContent) ?? $selectedHtmlBodyContent;
-        $selectedHtmlBodyContent = preg_replace('/(<[^>]*style="[^"]*background\s*:\s*#0f172a[^"]*?)color\s*:\s*#000000([^\"]*")/i', '$1color: #ffffff$2', $selectedHtmlBodyContent) ?? $selectedHtmlBodyContent;
-        $selectedHtmlBodyContent = preg_replace('/background\s*:\s*#0f172a\s*;\s*color\s*:\s*#000000\s*;/i', 'background: #0f172a; color: #ffffff;', $selectedHtmlBodyContent) ?? $selectedHtmlBodyContent;
-        $selectedHtmlBodyContent = preg_replace('/color\s*:\s*#0ea5e9\s*;/i', 'color: #0b63c7;', $selectedHtmlBodyContent) ?? $selectedHtmlBodyContent;
-
-        $selectedHtmlDocument = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-            . '<base target="_blank">'
-            . '<style>'
-            . 'html,body{margin:0;padding:0;background:#eef2f7;color:#111827;}'
-            . 'body{font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-wrap:anywhere;padding:18px;}'
-            . '@media (min-width: 768px){body{padding:24px;}}'
-            . '*{box-sizing:border-box;}'
-            . '.email-frame-inner{max-width:100%;margin:0 auto;background:#ffffff;border-radius:18px;box-shadow:0 12px 30px rgba(15,23,42,0.08);padding:18px;overflow:visible;}'
-            . '@media (min-width: 768px){.email-frame-inner{padding:24px;}}'
-            . 'img{max-width:100%;height:auto;}'
-            . 'table{max-width:100% !important;}'
-            . 'body table{width:auto;}'
-            . 'a{color:#0a66c2;}'
-            . 'pre{white-space:pre-wrap;word-break:break-word;}'
-            . '</style></head><body><div class="email-frame-inner">'
-            . $selectedHtmlBodyContent
-            . '</div></body></html>';
+        
+        if ($hasCompleteHtml) {
+            // Email has complete HTML structure - use it directly with minimal wrapper
+            $selectedHtmlDocument = '<!doctype html><html><head>'
+                . '<meta charset="utf-8">'
+                . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                . '<base target="_blank">'
+                . '<style>'
+                . 'html,body{margin:0;padding:0;}'
+                . 'body{font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-wrap:anywhere;}'
+                . 'img{max-width:100%;height:auto;}'
+                . 'table{border-collapse:collapse;}'
+                . 'a{color:#0a66c2;text-decoration:none;}'
+                . '</style>'
+                . '</head><body>'
+                . $selectedHtmlBodyContent
+                . '</body></html>';
+        } else {
+            // Email is HTML fragment - wrap it with proper email rendering styles
+            // Do NOT strip Gmail wrapper divs or other structural elements
+            
+            $selectedHtmlDocument = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+                . '<base target="_blank">'
+                . '<style>'
+                . 'html,body{margin:0;padding:0;background:#f8f9fa;color:#111827;}'
+                . 'body{font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-wrap:anywhere;padding:16px;}'
+                . '*{box-sizing:border-box;}'
+                . 'img{max-width:100%;height:auto;display:block;}'
+                . 'table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;}'
+                . 'table td{border-collapse:collapse;}'
+                . 'table[cellpadding="0"],table[cellspacing="0"]{border-spacing:0;}'
+                . 'a{color:#673de6;text-decoration:none;}'
+                . 'a:hover{text-decoration:underline;}'
+                . 'pre{white-space:pre-wrap;word-break:break-word;}'
+                . 'p{margin:0 0 12px 0;}'
+                . 'h1,h2,h3,h4,h5,h6{margin:0 0 16px 0;line-height:1.3;}'
+                . 'h1{font-size:28px;}'
+                . 'h2{font-size:24px;}'
+                . 'h3{font-size:20px;}'
+                . '.gmail_quote,.gmail_attr{display:block;margin:12px 0;}'
+                . '.gmail_quote_container{background:transparent;padding:0;margin:0;}'
+                . '#default---6c2357a0720573fd4cf70833c5a8a68a{background:transparent !important;padding:0 !important;margin:0 !important;}'
+                . 'div[style*="background-color: #f4f5ff"],div[style*="background:#f4f5ff"],div[style*="background-color:#f4f5ff"]{background:#f4f5ff !important;}'
+                . 'td[style*="padding: 20px"],div[style*="padding: 20px"],div[style*="padding:20px"]{padding:20px !important;}'
+                . 'td[style*="padding: 30px"],div[style*="padding: 30px"],div[style*="padding:30px"]{padding:30px !important;}'
+                . 'br{line-height:1.6;}'
+                . '@media (max-width: 640px){body{padding:8px;}'
+                . 'table[style*="max-width: 640px"],table[style*="max-width:640px"]{max-width:100% !important;width:100% !important;}'
+                . 'td[style*="padding: 20px"]{padding:12px !important;}'
+                . '}'
+                . '</style></head><body>'
+                . $selectedHtmlBodyContent
+                . '</body></html>';
+        }
     }
 @endphp
 
@@ -1061,6 +1098,8 @@
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    overflow: hidden;
 }
 
 .email-html-meta {

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Detail Email')
 @section('page-title', 'Detail Email')
@@ -6,25 +6,56 @@
 @section('content')
 @php
     $htmlDocument = null;
-
     if ($email->body_html) {
+        $cleanedHtml = (string) $email->clean_body_html;
+        
+        // Hanya hapus tracking pixel (img 1x1)
+        $cleanedHtml = preg_replace('/<img\b(?=[^>]*\bwidth\s*=\s*["\']?1["\']?)(?=[^>]*\bheight\s*=\s*["\']?1["\']?)[^>]*>/i', '', $cleanedHtml) ?? $cleanedHtml;
+        
         $htmlDocument = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             . '<base target="_blank">'
             . '<style>'
-            . 'html,body{margin:0;padding:0;background:#eef2f7;color:#111827;}'
-            . 'body{font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-wrap:anywhere;padding:18px;}'
-            . '@media (min-width: 768px){body{padding:24px;}}'
+            . 'html,body{margin:0;padding:0;background:#f8f9fa;color:#111827;}'
+            . 'body{font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-wrap:anywhere;padding:0;}'
             . '*{box-sizing:border-box;}'
-            . '.email-frame-inner{max-width:100%;margin:0 auto;background:#ffffff;border-radius:18px;box-shadow:0 12px 30px rgba(15,23,42,0.08);padding:18px;overflow:visible;}'
-            . '@media (min-width: 768px){.email-frame-inner{padding:24px;}}'
-            . 'img{max-width:100%;height:auto;}'
-            . 'table{max-width:100% !important;}'
-            . 'body table{width:auto;}'
-            . 'a{color:#0a66c2;}'
+            . 'img{max-width:100%;height:auto;display:block;}'
+            . 'table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;}'
+            . 'table td{border-collapse:collapse;}'
+            . 'a{color:#0a66c2;text-decoration:none;}'
+            . 'a:hover{text-decoration:underline;}'
             . 'pre{white-space:pre-wrap;word-break:break-word;}'
-            . '</style></head><body><div class="email-frame-inner">'
-            . $email->clean_body_html
-            . '</div></body></html>';
+            . 'p{margin:0;padding:0;}'
+            . 'h1,h2,h3,h4,h5,h6{margin:0;padding:0;}'
+            . '.gmail_quote,.gmail_attr{display:block;}'
+            . '</style></head><body>'
+            . $cleanedHtml
+            . '</body></html>';
+    }
+            
+            // Tambahkan base target untuk links
+            if (!preg_match('/<base\s+target=/i', $htmlDocument)) {
+                $htmlDocument = preg_replace('/(<head[^>]*>)/i', '$1<base target="_blank">', $htmlDocument, 1);
+            }
+        } else {
+            // HTML tidak lengkap, bungkus dengan struktur lengkap
+            $htmlDocument = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+                . '<base target="_blank">'
+                . '<style>'
+                . 'html,body{margin:0;padding:0;background:#eef2f7;color:#111827;}'
+                . 'body{font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-wrap:anywhere;padding:18px;}'
+                . '@media (min-width: 768px){body{padding:24px;}}'
+                . '*{box-sizing:border-box;}'
+                . '.email-frame-inner{max-width:100%;margin:0 auto;background:#ffffff;border-radius:18px;box-shadow:0 12px 30px rgba(15,23,42,0.08);padding:18px;overflow:visible;}'
+                . '@media (min-width: 768px){.email-frame-inner{padding:24px;}}'
+                . 'img{max-width:100%;height:auto;}'
+                . 'table{max-width:100% !important;}'
+                . 'body table{width:auto;}'
+                . 'a{color:#0a66c2;}'
+                . 'pre{white-space:pre-wrap;word-break:break-word;}'
+                . '</style></head><body><div class="email-frame-inner">'
+                . $selectedHtmlBodyContent
+                . '</div></body></html>';
+        }
     }
 @endphp
 <div class="max-w-5xl mx-auto space-y-6"
@@ -291,6 +322,8 @@
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    overflow: hidden;
 }
 
 .email-html-meta {

@@ -1,3 +1,7 @@
+@props([
+    'name' => 'portal',
+])
+
 @php
     // Default command set — extendable via slot or window.portalCommands
     $commands = [
@@ -72,7 +76,7 @@
         </div>
 
         {{-- Results --}}
-        <div class="overflow-y-auto py-1" style="max-height: calc(70vh - 110px);">
+        <div class="overflow-y-auto py-1 max-h-[calc(70vh-110px)]">
             <template x-if="filtered.length === 0">
                 <div class="px-4 py-10 text-center">
                     <p class="text-sm text-[var(--text-secondary)]">Tidak ada hasil untuk

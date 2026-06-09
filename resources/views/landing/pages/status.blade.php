@@ -153,7 +153,7 @@
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($external as $ext)
-                <a href="{{ $ext['href'] }}" target="_blank" rel="noopener nofollow"
+                <a href="{{ $ext['href'] }}" target="_blank" rel="noopener noreferrer nofollow"
                    class="premium-card group transition-transform hover:-translate-y-0.5">
                     <div class="flex items-start justify-between gap-3 mb-2">
                         <div class="min-w-0">
@@ -192,7 +192,7 @@
                         ? 'For active client engagements, status updates arrive automatically via email & WhatsApp as part of your weekly SLA report.'
                         : 'Untuk klien aktif, update status disampaikan otomatis via email & WhatsApp sebagai bagian dari laporan SLA mingguan.' }}
                 </p>
-                <a href="{{ $whatsappLink }}" target="_blank" rel="noopener" class="btn btn-ghost">
+                <a href="{{ $whatsappLink }}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
                     <i class="fab fa-whatsapp"></i> {{ $isEn ? 'Contact us' : 'Hubungi kami' }}
                 </a>
             </div>

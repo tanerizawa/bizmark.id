@@ -57,6 +57,10 @@ class HrmAdminAuthorizationTest extends TestCase
     {
         $this->actingAs($this->hrManager)
             ->get(route('admin.jobs.index'))
+            ->assertRedirect(route('admin.recruitment.index', ['tab' => 'jobs']));
+
+        $this->actingAs($this->hrManager)
+            ->get(route('admin.recruitment.index', ['tab' => 'jobs']))
             ->assertOk();
     }
 

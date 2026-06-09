@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Detail Pelanggan - ' . $subscriber->email)
 @section('page-title', 'Detail Pelanggan')

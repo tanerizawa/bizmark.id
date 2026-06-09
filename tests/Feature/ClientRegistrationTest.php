@@ -24,6 +24,7 @@ class ClientRegistrationTest extends TestCase
             'phone' => '081234567890',
             'password' => 'password123',
             'password_confirmation' => 'password123',
+            'terms' => true,
         ]);
 
         $response->assertRedirect();
@@ -91,6 +92,7 @@ class ClientRegistrationTest extends TestCase
             'email' => 'deleted@example.com',
             'password' => 'newpassword123',
             'password_confirmation' => 'newpassword123',
+            'terms' => true,
         ]);
 
         $response->assertRedirect();
@@ -110,6 +112,7 @@ class ClientRegistrationTest extends TestCase
             'email' => 'budi@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
+            'terms' => true,
         ]);
 
         $response->assertRedirect();

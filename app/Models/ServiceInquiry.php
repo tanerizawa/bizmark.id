@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 
 class ServiceInquiry extends Model
@@ -84,6 +85,11 @@ class ServiceInquiry extends Model
     public function contactedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'contacted_by');
+    }
+
+    public function shapefileProject(): HasOne
+    {
+        return $this->hasOne(ShapefileProject::class);
     }
 
     /**

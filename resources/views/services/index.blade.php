@@ -36,13 +36,27 @@
     </div>
 </section>
 
-{{-- Sticky category anchor nav --}}
-<div class="sticky top-16 z-30 bg-white border-b border-gray-200 shadow-sm">
+{{-- Sticky category anchor nav — gold active indicator --}}
+<div class="sticky top-16 z-30 bg-white border-b border-gray-200 shadow-sm"
+     x-data="{ activeCat: '' }"
+     x-init="
+         const observer = new IntersectionObserver((entries) => {
+             entries.forEach(entry => {
+                 if (entry.isIntersecting) activeCat = entry.target.id.replace('cat-', '');
+             });
+         }, { rootMargin: '-120px 0px 0px 0px' });
+         document.querySelectorAll('[id^=cat-]').forEach(el => observer.observe(el));
+     ">
     <div class="container-wide overflow-x-auto">
         <div class="flex items-center gap-1 py-2 min-w-max">
             @foreach($groupedServices as $categoryName => $_)
-            <a href="#cat-{{ \Str::slug($categoryName) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 hover:text-amber-700 hover:bg-amber-50 border border-transparent hover:border-amber-200 transition-all duration-200 whitespace-nowrap">
+            @php $catSlug = \Str::slug($categoryName); @endphp
+            <a href="#cat-{{ $catSlug }}"
+               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border"
+               :class="activeCat === '{{ $catSlug }}' ? 'text-amber-800 bg-amber-50 border-amber-300 shadow-sm' : 'text-gray-600 hover:text-amber-700 hover:bg-amber-50 border-transparent hover:border-amber-200'">
+                <span class="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      :class="activeCat === '{{ $catSlug }}' ? 'bg-amber-500' : 'bg-transparent'"
+                      aria-hidden="true"></span>
                 {{ $categoryName }}
             </a>
             @endforeach
@@ -57,8 +71,9 @@
                 $totalInCat = count($items);
                 $displayItems = $totalInCat > 3 ? array_slice($items, 0, 3, true) : $items;
                 $catSlug = \Str::slug($categoryName);
+                $catBg = $loop->even ? 'bg-[var(--surface-warm)]' : '';
             @endphp
-            <div id="cat-{{ $catSlug }}" class="mb-14 last:mb-0 scroll-mt-24">
+            <div id="cat-{{ $catSlug }}" class="mb-14 last:mb-0 scroll-mt-24 rounded-2xl {{ $catBg }} p-6 -mx-6">
                 {{-- Category header: badge + count inline (no repetitive h2) --}}
                 <div class="flex items-center gap-3 mb-6">
                     <span class="eyebrow">{{ $categoryName }}</span>

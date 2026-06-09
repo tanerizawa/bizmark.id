@@ -46,11 +46,7 @@
 <section class="section-v2 section-premium" aria-labelledby="pain-heading">
     <div class="container-wide">
         <div class="max-w-2xl mb-5" data-aos="fade-up">
-            <div class="chapter-mark">
-                <span class="chapter-mark__num">01</span>
-                <span class="chapter-mark__rule"></span>
-                <span>{{ $isEn ? 'Common Problems' : 'Masalah Umum' }}</span>
-            </div>
+            <span class="eyebrow block mb-3">{{ $isEn ? 'Common Problems' : 'Masalah Umum' }}</span>
             <h2 id="pain-heading" class="display-md mb-0">
                 {{ $isEn ? 'We remove the roadblocks slowing you down.' : 'Kami atasi hambatan yang memperlambat usaha Anda.' }}
             </h2>

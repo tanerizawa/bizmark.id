@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Interview Feedback - ' . $interview->jobApplication->full_name)
 

@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     
     <!-- Tailwind CSS (compiled) -->
-    @vite('resources/css/landing.css')
+    @vite('resources/css/public.css')
     
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">

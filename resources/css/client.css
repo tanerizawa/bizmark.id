@@ -4,6 +4,9 @@
    Stack: Tailwind CSS v4 · Alpine.js v3 · FA v7
    ============================================ */
 
+/* Import Design Tokens (Single Source of Truth) */
+@import './design-tokens.css';
+
 /* Import Tailwind CSS v4 */
 @import 'tailwindcss';
 

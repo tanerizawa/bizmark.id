@@ -163,6 +163,15 @@ class ServiceInquiryController extends Controller
     }
 
     /**
+     * Sources that trigger AI analysis.
+     */
+    private function expectsAiAnalysis(ServiceInquiry $inquiry): bool
+    {
+        $nonAiSources = ['shp_maker', 'manual', 'import'];
+        return ! in_array($inquiry->source, $nonAiSources, true);
+    }
+
+    /**
      * Get inquiry result by number
      */
     public function show(string $inquiryNumber)
@@ -175,6 +184,15 @@ class ServiceInquiryController extends Controller
                 'error' => 'not_found',
                 'message' => 'Inquiry tidak ditemukan',
             ], 404);
+        }
+
+        // No AI analysis expected for this source — don't report as "processing"
+        if (! $this->expectsAiAnalysis($inquiry) && ! $inquiry->ai_analysis) {
+            return response()->json([
+                'success' => false,
+                'status' => 'no_analysis',
+                'message' => 'Inquiry ini tidak memerlukan analisis AI.',
+            ]);
         }
 
         // Check if still processing
@@ -224,8 +242,17 @@ class ServiceInquiryController extends Controller
             ], 404);
         }
 
+        // No AI analysis expected for this source — show appropriate view
+        if (! $this->expectsAiAnalysis($inquiry) && ! $inquiry->ai_analysis) {
+            return view('landing.service-inquiry.result', [
+                'inquiry' => $inquiry,
+                'forceNoAnalysis' => true,
+            ]);
+        }
+
         return view('landing.service-inquiry.result', [
             'inquiry' => $inquiry,
+            'forceNoAnalysis' => false,
         ]);
     }
 

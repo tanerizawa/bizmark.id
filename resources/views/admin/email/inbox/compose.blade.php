@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Compose Email')
 @section('content')
 <div style="display:flex;flex-direction:column;gap:16px;max-width:860px">
@@ -86,13 +86,22 @@
                     <label style="font-size:0.68rem;font-weight:600;color:var(--dark-text-secondary);display:block;margin-bottom:5px">
                         <i class="fas fa-align-left" style="margin-right:4px"></i>Message <span style="color:var(--apple-red)">*</span>
                     </label>
-                    <textarea name="body_html" id="body_html" rows="15" required
-                              placeholder="Write your message here..."
-                              style="width:100%;padding:9px 12px;background:var(--dark-bg-secondary);border:1px solid var(--dark-separator);border-radius:9px;color:var(--dark-text-primary);font-size:0.82rem;outline:none;font-family:'Courier New',Consolas,monospace;line-height:1.6;resize:vertical;box-sizing:border-box"
-                              onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='var(--dark-separator)'">{{ old('body_html') }}</textarea>
+                    <div class="ckeditor-wrapper">
+                        <textarea name="body_html" id="body_html" required style="display:none">{{ old('body_html') }}</textarea>
+                    </div>
                     @error('body_html')<p style="font-size:0.72rem;color:var(--apple-red);margin:4px 0 0">{{ $message }}</p>@enderror
                     <p style="font-size:0.72rem;color:var(--dark-text-secondary);margin:4px 0 0;opacity:.7">
-                        <i class="fas fa-info-circle" style="margin-right:3px"></i>You can use HTML formatting if needed
+                        <i class="fas fa-info-circle" style="margin-right:3px"></i>Gunakan toolbar untuk formatting teks (bold, italic, link, list, dll)
+                    </p>
+                </div>
+                    @error('body_html')<p style="font-size:0.72rem;color:var(--apple-red);margin:4px 0 0">{{ $message }}</p>@enderror
+                    <p style="font-size:0.72rem;color:var(--dark-text-secondary);margin:4px 0 0;opacity:.7">
+                        <i class="fas fa-magic" style="margin-right:3px"></i>Gunakan toolbar untuk memformat teks, menambah link, dan styling lainnya
+                    </p>
+                </div>
+                    @error('body_html')<p style="font-size:0.72rem;color:var(--apple-red);margin:4px 0 0">{{ $message }}</p>@enderror
+                    <p style="font-size:0.72rem;color:var(--dark-text-secondary);margin:4px 0 0;opacity:.7">
+                        <i class="fas fa-magic" style="margin-right:3px"></i>Gunakan toolbar untuk formatting teks, link, dan lainnya
                     </p>
                 </div>
 
@@ -143,20 +152,84 @@
         <ul style="color:var(--dark-text-secondary);font-size:0.8rem;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
             <li>Pastikan email penerima valid dan aktif</li>
             <li>Tulis subject yang jelas dan deskriptif</li>
-            <li>Gunakan format HTML untuk tampilan yang lebih menarik</li>
+            <li>Gunakan toolbar editor untuk format teks, link, dan list</li>
             <li>Email akan tersimpan di folder "Sent" setelah terkirim</li>
         </ul>
     </div>
 </div>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+@push('styles')
+<style>
+    .ckeditor-wrapper .ck-editor__editable { min-height:400px;background-color:#1c1c1e !important;color:#f5f5f7 !important; }
+    .ck.ck-editor__main > .ck-editor__editable { background-color:#1c1c1e !important;color:#f5f5f7 !important;border-color:#38383a !important; }
+    .ck.ck-toolbar { background-color:#2c2c2e !important;border-color:#38383a !important; }
+    .ck.ck-button:not(.ck-disabled):hover,.ck.ck-button:not(.ck-disabled):active { background-color:#3a3a3c !important; }
+    .ck.ck-button.ck-on { background-color:#0a84ff !important;color:white !important; }
+    .ck.ck-dropdown__panel { background-color:#2c2c2e !important;border-color:#38383a !important; }
+    .ck.ck-list__item:hover { background-color:#3a3a3c !important; }
+    .ck.ck-labeled-field-view>.ck-labeled-field-view__input-wrapper>.ck-input { background-color:#1c1c1e !important;color:#f5f5f7 !important;border-color:#38383a !important; }
+    .ck-content h1,.ck-content h2,.ck-content h3,.ck-content h4,.ck-content h5,.ck-content h6 { color:#f5f5f7 !important; }
+    .ck-content a { color:#0a84ff !important; }
+    .ck-content blockquote { border-left-color:#0a84ff !important; }
+    .ck-content code { background-color:#2c2c2e !important;color:#ff453a !important; }
+    .ck-content pre { background-color:#2c2c2e !important;color:#f5f5f7 !important;border-color:#38383a !important; }
+</style>
+@endpush
+
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+@push('styles')
+<style>
+    .ckeditor-wrapper .ck-editor__editable { min-height:300px;background-color:#1c1c1e !important;color:#f5f5f7 !important; }
+    .ck.ck-editor__main > .ck-editor__editable { background-color:#1c1c1e !important;color:#f5f5f7 !important;border-color:#38383a !important; }
+    .ck.ck-toolbar { background-color:#2c2c2e !important;border-color:#38383a !important; }
+    .ck.ck-button:not(.ck-disabled):hover,.ck.ck-button:not(.ck-disabled):active { background-color:#3a3a3c !important; }
+    .ck.ck-button.ck-on { background-color:#0a84ff !important;color:white !important; }
+    .ck.ck-dropdown__panel { background-color:#2c2c2e !important;border-color:#38383a !important; }
+    .ck.ck-list__item:hover { background-color:#3a3a3c !important; }
+    .ck.ck-labeled-field-view>.ck-labeled-field-view__input-wrapper>.ck-input { background-color:#1c1c1e !important;color:#f5f5f7 !important;border-color:#38383a !important; }
+    .ck-content h1,.ck-content h2,.ck-content h3,.ck-content h4,.ck-content h5,.ck-content h6 { color:#f5f5f7 !important; }
+    .ck-content a { color:#0a84ff !important; }
+    .ck-content blockquote { border-left-color:#0a84ff !important; }
+    .ck-content code { background-color:#2c2c2e !important;color:#ff453a !important; }
+    .ck-content pre { background-color:#2c2c2e !important;color:#f5f5f7 !important;border-color:#38383a !important; }
+</style>
+@endpush
+
 @push('scripts')
 <script>
+let editorInstance;
+
+// Initialize CKEditor
+ClassicEditor.create(document.querySelector('#body_html'), {
+    toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'link', 'bulletedList', 'numberedList', '|', 'blockQuote', '|', 'undo', 'redo'],
+    link: { addTargetToExternalLinks: true }
+}).then(editor => {
+    editorInstance = editor;
+    
+    // Sync editor content to textarea on form submit
+    document.querySelector('form').addEventListener('submit', function() {
+        document.querySelector('#body_html').value = editorInstance.getData();
+    });
+    
+    // Load draft if exists
+    const draft = localStorage.getItem('email_draft');
+    if (draft) {
+        const data = JSON.parse(draft);
+        if (confirm('Found saved draft from ' + new Date(data.saved_at).toLocaleString() + '. Restore?')) {
+            document.getElementById('to_email').value = data.to || '';
+            document.getElementById('subject').value = data.subject || '';
+            editorInstance.setData(data.body || '');
+        }
+    }
+}).catch(err => console.error(err));
+
 function saveDraft() {
     const btn = document.getElementById('saveDraftBtn');
     localStorage.setItem('email_draft', JSON.stringify({
         to: document.getElementById('to_email').value,
         subject: document.getElementById('subject').value,
-        body: document.getElementById('body_html').value,
+        body: editorInstance.getData(),
         saved_at: new Date().toISOString()
     }));
     const orig = btn.innerHTML;
@@ -164,18 +237,6 @@ function saveDraft() {
     btn.disabled = true;
     setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const draft = localStorage.getItem('email_draft');
-    if (draft) {
-        const data = JSON.parse(draft);
-        if (confirm('Found saved draft from ' + new Date(data.saved_at).toLocaleString() + '. Restore?')) {
-            document.getElementById('to_email').value = data.to || '';
-            document.getElementById('subject').value = data.subject || '';
-            document.getElementById('body_html').value = data.body || '';
-        }
-    }
-});
 
 @if(session('success'))
     localStorage.removeItem('email_draft');
@@ -191,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const payload = new FormData();
         payload.append('to_email', document.getElementById('to_email').value || '');
         payload.append('subject', document.getElementById('subject').value || '');
-        payload.append('body_html', document.getElementById('body_html').value || '');
+        payload.append('body_html', editorInstance.getData() || '');
         try {
             const res = await fetch('{{ route('admin.inbox.generate') }}', {
                 method: 'POST',
@@ -201,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await res.json();
             if (data.success && data.data) {
                 if (data.data.email_subject) document.getElementById('subject').value = data.data.email_subject;
-                if (data.data.email_html) document.getElementById('body_html').value = data.data.email_html;
+                if (data.data.email_html) editorInstance.setData(data.data.email_html);
                 alert('Konten AI berhasil dimasukkan. Periksa dan sesuaikan sebelum mengirim.');
             } else {
                 alert('Gagal menghasilkan konten: ' + (data.error || 'unknown'));

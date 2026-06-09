@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('permission:clients.view')->group(function () {
     Route::get('leads', [App\Http\Controllers\Admin\LeadManagementController::class, 'index'])->name('admin.leads.index');
 
-    Route::redirect('service-inquiries/index', '/admin/leads?tab=service-inquiries')
-        ->name('admin.service-inquiries.index');
+    Route::get('service-inquiries/index', function () {
+        return redirect('/admin/leads?tab=service-inquiries');
+    })->name('admin.service-inquiries.index');
+
+    // Show route must be defined before the base redirect to ensure it takes priority
     Route::get('service-inquiries/export', [App\Http\Controllers\Admin\ServiceInquiryController::class, 'export'])->name('admin.service-inquiries.export');
     Route::get('service-inquiries/{serviceInquiry}', [App\Http\Controllers\Admin\ServiceInquiryController::class, 'show'])->name('admin.service-inquiries.show');
     Route::patch('service-inquiries/{serviceInquiry}/status', [App\Http\Controllers\Admin\ServiceInquiryController::class, 'updateStatus'])
@@ -71,5 +74,8 @@ Route::middleware('permission:clients.view')->group(function () {
         ->middleware('permission:clients.edit')
         ->name('admin.service-cost-requests.archive');
 
-    Route::redirect('service-inquiries', '/admin/leads?tab=service-inquiries');
+    // Base index redirect — only matches exact /admin/service-inquiries, never /admin/service-inquiries/{id}
+    Route::get('service-inquiries', function () {
+        return redirect('/admin/leads?tab=service-inquiries');
+    });
 });

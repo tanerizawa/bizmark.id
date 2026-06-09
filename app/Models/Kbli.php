@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Kbli extends Model
 {
@@ -100,7 +101,7 @@ class Kbli extends Model
 
         // Warn if not 5-digit
         if ($kbli && strlen($code) !== 5) {
-            \Illuminate\Support\FacadesLog::warning('KBLI code is not 5-digit', ['code' => $code]);
+            Log::warning('KBLI code is not 5-digit', ['code' => $code]);
         }
 
         return $kbli;
@@ -114,7 +115,7 @@ class Kbli extends Model
         return self::where('category', $category)
             ->where('is_active', true)
             ->orderBy('usage_count', 'desc')
-            ->orderBy('title')
+            ->orderBy('activities')
             ->get();
     }
 
@@ -135,6 +136,37 @@ class Kbli extends Model
             ->orderBy('usage_count', 'desc')
             ->limit($limit)
             ->get();
+    }
+
+    /**
+     * Search KBLI codes by semantic similarity using pgvector.
+     *
+     * @param  string  $query  Business activity description
+     * @param  int  $limit  Max results
+     * @return \Illuminate\Support\Collection
+     */
+    public static function similaritySearch(string $query, int $limit = 5)
+    {
+        $embedding = app(\App\Services\EmbeddingService::class)->embed($query);
+
+        if (empty($embedding)) {
+            return self::search($query, $limit);
+        }
+
+        $vectorLiteral = \App\Services\EmbeddingService::toVectorLiteral($embedding);
+
+        $rows = \Illuminate\Support\Facades\DB::select("
+            SELECT id, code, description, sector, category, activities,
+                   1 - (embedding <=> '{$vectorLiteral}'::vector) AS similarity
+            FROM kbli
+            WHERE embedding IS NOT NULL
+              AND LENGTH(code) = 5
+              AND is_active = true
+            ORDER BY similarity DESC
+            LIMIT ?
+        ", [$limit]);
+
+        return collect($rows);
     }
 
     /**

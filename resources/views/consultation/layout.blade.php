@@ -51,7 +51,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     
     <!-- Tailwind CSS (compiled) -->
-    @vite('resources/css/landing.css')
+    @vite('resources/css/public.css')
     
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">

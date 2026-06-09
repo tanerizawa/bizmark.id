@@ -4,105 +4,83 @@
     'placeholder' => '',
     'value' => '',
     'error' => null,
-    'size' => 'md',             // sm | md | lg
+    'hint' => null,
+    'size' => 'md',
+    'compact' => false,
     'rows' => 4,
     'required' => false,
     'disabled' => false,
     'readonly' => false,
-    'helperText' => '',
-    'showCharCount' => false,
     'maxLength' => null,
-    'resize' => 'vertical',     // none | vertical | both
+    'resize' => 'vertical',
     'class' => '',
 ])
 
 @php
-    $textareaClasses = 'block w-full rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0';
+$textareaBase = 'block w-full rounded-xl border transition-all duration-200 font-sans';
+$textareaBase .= ' bg-[var(--surface)] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]';
+$textareaBase .= ' focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)] focus:outline-none';
 
-    $resizeClasses = [
-        'none' => 'resize-none',
-        'vertical' => 'resize-y',
-        'both' => 'resize',
-    ];
+$resizeClasses = [
+    'none' => 'resize-none',
+    'vertical' => 'resize-y',
+    'both' => 'resize',
+];
 
-    $sizeClasses = [
-        'sm' => 'px-3 py-1.5 text-sm',
-        'md' => 'px-4 py-2.5 text-sm',
-        'lg' => 'px-5 py-3.5 text-base',
-    ];
+$sizeClasses = [
+    'sm' => 'px-3 py-1.5 text-sm',
+    'md' => 'px-4 py-2.5 text-sm',
+    'lg' => 'px-5 py-3.5 text-base',
+];
 
-    $stateClasses = $error
-        ? 'border-red-300 dark:border-red-500 text-red-900 dark:text-red-400 focus:ring-red-500 focus:border-red-500 placeholder-red-300'
-        : 'border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] placeholder-gray-400 dark:placeholder-gray-500';
+$compactClasses = $compact ? 'px-2.5 py-1.5 text-[0.8125rem] rounded-md' : '';
 
-    $disabledClasses = $disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900' : '';
-    $readonlyClasses = $readonly ? 'bg-gray-50 dark:bg-gray-900 cursor-default' : '';
+$stateBorder = $error
+    ? 'border-[var(--color-error)] ring-1 ring-[var(--color-error)]'
+    : 'border-[var(--border-medium)]';
 
-    $classes = trim("{$textareaClasses} {$resizeClasses[$resize]} {$sizeClasses[$size]} {$stateClasses} {$disabledClasses} {$readonlyClasses} {$class}");
+$disabledClasses = $disabled ? 'opacity-50 cursor-not-allowed' : '';
+$readonlyClasses = $readonly ? 'cursor-default' : '';
+
+$classes = trim($textareaBase . ' ' . $resizeClasses[$resize] . ' ' . ($compact ? $compactClasses : $sizeClasses[$size]) . ' ' . $stateBorder . ' ' . $disabledClasses . ' ' . $readonlyClasses . ' ' . $class);
+
+$labelClasses = $compact
+    ? 'block text-xs font-medium text-[var(--text-secondary)] mb-1'
+    : 'block text-sm font-semibold text-[var(--text-primary)] mb-1.5';
 @endphp
 
 <div class="w-full">
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+        <label for="{{ $name }}" class="{{ $labelClasses }}">
             {{ $label }}
             @if($required)
-                <span class="text-red-500 ml-0.5">*</span>
+                <span class="text-[var(--color-error)] ml-0.5">*</span>
             @endif
             @if($maxLength)
-                <span class="text-xs text-gray-400 font-normal ml-2">(max. {{ $maxLength }} karakter)</span>
+                <span class="text-xs text-[var(--text-tertiary)] font-normal ml-2">(max. {{ $maxLength }} karakter)</span>
             @endif
         </label>
     @endif
 
-    @if($showCharCount)
-        {{-- Textarea with character count using Alpine.js --}}
-        <div
-            x-data="{
-                value: '{{ str_replace(["'", "\n"], ["\\'", '\\n'], $value) }}',
-                maxLength: {{ $maxLength ?? 'null' }},
-                get count() { return this.value.length; }
-            }"
-            class="relative"
-        >
-            <textarea
-                name="{{ $name }}"
-                id="{{ $name }}"
-                rows="{{ $rows }}"
-                placeholder="{{ $placeholder }}"
-                x-model="value"
-                @if($required) required @endif
-                @if($disabled) disabled @endif
-                @if($readonly) readonly @endif
-                @if($maxLength) maxlength="{{ $maxLength }}" @endif
-                {{ $attributes->merge(['class' => $classes . ' pb-8']) }}
-            >{{ $value }}</textarea>
-
-            <div class="absolute bottom-2 right-3 text-xs text-gray-400 dark:text-gray-500">
-                <span x-text="count"></span>
-                @if($maxLength)
-                    <span>/ {{ $maxLength }}</span>
-                @endif
-            </div>
-        </div>
-    @else
-        <textarea
-            name="{{ $name }}"
-            id="{{ $name }}"
-            rows="{{ $rows }}"
-            placeholder="{{ $placeholder }}"
-            @if($required) required @endif
-            @if($disabled) disabled @endif
-            @if($readonly) readonly @endif
-            @if($maxLength) maxlength="{{ $maxLength }}" @endif
-            {{ $attributes->merge(['class' => $classes]) }}
-        >{{ $value }}</textarea>
-    @endif
+    <textarea
+        name="{{ $name }}"
+        id="{{ $name }}"
+        rows="{{ $rows }}"
+        placeholder="{{ $placeholder }}"
+        @if($required) required @endif
+        @if($disabled) disabled @endif
+        @if($readonly) readonly @endif
+        @if($maxLength) maxlength="{{ $maxLength }}" @endif
+        {{ $attributes->merge(['class' => $classes]) }}
+    >{{ $value }}</textarea>
 
     @if($error)
-        <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $error }}</p>
+        <p class="mt-1.5 text-sm text-[var(--color-error)] flex items-center gap-1">
+            <i class="fas fa-exclamation-circle"></i> {{ $error }}
+        </p>
     @endif
 
-    @if($helperText && !$error)
-        <p class="mt-1.5 text-sm text-gray-500 dark:text-gray-400">{{ $helperText }}</p>
+    @if($hint && !$error)
+        <p class="mt-1.5 text-xs text-[var(--text-tertiary)]">{{ $hint }}</p>
     @endif
 </div>

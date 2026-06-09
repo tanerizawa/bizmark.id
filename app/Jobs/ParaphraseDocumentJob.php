@@ -2,11 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Ai\Agents\DocumentAgent;
 use App\Models\AIProcessingLog;
 use App\Models\DocumentDraft;
 use App\Models\DocumentTemplate;
 use App\Models\Project;
-use App\Services\OpenRouterService;
 use App\Services\ProjectContextBuilder;
 use App\Services\TemplateExtractor;
 use Illuminate\Bus\Queueable;
@@ -35,14 +35,14 @@ class ParaphraseDocumentJob implements ShouldQueue
         public int $projectId,
         public int $templateId,
         public int $userId,
-        public array $additionalContext = []
+        public array $additionalContext = [],
+        private ?DocumentAgent $agent = null,
     ) {}
 
     /**
      * Execute the job.
      */
     public function handle(
-        OpenRouterService $openRouter,
         TemplateExtractor $extractor,
         ProjectContextBuilder $contextBuilder
     ): void {
@@ -93,12 +93,25 @@ class ParaphraseDocumentJob implements ShouldQueue
                 }
             }
 
-            // Paraphrase document
-            $result = $openRouter->paraphraseDocument($templateText, $context);
+            // Paraphrase document via DocumentAgent
+            $contextSummary = $contextBuilder->buildContextSummary($context);
+            $prompt = "Document Template:\n```\n{$templateText}\n```\n\n"
+                ."Project Context:\n```\n{$contextSummary}\n```\n\n"
+                .'Please paraphrase this document using the project context. Return JSON only.';
 
-            if (! $result['success']) {
-                throw new \Exception('AI paraphrasing failed: '.$result['error']);
+            $agent = $this->agent ?? new DocumentAgent(mode: 'paraphrase');
+            $response = $agent->prompt($prompt, timeout: 600);
+
+            $parsed = $response instanceof \Laravel\Ai\Responses\StructuredAgentResponse
+                ? $response->structured
+                : json_decode($response->text, true);
+
+            if (empty($parsed) || empty($parsed['full_text'])) {
+                throw new \Exception('AI paraphrasing failed: empty response');
             }
+
+            $fullText = $parsed['full_text'];
+            $chunks = $parsed['chunks'] ?? null;
 
             // Calculate duration
             $duration = round(microtime(true) - $startTime, 2);
@@ -109,27 +122,28 @@ class ParaphraseDocumentJob implements ShouldQueue
                 'template_id' => $this->templateId,
                 'ai_log_id' => $log->id,
                 'title' => $template->name.' - '.$project->name,
-                'content' => $result['full_text'],
-                'sections' => $result['chunks'] ?? null,
+                'content' => $fullText,
+                'sections' => $chunks,
                 'status' => 'draft',
                 'created_by' => $this->userId,
             ]);
 
             // Update log as completed
+            $usage = method_exists($response, 'usage') ? $response->usage() : [];
             $log->update([
                 'status' => 'completed',
-                'input_tokens' => $result['total_input_tokens'],
-                'output_tokens' => $result['total_output_tokens'],
-                'cost' => $result['cost'],
+                'input_tokens' => $usage['prompt_tokens'] ?? null,
+                'output_tokens' => $usage['completion_tokens'] ?? null,
+                'cost' => $usage['cost'] ?? null,
                 'metadata' => [
                     'started_at' => $log->metadata['started_at'] ?? null,
                     'completed_at' => now()->toIso8601String(),
                     'duration_seconds' => $duration,
-                    'chunks_count' => $result['chunks_count'],
+                    'chunks_count' => is_array($chunks) ? count($chunks) : 0,
                     'draft_id' => $draft->id,
                     'word_count' => $extractionResult['word_count'] ?? null,
                     'page_count' => $extractionResult['page_count'] ?? null,
-                    'model' => $result['model'] ?? null,
+                    'model' => $usage['model'] ?? null,
                 ],
             ]);
 

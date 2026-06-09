@@ -58,7 +58,7 @@
                             :aria-expanded="localeMenu"
                             aria-haspopup="true"
                             @click="localeMenu = !localeMenu">
-                        <span>{{ $currentLocale === 'en' ? '🇬🇧 EN' : '🇮🇩 ID' }}</span>
+                        <span>{{ $currentLocale === 'en' ? 'EN' : 'ID' }}</span>
                         <i class="fas fa-chevron-down text-[10px]"></i>
                     </button>
                     <div x-show="localeMenu"
@@ -71,11 +71,11 @@
                          role="menu">
                         <a href="{{ route('locale.set', 'id') }}" role="menuitem"
                            class="nav-dropdown-item {{ $currentLocale === 'id' ? 'active' : '' }}">
-                            <span>🇮🇩 Indonesia</span>
+                            <span>ID — Indonesia</span>
                         </a>
                         <a href="{{ route('locale.set', 'en') }}" role="menuitem"
                            class="nav-dropdown-item {{ $currentLocale === 'en' ? 'active' : '' }}">
-                            <span>🇬🇧 English</span>
+                            <span>EN — English</span>
                         </a>
                     </div>
                 </div>

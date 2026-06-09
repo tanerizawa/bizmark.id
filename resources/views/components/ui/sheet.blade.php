@@ -60,7 +60,7 @@
             </div>
         @endif
 
-        <div class="overflow-y-auto px-5 py-4" style="max-height: calc(85vh - 4rem);">
+        <div class="overflow-y-auto px-5 py-4 max-h-[calc(85vh-4rem)]">
             {{ $slot }}
         </div>
 

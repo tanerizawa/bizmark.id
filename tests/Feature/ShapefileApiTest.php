@@ -273,6 +273,11 @@ class ShapefileApiTest extends TestCase
 
     public function test_polygon_shp_maker_page_loads(): void
     {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
+        $this->withoutMiddleware(\Illuminate\View\Middleware\ShareErrorsFromSession::class);
+        $this->withoutMiddleware(\App\Http\Middleware\LogReconciliationRequests::class);
+        $this->withoutMiddleware(\App\Http\Middleware\NeuralResponseTime::class);
+
         $response = $this->get('/polygon-shp-maker');
 
         $response->assertOk();

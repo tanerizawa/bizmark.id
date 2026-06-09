@@ -1,79 +1,75 @@
 @props([
     'label' => '',
     'value' => '',
-    'trend' => null,          // null (no trend) | positive number | negative number
+    'trend' => null,
     'trendLabel' => '',
-    'icon' => null,           // Font Awesome class
-    'variant' => 'primary',   // primary | success | warning | danger | info
+    'icon' => null,
+    'iconBg' => null,
+    'variant' => 'default',
+    'compact' => false,
     'class' => '',
 ])
 
 @php
-    $baseClasses = 'rounded-2xl p-6 border transition-all duration-200 hover:shadow-md';
+$base = 'flex items-center gap-4 border transition-all duration-200';
+$hover = 'hover:-translate-y-0.5 hover:shadow-md';
 
-    $variantClasses = [
-        'primary' => 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700',
-        'success' => 'bg-white dark:bg-gray-800 border-l-4 border-l-[var(--color-success)] border-gray-100 dark:border-gray-700',
-        'warning' => 'bg-white dark:bg-gray-800 border-l-4 border-l-[var(--color-warning)] border-gray-100 dark:border-gray-700',
-        'danger' => 'bg-white dark:bg-gray-800 border-l-4 border-l-[var(--color-error)] border-gray-100 dark:border-gray-700',
-        'info' => 'bg-white dark:bg-gray-800 border-l-4 border-l-[var(--color-info)] border-gray-100 dark:border-gray-700',
-    ];
+$variants = [
+    'default' => 'bg-[var(--surface-raised)] border-[var(--border-subtle)] rounded-xl',
+    'primary' => 'bg-[var(--surface-raised)] border-l-4 border-l-[var(--accent)] border-[var(--border-subtle)] rounded-xl',
+    'success' => 'bg-[var(--surface-raised)] border-l-4 border-l-[var(--color-success)] border-[var(--border-subtle)] rounded-xl',
+    'warning' => 'bg-[var(--surface-raised)] border-l-4 border-l-[var(--color-warning)] border-[var(--border-subtle)] rounded-xl',
+    'danger'  => 'bg-[var(--surface-raised)] border-l-4 border-l-[var(--color-error)] border-[var(--border-subtle)] rounded-xl',
+];
 
-    $iconBgClasses = [
-        'primary' => 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]',
-        'success' => 'bg-[var(--color-success)]/10 text-green-600',
-        'warning' => 'bg-[var(--color-warning)]/10 text-amber-600',
-        'danger' => 'bg-[var(--color-error)]/10 text-red-600',
-        'info' => 'bg-[var(--color-info)]/10 text-blue-600',
-    ];
+$padding = $compact ? 'p-3 rounded-lg' : 'p-5';
+$iconSize = $compact ? 'w-9 h-9 rounded-lg text-base' : 'w-12 h-12 rounded-xl text-xl';
+$valueSize = $compact ? 'text-xl' : 'text-[1.875rem]';
+$labelSize = $compact ? 'text-xs' : 'text-sm';
 
-    $classes = trim("{$baseClasses} {$variantClasses[$variant]} {$class}");
+$iconDefaults = [
+    'default' => 'bg-[var(--accent-glow)] text-[var(--accent-text)]',
+    'primary' => 'bg-[var(--accent-glow)] text-[var(--accent-text)]',
+    'success' => 'bg-[var(--color-success-bg)] text-[var(--color-success)]',
+    'warning' => 'bg-[var(--color-warning-bg)] text-[var(--color-warning)]',
+    'danger'  => 'bg-[var(--color-error-bg)] text-[var(--color-error)]',
+];
 
-    $trendUp = $trend !== null && $trend >= 0;
-    $trendDown = $trend !== null && $trend < 0;
+$iconClass = $iconBg ?? $iconDefaults[$variant] ?? $iconDefaults['default'];
+$classes = trim("{$base} {$hover} {$variants[$variant]} {$padding} {$class}");
+
+$trendUp = $trend !== null && $trend >= 0;
+$trendDown = $trend !== null && $trend < 0;
 @endphp
 
 <div {{ $attributes->merge(['class' => $classes]) }}>
-    <div class="flex items-start justify-between">
-        <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                {{ $label }}
-            </p>
-            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {{ $value }}
-            </p>
-
-            @if($trend !== null)
-                <div class="mt-2 flex items-center gap-1.5">
-                    @if($trendUp)
-                        <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                        </svg>
-                        <span class="text-sm font-medium text-green-600 dark:text-green-400">
-                            {{ number_format($trend, 1) }}%
-                        </span>
-                    @else
-                        <svg class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                        </svg>
-                        <span class="text-sm font-medium text-red-600 dark:text-red-400">
-                            {{ number_format(abs($trend), 1) }}%
-                        </span>
-                    @endif
-
-                    @if($trendLabel)
-                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ $trendLabel }}</span>
-                    @endif
-                </div>
-            @endif
+    @if($icon)
+        <div class="flex-shrink-0 {{ $iconSize }} flex items-center justify-center {{ $iconClass }}">
+            <i class="{{ $icon }}"></i>
         </div>
+    @endif
 
-        @if($icon)
-            <div class="flex-shrink-0 ml-4">
-                <div class="w-12 h-12 rounded-xl {{ $iconBgClasses[$variant] }} flex items-center justify-center">
-                    <i class="{{ $icon }} text-lg"></i>
-                </div>
+    <div class="flex-1 min-w-0">
+        <p class="{{ $labelSize }} text-[var(--text-secondary)] truncate">{{ $label }}</p>
+        <p class="mt-1 {{ $valueSize }} font-bold tracking-tight text-[var(--text-primary)]">{{ $value }}</p>
+
+        @if($trend !== null)
+            <div class="mt-1.5 flex items-center gap-1.5">
+                @if($trend > 0)
+                    <i class="fa-solid fa-arrow-up text-xs text-[var(--color-success)]"></i>
+                    <span class="text-xs font-medium text-[var(--color-success)]">+{{ number_format($trend, 1) }}%</span>
+                @elseif($trend < 0)
+                    <i class="fa-solid fa-arrow-down text-xs text-[var(--color-error)]"></i>
+                    <span class="text-xs font-medium text-[var(--color-error)]">{{ number_format($trend, 1) }}%</span>
+                @else
+                    <span class="text-xs font-medium text-[var(--text-tertiary)]">0.0%</span>
+                @endif
+                @if($trendLabel)
+                    <span class="text-xs text-[var(--text-tertiary)]">{{ $trendLabel }}</span>
+                @endif
             </div>
         @endif
     </div>
+
+    {{ $slot }}
 </div>

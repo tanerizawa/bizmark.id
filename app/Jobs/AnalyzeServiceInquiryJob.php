@@ -158,38 +158,13 @@ class AnalyzeServiceInquiryJob implements ShouldQueue
             'error' => $exception->getMessage(),
         ]);
 
-        // Update inquiry to indicate permanent failure - use fallback analysis
         $inquiry = ServiceInquiry::find($this->inquiryId);
         if ($inquiry) {
-            // Generate fallback analysis so user still gets a result
-            $aiService = app(FreeAIAnalysisService::class);
-            $fallbackData = array_merge(
-                [
-                    'business_activity' => $inquiry->business_activity,
-                    'company_type' => $inquiry->company_type,
-                    'kbli_code' => $inquiry->kbli_code,
-                    'kbli_description' => $inquiry->kbli_description,
-                ],
-                $inquiry->form_data ?? []
-            );
-            $fallback = $aiService->analyze($fallbackData); // Will return fallback since AI already failed
-
             $inquiry->update([
-                'ai_analysis' => $fallback,
-                'ai_model_used' => 'fallback-v2',
-                'analyzed_at' => now(),
-                'status' => 'analyzed',
-                'priority' => 'medium',
+                'status' => 'error',
                 'admin_notes' => ($inquiry->admin_notes ? $inquiry->admin_notes."\n" : '').
-                    '['.now()->format('Y-m-d H:i').'] AI analysis failed permanently - fallback used. Error: '.$exception->getMessage(),
+                    '['.now()->format('Y-m-d H:i').'] AI analysis failed permanently after '.$this->attempts().' attempts. Error: '.$exception->getMessage(),
             ]);
-
-            // Still send email with fallback results
-            try {
-                Mail::to($inquiry->email)->queue(new ServiceInquiryResultEmail($inquiry->fresh()));
-            } catch (\Exception $e) {
-                Log::error('Failed to send fallback email', ['error' => $e->getMessage()]);
-            }
         }
     }
 }

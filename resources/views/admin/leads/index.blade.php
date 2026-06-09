@@ -1,44 +1,48 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Lead Management')
 @section('page-title', 'Kelola Lead & Inquiry')
 
 @section('content')
-<div style="display:flex;flex-direction:column;gap:16px">
+<div class="flex flex-col gap-4">
 
     {{-- Page Header --}}
     <div>
-        <p style="font-size:0.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dark-text-secondary);margin:0">Manajemen Prospek</p>
-        <h1 style="font-size:1.4rem;font-weight:800;color:var(--dark-text-primary);margin:3px 0 0;line-height:1.2">Lead & Inquiry</h1>
-        <p style="font-size:0.78rem;color:var(--dark-text-secondary);margin:4px 0 0">Kelola semua masukan prospek, inquiry layanan, dan permohonan biaya dari calon klien.</p>
+        <p class="lead-header-breadcrumb">Manajemen Prospek</p>
+        <h1 class="lead-header-title">Lead & Inquiry</h1>
+        <p class="lead-header-desc">Kelola semua masukan prospek, inquiry layanan, dan permohonan biaya dari calon klien.</p>
     </div>
 
     {{-- Session Alerts --}}
     @if(session('success'))
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:color-mix(in srgb,var(--apple-green) 10%,transparent);border:1px solid color-mix(in srgb,var(--apple-green) 30%,transparent);border-radius:12px">
-            <div style="display:flex;align-items:center;gap:10px">
-                <i class="fas fa-check-circle" style="color:var(--apple-green)"></i>
-                <span style="font-size:0.82rem;color:var(--apple-green);font-weight:600">{{ session('success') }}</span>
+        <div class="flex items-center justify-between p-3" style="background:rgba(52,199,89,0.1);border:1px solid rgba(52,199,89,0.3);border-radius:12px">
+            <div class="flex items-center gap-2.5">
+                <i class="fas fa-check-circle text-apple-green"></i>
+                <span class="text-sm font-semibold text-apple-green">{{ session('success') }}</span>
             </div>
-            <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--apple-green);opacity:.7"><i class="fas fa-times"></i></button>
+            <button @click="$el.parentElement.remove()" class="bg-transparent border-none cursor-pointer text-apple-green opacity-70 hover:opacity-100 p-1 rounded-lg transition-opacity" aria-label="Tutup">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     @endif
     @if(session('error'))
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:color-mix(in srgb,var(--apple-red) 10%,transparent);border:1px solid color-mix(in srgb,var(--apple-red) 30%,transparent);border-radius:12px">
-            <div style="display:flex;align-items:center;gap:10px">
-                <i class="fas fa-exclamation-circle" style="color:var(--apple-red)"></i>
-                <span style="font-size:0.82rem;color:var(--apple-red);font-weight:600">{{ session('error') }}</span>
+        <div class="flex items-center justify-between p-3" style="background:rgba(255,59,48,0.1);border:1px solid rgba(255,59,48,0.3);border-radius:12px">
+            <div class="flex items-center gap-2.5">
+                <i class="fas fa-exclamation-circle text-apple-red"></i>
+                <span class="text-sm font-semibold text-apple-red">{{ session('error') }}</span>
             </div>
-            <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--apple-red);opacity:.7"><i class="fas fa-times"></i></button>
+            <button @click="$el.parentElement.remove()" class="bg-transparent border-none cursor-pointer text-apple-red opacity-70 hover:opacity-100 p-1 rounded-lg transition-opacity" aria-label="Tutup">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     @endif
 
     {{-- Tab Navigation + Content --}}
-    <div style="background:var(--dark-bg-secondary);border:1px solid var(--dark-separator);border-radius:18px;overflow:hidden">
+    <div x-data="leadTabs()" class="bg-dark-bg-secondary border border-dark-separator" style="border-radius:18px;overflow:hidden">
 
         {{-- Tab Bar --}}
-        <div style="display:flex;align-items:stretch;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--dark-separator);overflow-x:auto" role="tablist">
-            <div style="display:flex;align-items:stretch">
+        <div class="lead-tab-bar" role="tablist" @keydown.left.prevent="$event.shiftKey ? focusFirstTab() : focusPrevTab()" @keydown.right.prevent="$event.shiftKey ? focusLastTab() : focusNextTab()" @keydown.home.prevent="focusFirstTab()" @keydown.end.prevent="focusLastTab()">
+            <div class="lead-tab-list">
             @php
                 $tabs = [
                     'service-inquiries'    => ['icon'=>'fa-envelope',      'label'=>'Service Inquiries',    'color'=>'var(--apple-blue)',   'count'=>$serviceInquiriesCount],
@@ -47,20 +51,27 @@
                 ];
             @endphp
             @foreach($tabs as $tabKey => $tab)
-                @php $isActive = $activeTab === $tabKey; @endphp
+                @php
+                    $isActive = $activeTab === $tabKey;
+                    $tabColor = $tab['color'];
+                    $bgActive = 'color-mix(in srgb,'.$tabColor.' 18%,transparent)';
+                @endphp
                 <a href="{{ route('admin.leads.index', ['tab' => $tabKey]) }}"
                    role="tab"
                    aria-selected="{{ $isActive ? 'true' : 'false' }}"
-                   style="display:inline-flex;align-items:center;gap:8px;padding:14px 6px;margin-right:24px;font-size:0.85rem;font-weight:{{ $isActive ? '700' : '500' }};color:{{ $isActive ? $tab['color'] : 'var(--dark-text-secondary)' }};text-decoration:none;border-bottom:2px solid {{ $isActive ? $tab['color'] : 'transparent' }};margin-bottom:-1px;transition:color .2s,border-color .2s;white-space:nowrap"
-                   onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--dark-text-primary)'"
-                   onmouseout="if(!this.classList.contains('active-tab'))this.style.color='var(--dark-text-secondary)'"
-                   {{ $isActive ? 'class=active-tab' : '' }}>
-                    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:{{ $isActive ? 'color-mix(in srgb,'.$tab['color'].' 18%,transparent)' : 'var(--dark-bg-tertiary)' }};color:{{ $isActive ? $tab['color'] : 'var(--dark-text-secondary)' }};font-size:0.75rem;flex-shrink:0">
+                   aria-controls="tabpanel-{{ $tabKey }}"
+                   id="tab-{{ $tabKey }}"
+                   tabindex="{{ $isActive ? '0' : '-1' }}"
+                   class="lead-tab @if($isActive) active @endif"
+                   @if($isActive) style="color:{{ $tabColor }};border-bottom-color:{{ $tabColor }}" @endif
+                   @click="activateTab('{{ $tabKey }}')">
+                    <span class="lead-tab-icon-wrap @if($isActive) active @endif" @if($isActive) style="background:{{ $bgActive }};color:{{ $tabColor }}" @endif>
                         <i class="fas {{ $tab['icon'] }}"></i>
                     </span>
                     {{ $tab['label'] }}
                     @if($tab['count'] > 0)
-                        <span style="display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;font-size:0.7rem;font-weight:700;background:{{ $isActive ? $tab['color'] : 'var(--dark-bg-tertiary)' }};color:{{ $isActive ? ($tab['color'] === 'var(--apple-yellow)' ? '#000' : '#fff') : 'var(--dark-text-secondary)' }}">
+                        <span class="lead-tab-count @if($isActive) active @endif"
+                              @if($isActive) style="background:{{ $tabColor }};color:{{ $tabColor === 'var(--apple-yellow)' ? '#000' : '#fff' }}" @endif>
                             {{ $tab['count'] > 99 ? '99+' : $tab['count'] }}
                         </span>
                     @endif
@@ -68,13 +79,13 @@
             @endforeach
             </div>
             {{-- Export button aligned right in tab bar --}}
-            <div style="display:flex;align-items:center;padding:10px 0 10px 16px;flex-shrink:0">
+            <div class="flex items-center py-2.5 pl-4 flex-shrink-0">
                 @if($activeTab === 'service-inquiries')
-                    <a href="{{ route('admin.service-inquiries.export', request()->all()) }}" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:0.78rem;font-weight:600;color:var(--dark-text-secondary);background:var(--dark-bg-tertiary);border:1px solid var(--dark-separator);border-radius:8px;text-decoration:none;transition:all .2s" onmouseover="this.style.color='var(--dark-text-primary)';this.style.borderColor='var(--dark-text-secondary)'" onmouseout="this.style.color='var(--dark-text-secondary)';this.style.borderColor='var(--dark-separator)'">
+                    <a href="{{ route('admin.service-inquiries.export', request()->all()) }}" class="lead-export-btn">
                         <i class="fas fa-download"></i>Export CSV
                     </a>
                 @elseif($activeTab === 'consultation-leads')
-                    <a href="{{ route('admin.consultation-leads.export', request()->all()) }}" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:0.78rem;font-weight:600;color:var(--dark-text-secondary);background:var(--dark-bg-tertiary);border:1px solid var(--dark-separator);border-radius:8px;text-decoration:none;transition:all .2s" onmouseover="this.style.color='var(--dark-text-primary)';this.style.borderColor='var(--dark-text-secondary)'" onmouseout="this.style.color='var(--dark-text-secondary)';this.style.borderColor='var(--dark-separator)'">
+                    <a href="{{ route('admin.consultation-leads.export', request()->all()) }}" class="lead-export-btn">
                         <i class="fas fa-download"></i>Export CSV
                     </a>
                 @endif
@@ -82,7 +93,7 @@
         </div>
 
         {{-- Active Tab Content --}}
-        <div style="padding:20px">
+        <div style="padding:20px" role="tabpanel" id="tabpanel-{{ $activeTab }}" aria-labelledby="tab-{{ $activeTab }}">
             @if($activeTab === 'service-inquiries')
                 @include('admin.leads.tabs.service-inquiries')
             @elseif($activeTab === 'consultation-leads')
@@ -126,35 +137,33 @@
                  x-transition:leave-end="opacity-0 scale-95"
                  @click.outside="isOpen = false"
                  @keydown.escape.window="isOpen = false"
-                 style="background:var(--dark-bg-secondary);border:1px solid var(--dark-separator)" class="relative rounded-2xl shadow-2xl w-full max-w-md"
+                 class="bg-dark-bg-secondary border border-dark-separator relative rounded-2xl shadow-2xl w-full max-w-md"
                  role="dialog" aria-modal="true" aria-labelledby="convert-modal-title">
 
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--dark-separator)">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-dark-separator">
                     <div>
-                        <p style="font-size:0.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dark-text-secondary);margin:0">Lead Management</p>
-                        <h2 id="convert-modal-title" style="font-size:1rem;font-weight:700;color:var(--dark-text-primary);margin:3px 0 0">
+                        <p class="text-xs font-bold uppercase tracking-wider text-dark-text-secondary m-0">Lead Management</p>
+                        <h2 id="convert-modal-title" class="text-base font-bold text-dark-text-primary mt-0.5 m-0">
                             Konversi ke Klien
                         </h2>
                     </div>
                     <button @click="isOpen = false"
-                            style="padding:8px;border-radius:10px;background:none;border:none;color:var(--dark-text-secondary);cursor:pointer;transition:all .2s"
-                            onmouseover="this.style.background='var(--dark-bg-tertiary)';this.style.color='var(--dark-text-primary)'"
-                            onmouseout="this.style.background='none';this.style.color='var(--dark-text-secondary)'"
+                            class="p-2 rounded-lg bg-transparent border-none text-dark-text-secondary cursor-pointer transition-colors hover:bg-dark-bg-tertiary hover:text-dark-text-primary"
                             aria-label="Tutup">
                         <i class="fas fa-times text-sm"></i>
                     </button>
                 </div>
 
                 <div class="px-6 py-5">
-                    <p style="font-size:0.875rem;color:var(--dark-text-secondary);margin-bottom:20px">
+                    <p class="text-sm text-dark-text-secondary mb-5">
                         Konversi consultation lead ini menjadi akun klien terdaftar. Sistem akan membuat akun klien dan proyek perizinan secara otomatis.
                     </p>
                     <form id="convertForm" method="POST" :action="convertUrl" class="space-y-4">
                         @csrf
                         <label class="flex items-center gap-2.5 cursor-pointer group">
                             <input type="checkbox" name="create_client_account" value="1" checked
-                                   style="width:16px;height:16px;border-radius:4px;border:1px solid var(--dark-separator);background:var(--dark-bg-tertiary);accent-color:var(--color-primary);cursor:pointer">
-                            <span style="font-size:0.875rem;font-weight:500;color:var(--dark-text-primary)">
+                                   class="w-4 h-4 rounded border-dark-separator bg-dark-bg-tertiary accent-[var(--color-primary)] cursor-pointer">
+                            <span class="text-sm font-medium text-dark-text-primary">
                                 Buat akun klien baru
                             </span>
                         </label>
@@ -163,7 +172,7 @@
                     </form>
                 </div>
 
-                <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:14px 24px;border-top:1px solid var(--dark-separator)">
+                <div class="flex items-center justify-end gap-3 px-6 py-3.5 border-t border-dark-separator">
                     <x-ui.button variant="ghost" size="sm" @click="isOpen = false">Batal</x-ui.button>
                     <x-ui.button type="submit" size="sm" form="convertForm">
                         <i class="fas fa-user-plus mr-1.5"></i>Konversi
@@ -179,6 +188,35 @@
 function showConvertModal(convertUrl) {
     window.dispatchEvent(new CustomEvent('open-convert-modal', { detail: { url: convertUrl } }));
 }
+
+document.addEventListener('alpine:init', () => {
+    Alpine.data('leadTabs', () => ({
+        activeTab: @js($activeTab),
+        activateTab(tabKey) {
+            window.location.href = '{{ route('admin.leads.index') }}?tab=' + tabKey;
+        },
+        focusPrevTab() {
+            const tabs = Array.from(this.$el.querySelectorAll('[role="tab"]'));
+            const current = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+            const prev = (current - 1 + tabs.length) % tabs.length;
+            tabs[prev].focus();
+        },
+        focusNextTab() {
+            const tabs = Array.from(this.$el.querySelectorAll('[role="tab"]'));
+            const current = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+            const next = (current + 1) % tabs.length;
+            tabs[next].focus();
+        },
+        focusFirstTab() {
+            const tabs = this.$el.querySelectorAll('[role="tab"]');
+            tabs[0].focus();
+        },
+        focusLastTab() {
+            const tabs = this.$el.querySelectorAll('[role="tab"]');
+            tabs[tabs.length - 1].focus();
+        }
+    }));
+});
 </script>
 @endpush
 @endsection

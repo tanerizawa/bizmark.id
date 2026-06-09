@@ -35,6 +35,10 @@ return [
         ],
     ],
 
+    'ollama' => [
+        'base_url' => env('OLLAMA_BASE_URL', 'http://localhost:11434'),
+    ],
+
     'openrouter' => [
         'api_key' => env('OPENROUTER_API_KEY'),
         'base_url' => env('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1'),
@@ -58,6 +62,21 @@ return [
 
     // SearXNG — Open-source self-hosted metasearch (Priority 1: gratis, unlimited)
     // Docker: bizmark_searxng container — https://github.com/searxng/searxng
+    'omniroute' => [
+        'api_key' => env('OMNIROUTE_API_KEY'),
+        'base_url' => env('OMNIROUTE_BASE_URL', 'http://localhost:20128/v1'),
+    ],
+
+    'omniroute2' => [
+        'api_key' => env('OMNIROUTE2_API_KEY', 'sk-4cda540a951b42b5-75avmp-9cd6ab32'),
+        'base_url' => env('OMNIROUTE2_BASE_URL', 'http://localhost:20129/v1'),
+        'default_model' => env('OMNIROUTE2_DEFAULT_MODEL', 'Gratis'),
+        'free_primary_model' => env('OMNIROUTE2_FREE_PRIMARY_MODEL', 'Gratis'),
+        'free_fallback_model' => env('OMNIROUTE2_FREE_FALLBACK_MODEL', 'Gratis'),
+        'premium_primary_model' => env('OMNIROUTE2_PREMIUM_PRIMARY_MODEL', 'Gratis'),
+        'premium_fallback_model' => env('OMNIROUTE2_PREMIUM_FALLBACK_MODEL', 'Gratis'),
+    ],
+
     'searxng' => [
         'url' => env('SEARXNG_URL', 'http://bizmark_searxng:8080'),
     ],
@@ -79,6 +98,7 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'refresh_token' => env('GOOGLE_REFRESH_TOKEN'),
         'gsc_site_url' => env('GSC_SITE_URL', 'https://bizmark.id/'),  // must match GSC property URL exactly
+        'analytics_id' => env('GOOGLE_ANALYTICS_ID'),
     ],
 
     'perizinan_ai' => [
@@ -157,10 +177,6 @@ return [
         'property_id' => env('TAWK_PROPERTY_ID', '69f84236394ff41c326e2175'),
         'widget_id' => env('TAWK_WIDGET_ID', '1jnos59bv'),
         'api_key' => env('TAWK_API_KEY'),
-    ],
-
-    'google' => [
-        'analytics_id' => env('GOOGLE_ANALYTICS_ID'),
     ],
 
     // Indonesia Civic Stack — internal Docker microservice (FastAPI)

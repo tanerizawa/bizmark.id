@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Sub-Layanan: ' . ($parent['title'] ?? ''))
 @section('page-title', 'Sub-Layanan')
 

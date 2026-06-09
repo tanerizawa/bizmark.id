@@ -89,11 +89,7 @@
 {{-- HERO — EDITORIAL --}}
 <section class="section-v2 geo-motif bg-[var(--bg-raised)] border-b border-gray-200">
     <div class="container-wide">
-        <div class="chapter-mark">
-            <span class="chapter-mark__num">CH.01</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'About Bizmark' : 'Tentang Bizmark' }}</span>
-        </div>
+        <span class="eyebrow block mb-4">{{ $isEn ? 'About Bizmark' : 'Tentang Bizmark' }}</span>
 
         <div class="editorial-split">
             <div>
@@ -145,11 +141,7 @@
 {{-- MISSION / STORY — EDITORIAL SPLIT --}}
 <section class="section-v2" aria-labelledby="story-heading">
     <div class="container-wide">
-        <div class="chapter-mark">
-            <span class="chapter-mark__num">CH.02</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'Our Story' : 'Cerita Kami' }}</span>
-        </div>
+        <span class="eyebrow block mb-4">{{ $isEn ? 'Our Story' : 'Cerita Kami' }}</span>
 
         <div class="editorial-split">
             <div>
@@ -215,17 +207,23 @@
 {{-- TIMELINE — HORIZONTAL EDITORIAL --}}
 <section class="section-v2 section-premium" aria-labelledby="timeline-heading">
     <div class="container-wide">
-        <div class="chapter-mark">
-            <span class="chapter-mark__num">CH.03</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'Milestones' : 'Tonggak Sejarah' }}</span>
-        </div>
+        <span class="eyebrow block mb-4">{{ $isEn ? 'Milestones' : 'Tonggak Sejarah' }}</span>
         <h2 id="timeline-heading" class="display-lg mb-3 max-w-2xl">
             {{ $isEn ? $expYears . ' years, forward.' : $expYears . ' tahun, melangkah maju.' }}
         </h2>
-        <p class="text-base text-gray-600 mb-8 max-w-2xl">
+        <p class="text-base text-gray-600 mb-4 max-w-2xl">
             {{ $isEn ? 'Scroll horizontally to walk through every chapter.' : 'Geser untuk menyusuri setiap babak.' }}
         </p>
+
+        <div class="h-timeline-scroll-hint mb-6" aria-hidden="true"
+             x-data="{ visible: true }"
+             x-init="setTimeout(() => visible = false, 8000)"
+             x-show="visible"
+             x-transition.opacity.duration.500ms>
+            <i class="fas fa-arrows-left-right text-xs"></i>
+            <span>{{ $isEn ? 'Scroll to explore' : 'Geser ke samping' }}</span>
+            <i class="fas fa-hand-pointer text-xs animate-pulse"></i>
+        </div>
 
         <div class="h-timeline">
             @foreach($timeline as $t)
@@ -242,18 +240,14 @@
 {{-- VALUES — PLATFORM CARDS --}}
 <section class="section-v2" aria-labelledby="values-heading">
     <div class="container-wide">
-        <div class="chapter-mark">
-            <span class="chapter-mark__num">CH.04</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'Our Values' : 'Nilai Kami' }}</span>
-        </div>
+        <span class="eyebrow block mb-4">{{ $isEn ? 'Our Values' : 'Nilai Kami' }}</span>
         <h2 id="values-heading" class="display-lg mb-12 max-w-2xl">
             {{ $isEn ? 'How we work — written rules, not slogans.' : 'Cara kami bekerja — aturan tertulis, bukan slogan.' }}
         </h2>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             @foreach($values as $i => $v)
-                <article class="platform-card">
+                <article class="platform-card" style="position: relative; border-top: 2px solid var(--accent); border-top-left-radius: 0; border-top-right-radius: 0;">
                     <div class="platform-card__head">
                         <span class="platform-card__num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }} / {{ str_pad(count($values), 2, '0', STR_PAD_LEFT) }}</span>
                         <span class="platform-card__status">{{ $isEn ? 'Live' : 'Aktif' }}</span>
@@ -270,11 +264,7 @@
 {{-- TEAM — EDITORIAL ROSTER --}}
 <section class="section-v2" aria-labelledby="team-heading">
     <div class="container-wide">
-        <div class="chapter-mark">
-            <span class="chapter-mark__num">CH.05</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'The Practice' : 'Tim Kami' }}</span>
-        </div>
+        <span class="eyebrow block mb-4">{{ $isEn ? 'The Practice' : 'Tim Kami' }}</span>
         <div class="editorial-split mb-10">
             <h2 id="team-heading" class="display-lg">
                 {{ $isEn ? 'Senior consultants on every project.' : 'Konsultan senior di setiap proyek.' }}

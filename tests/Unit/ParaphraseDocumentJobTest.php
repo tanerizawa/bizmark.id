@@ -2,17 +2,41 @@
 
 namespace Tests\Unit;
 
+use App\Ai\Agents\DocumentAgent;
 use App\Jobs\ParaphraseDocumentJob;
 use App\Models\DocumentTemplate;
 use App\Models\Project;
 use App\Models\ProjectStatus;
 use App\Models\User;
-use App\Services\OpenRouterService;
 use App\Services\ProjectContextBuilder;
 use App\Services\TemplateExtractor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
+use Laravel\Ai\Responses\AgentResponse;
+use Laravel\Ai\Responses\Data\Meta;
+use Laravel\Ai\Responses\Data\Usage;
 use Tests\TestCase;
+
+/**
+ * Test double for AgentResponse that doesn't require mocking return types
+ */
+class TestAgentResponse extends AgentResponse
+{
+    public function __construct(public string $text)
+    {
+        parent::__construct(
+            invocationId: 'test-invocation-id',
+            text: $this->text,
+            usage: new Usage(),
+            meta: new Meta()
+        );
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
+    }
+}
 
 class ParaphraseDocumentJobTest extends TestCase
 {
@@ -79,10 +103,9 @@ class ParaphraseDocumentJobTest extends TestCase
             ->willThrowException(new \Exception('Simulated failure'));
 
         $contextBuilder = $this->createMock(ProjectContextBuilder::class);
-        $openRouter = \Mockery::mock(OpenRouterService::class);
 
         try {
-            $job->handle($openRouter, $extractor, $contextBuilder);
+            $job->handle($extractor, $contextBuilder);
         } catch (\Exception) {
             // Expected
         }
@@ -115,10 +138,9 @@ class ParaphraseDocumentJobTest extends TestCase
             ->willReturn(['success' => false, 'error' => 'Template extraction failed: File not found']);
 
         $contextBuilder = $this->createMock(ProjectContextBuilder::class);
-        $openRouter = \Mockery::mock(OpenRouterService::class);
 
         try {
-            $job->handle($openRouter, $extractor, $contextBuilder);
+            $job->handle($extractor, $contextBuilder);
         } catch (\Exception) {
             // Expected - job re-throws after logging
         }
@@ -160,10 +182,8 @@ class ParaphraseDocumentJobTest extends TestCase
                 'missing_fields' => ['company_name', 'director_name'],
             ]);
 
-        $openRouter = \Mockery::mock(OpenRouterService::class);
-
         try {
-            $job->handle($openRouter, $extractor, $contextBuilder);
+            $job->handle($extractor, $contextBuilder);
         } catch (\Exception) {
             // Expected - job re-throws after logging
         }
@@ -171,10 +191,23 @@ class ParaphraseDocumentJobTest extends TestCase
 
     public function test_handle_creates_draft_on_success(): void
     {
+        $responseData = [
+            'full_text' => 'Hasil parafrase dokumen.',
+            'chunks' => [['heading' => 'Bagian 1', 'content' => 'Konten']],
+            'word_count' => 5,
+            'changes_summary' => ['Replaced placeholders'],
+        ];
+
+        $agent = \Mockery::mock(DocumentAgent::class);
+        $agent->shouldReceive('prompt')
+            ->once()
+            ->andReturn(new TestAgentResponse(json_encode($responseData)));
+
         $job = new ParaphraseDocumentJob(
             projectId: $this->project->id,
             templateId: $this->template->id,
             userId: $this->user->id,
+            agent: $agent,
         );
 
         $extractor = $this->createMock(TemplateExtractor::class);
@@ -191,24 +224,13 @@ class ParaphraseDocumentJobTest extends TestCase
         $contextBuilder = $this->createMock(ProjectContextBuilder::class);
         $contextBuilder->method('buildContext')
             ->willReturn(['company_name' => 'PT BizMark', 'director_name' => 'John Doe']);
+        $contextBuilder->method('buildContextSummary')
+            ->willReturn('KONTEKS PROYEK:\nCompany Name: PT BizMark\nDirector Name: John Doe');
 
         $contextBuilder->method('validateRequiredFields')
             ->willReturn(['valid' => true, 'missing_fields' => []]);
 
-        $openRouter = \Mockery::mock(OpenRouterService::class);
-        $openRouter->shouldReceive('paraphraseDocument')
-            ->andReturn([
-                'success' => true,
-                'full_text' => 'Hasil parafrase dokumen.',
-                'chunks' => [['heading' => 'Bagian 1', 'content' => 'Konten']],
-                'total_input_tokens' => 100,
-                'total_output_tokens' => 50,
-                'cost' => 0.0025,
-                'chunks_count' => 1,
-                'model' => 'gpt-4',
-            ]);
-
-        $job->handle($openRouter, $extractor, $contextBuilder);
+        $job->handle($extractor, $contextBuilder);
 
         $this->assertDatabaseHas('document_drafts', [
             'project_id' => $this->project->id,
@@ -218,17 +240,30 @@ class ParaphraseDocumentJobTest extends TestCase
 
     public function test_handle_logs_info_on_success(): void
     {
-        $job = new ParaphraseDocumentJob(
-            projectId: $this->project->id,
-            templateId: $this->template->id,
-            userId: $this->user->id,
-        );
+        $responseData = [
+            'full_text' => 'Hasil parafrase.',
+            'chunks' => [],
+            'word_count' => 2,
+            'changes_summary' => ['Replaced placeholders'],
+        ];
+
+        $agent = \Mockery::mock(DocumentAgent::class);
+        $agent->shouldReceive('prompt')
+            ->once()
+            ->andReturn(new TestAgentResponse(json_encode($responseData)));
 
         Log::shouldReceive('info')
             ->once()
             ->with('Document paraphrasing completed', \Mockery::on(function ($context) {
                 return $context['project_id'] === $this->project->id;
             }));
+
+        $job = new ParaphraseDocumentJob(
+            projectId: $this->project->id,
+            templateId: $this->template->id,
+            userId: $this->user->id,
+            agent: $agent,
+        );
 
         $extractor = $this->createMock(TemplateExtractor::class);
         $extractor->method('extractFromFile')
@@ -244,22 +279,11 @@ class ParaphraseDocumentJobTest extends TestCase
         $contextBuilder = $this->createMock(ProjectContextBuilder::class);
         $contextBuilder->method('buildContext')
             ->willReturn(['company_name' => 'PT BizMark', 'director_name' => 'John Doe']);
+        $contextBuilder->method('buildContextSummary')
+            ->willReturn('KONTEKS PROYEK:\nCompany Name: PT BizMark\nDirector Name: John Doe');
         $contextBuilder->method('validateRequiredFields')
             ->willReturn(['valid' => true, 'missing_fields' => []]);
 
-        $openRouter = \Mockery::mock(OpenRouterService::class);
-        $openRouter->shouldReceive('paraphraseDocument')
-            ->andReturn([
-                'success' => true,
-                'full_text' => 'Hasil parafrase.',
-                'chunks' => [],
-                'total_input_tokens' => 50,
-                'total_output_tokens' => 25,
-                'cost' => 0.001,
-                'chunks_count' => 0,
-                'model' => 'gpt-4',
-            ]);
-
-        $job->handle($openRouter, $extractor, $contextBuilder);
+        $job->handle($extractor, $contextBuilder);
     }
 }

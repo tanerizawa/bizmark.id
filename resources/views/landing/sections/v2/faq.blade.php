@@ -14,11 +14,7 @@
     <div class="container-wide">
         <div class="grid lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4" data-aos="fade-up">
-                <div class="chapter-mark">
-                    <span class="chapter-mark__num">FAQ</span>
-                    <span class="chapter-mark__rule"></span>
-                    <span>{{ $isEn ? 'Frequently asked' : 'Pertanyaan umum' }}</span>
-                </div>
+                <span class="eyebrow block mb-3">{{ $isEn ? 'Frequently asked' : 'Pertanyaan umum' }}</span>
                 <h2 id="faq-heading" class="display-md mb-3">
                     {{ $isEn ? 'Common questions.' : 'Pertanyaan umum.' }}
                 </h2>

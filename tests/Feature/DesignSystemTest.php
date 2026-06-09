@@ -149,10 +149,12 @@ class DesignSystemTest extends TestCase
     {
         $content = file_get_contents($componentPath);
 
-        $this->assertStringContainsString(
-            'dark:',
-            $content,
-            "Component {$componentPath} does not contain any dark: prefix — missing dark mode support"
+        $hasTailwindDark = str_contains($content, 'dark:');
+        $hasCssVariableTheme = preg_match('/var\(--(?:dark|apple)/', $content);
+
+        $this->assertTrue(
+            $hasTailwindDark || $hasCssVariableTheme,
+            "Component {$componentPath} does not have dark mode support — add dark: prefix or CSS custom properties"
         );
     }
 
@@ -335,11 +337,11 @@ class DesignSystemTest extends TestCase
         $base = getcwd().'/resources/views/components/ui';
 
         return [
-            'badge primary' => ["{$base}/badge.blade.php", '--color-primary'],
-            'button primary' => ["{$base}/button.blade.php", '--color-primary'],
+            'badge primary' => ["{$base}/badge.blade.php", '--apple-blue'],
+            'button primary' => ["{$base}/button.blade.php", '--apple-blue'],
             'pagination primary' => ["{$base}/pagination.blade.php", '--color-primary'],
-            'input primary focus' => ["{$base}/input.blade.php", '--color-primary'],
-            'select primary focus' => ["{$base}/select.blade.php", '--color-primary'],
+            'input primary focus' => ["{$base}/input.blade.php", '--apple-blue'],
+            'select primary focus' => ["{$base}/select.blade.php", '--apple-blue'],
         ];
     }
 

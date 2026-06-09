@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Topic Pool')
 @section('page-title', 'Topic Pool')

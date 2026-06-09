@@ -20,13 +20,8 @@ class NewLandingController extends Controller
                     ->get();
             });
         } catch (Throwable $e) {
-            Log::warning('New landing articles cache unavailable', [
-                'locale' => $locale, 'error' => $e->getMessage(),
-            ]);
-            $latestArticles = \App\Models\Article::published()
-                ->orderBy('published_at', 'desc')
-                ->take(5)
-                ->get();
+            Log::warning('New landing articles cache unavailable', ['locale' => $locale]);
+            $latestArticles = collect();
         }
 
         $services = config('services_data', []);

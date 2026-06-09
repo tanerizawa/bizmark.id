@@ -47,12 +47,15 @@ window.apiFetch = async function (url, options = {}) {
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRF-TOKEN': csrfToken,
         },
+        credentials: 'include',
     };
 
     const config = {
         ...defaults,
         ...options,
         headers: { ...defaults.headers, ...(options.headers ?? {}) },
+        // Allow caller override for credentials (e.g. 'same-origin')
+        ...(options.credentials ? {} : { credentials: 'include' }),
     };
 
     try {

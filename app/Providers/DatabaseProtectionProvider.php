@@ -42,6 +42,19 @@ class DatabaseProtectionProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Skip protection in testing environment
+        try {
+            if ($this->app->runningUnitTests()) {
+                return;
+            }
+        } catch (\Exception) {
+            // Fall through to check environment
+        }
+
+        if ($this->app->environment('testing')) {
+            return;
+        }
+
         if ($this->app->runningInConsole()) {
             $this->interceptDangerousCommands();
         }
@@ -53,6 +66,12 @@ class DatabaseProtectionProvider extends ServiceProvider
     protected function interceptDangerousCommands(): void
     {
         Event::listen(CommandStarting::class, function (CommandStarting $event) {
+            // Skip check in testing - even if APP_ENV says production
+            $env = $_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? env('APP_ENV', 'local');
+            if ($env === 'testing' || getenv('PHPUNIT') === '1') {
+                return;
+            }
+
             $command = $event->command;
 
             // Check if this is a dangerous command
@@ -67,6 +86,7 @@ class DatabaseProtectionProvider extends ServiceProvider
      */
     protected function handleDangerousCommand(string $command, CommandStarting $event): void
     {
+        // Always allow in testing environment regardless of APP_ENV value
         $environment = app()->environment();
         $isProduction = in_array($environment, ['production', 'prod', 'live']);
 

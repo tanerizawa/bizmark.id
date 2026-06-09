@@ -7,47 +7,34 @@ use Illuminate\Support\Facades\Log;
 
 class EmbeddingService
 {
-    private const EMBEDDING_MODEL = 'text-embedding-ada-002';
+    private const EMBEDDING_MODEL = 'nomic-embed-text';
 
-    private const EMBEDDING_DIMS = 1536;
-
-    private string $apiKey;
+    private const EMBEDDING_DIMS = 768;
 
     private string $baseUrl;
 
     public function __construct()
     {
-        // OpenRouter supports OpenAI-compatible embeddings endpoint
-        $this->apiKey = config('services.openrouter.api_key') ?? '';
-        $this->baseUrl = rtrim(config('services.openrouter.base_url', 'https://openrouter.ai/api/v1'), '/');
+        $this->baseUrl = rtrim(config('services.ollama.base_url', 'http://localhost:11434'), '/');
     }
 
     /**
-     * Embed a single text string. Returns float[] of length 1536.
+     * Embed a single text string. Returns float[] of length 768.
      * Returns empty array on failure.
      */
     public function embed(string $text): array
     {
-        if (empty($this->apiKey)) {
-            Log::warning('[Embedding] API key not configured');
-
-            return [];
-        }
-
-        // Truncate to ~8000 chars to stay within token limits
         $text = mb_substr(trim($text), 0, 8000);
 
         try {
-            $response = Http::withToken($this->apiKey)
-                ->timeout(30)
-                ->withHeaders(['HTTP-Referer' => config('app.url')])
-                ->post("{$this->baseUrl}/embeddings", [
+            $response = Http::timeout(30)
+                ->post("{$this->baseUrl}/api/embeddings", [
                     'model' => self::EMBEDDING_MODEL,
-                    'input' => $text,
+                    'prompt' => $text,
                 ]);
 
             if (! $response->successful()) {
-                Log::warning('[Embedding] API error', [
+                Log::warning('[Embedding] Ollama API error', [
                     'status' => $response->status(),
                     'body' => $response->body(),
                 ]);
@@ -55,7 +42,15 @@ class EmbeddingService
                 return [];
             }
 
-            return $response->json('data.0.embedding', []);
+            $embedding = $response->json('embedding', []);
+
+            if (empty($embedding)) {
+                Log::warning('[Embedding] Empty embedding returned');
+
+                return [];
+            }
+
+            return $embedding;
         } catch (\Throwable $e) {
             Log::error('[Embedding] Exception: '.$e->getMessage());
 

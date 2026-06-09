@@ -1,2 +1,0 @@
-# Ignore MCP config which may contain API tokens/secrets
-mcp.json

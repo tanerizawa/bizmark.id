@@ -43,11 +43,7 @@
 <section class="section-v2 section-premium" aria-labelledby="testimonials-heading">
     <div class="container-wide">
         <div class="max-w-2xl mb-5">
-            <div class="chapter-mark">
-                <span class="chapter-mark__num">05</span>
-                <span class="chapter-mark__rule"></span>
-                <span>{{ $isEn ? 'Client Stories' : 'Testimoni Klien' }}</span>
-            </div>
+            <span class="eyebrow block mb-3">{{ $isEn ? 'Client Stories' : 'Testimoni Klien' }}</span>
             <h2 id="testimonials-heading" class="display-md mb-2">
                 {{ $isEn ? 'Trusted by industry leaders.' : 'Dipercaya berbagai industri.' }}
             </h2>

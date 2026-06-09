@@ -6,12 +6,12 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Hasil Tidak Ditemukan | Bizmark.ID</title>
 
-    <!-- Google Fonts preconnect (font loaded via Vite landing.css) -->
+    <!-- Google Fonts preconnect (font loaded via Vite public.css) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Vite: Tailwind CSS + Font Awesome + Alpine.js (dari npm, bukan CDN) -->
-    @vite(['resources/css/landing.css', 'resources/js/app.js'])
+    @vite(['resources/css/public.css', 'resources/js/app.js'])
 
     <style>
         [x-cloak] { display: none !important; }

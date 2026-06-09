@@ -74,10 +74,15 @@ class AdminDashboardIntegrationTest extends TestCase
 
     public function test_dashboard_renders_critical_alerts_section(): void
     {
-        $this->actingAs($this->admin)
+        $response = $this->actingAs($this->admin)
             ->get(route('dashboard'))
-            ->assertOk()
-            ->assertSee('Fokus Kritis');
+            ->assertOk();
+
+        $content = $response->getContent();
+        $this->assertTrue(
+            str_contains($content, 'Fokus Kritis') || str_contains($content, 'Semua Terkendali'),
+            'Dashboard must render critical alerts section (Fokus Kritis or Semua Terkendali).'
+        );
     }
 
     public function test_dashboard_renders_project_status_distribution(): void

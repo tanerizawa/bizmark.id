@@ -19,10 +19,35 @@ class PerizinanAIService
 
     private int $timeout;
 
+    private ?string $username;
+
+    private ?string $password;
+
     public function __construct()
     {
         $this->baseUrl = config('services.perizinan_ai.url', 'https://api.bizmark.id');
         $this->timeout = config('services.perizinan_ai.timeout', 30);
+        $this->username = config('services.perizinan_ai.username');
+        $this->password = config('services.perizinan_ai.password');
+    }
+
+    /**
+     * Get HTTP client with auth headers.
+     */
+    private function client(): \Illuminate\Http\Client\PendingRequest
+    {
+        $client = Http::timeout($this->timeout)
+            ->retry(3, 1000, function ($exception) {
+                return $exception instanceof \Illuminate\Http\Client\ConnectionException
+                    || ($exception->response && $exception->response->status() >= 500);
+            })
+            ->withHeaders(['Accept' => 'application/json']);
+
+        if ($this->username && $this->password) {
+            $client->withBasicAuth($this->username, $this->password);
+        }
+
+        return $client;
     }
 
     /**
@@ -38,12 +63,7 @@ class PerizinanAIService
         $startTime = microtime(true);
 
         try {
-            $response = Http::timeout($this->timeout)
-                ->retry(3, 1000, function ($exception) {
-                    // Retry on timeout or 5xx errors
-                    return $exception instanceof \Illuminate\Http\Client\ConnectionException
-                        || ($exception->response && $exception->response->status() >= 500);
-                })
+            $response = $this->client()
                 ->post("{$this->baseUrl}/api/query", [
                     'question' => $question,
                 ]);
@@ -159,8 +179,7 @@ class PerizinanAIService
     public function testConnection(): bool
     {
         try {
-            $response = Http::timeout(10)
-                ->get("{$this->baseUrl}/health");
+            $response = $this->client()->get("{$this->baseUrl}/health");
 
             return $response->successful() && $response->json('status') === 'healthy';
         } catch (\Exception $e) {
@@ -177,14 +196,11 @@ class PerizinanAIService
      */
     public function clearCache(): void
     {
-        Cache::forget('perizinan_ai_token');
-
-        // Clear query caches (pattern-based)
-        $patterns = ['rag_biztype:*', 'rag_kbli:*', 'rag_location:*'];
-
-        foreach ($patterns as $pattern) {
-            // Note: This requires Redis or similar cache driver that supports patterns
+        try {
             Cache::tags('rag')->flush();
+        } catch (\BadMethodCallException|\Exception $e) {
+            // Fallback for drivers that do not support tags (e.g. file, database)
+            Cache::forget('perizinan_ai_token');
         }
 
         Log::info('Perizinan AI cache cleared');
@@ -201,7 +217,7 @@ class PerizinanAIService
             return [
                 'connected' => $isConnected,
                 'base_url' => $this->baseUrl,
-                'configured' => true, // No auth required
+                'configured' => filled($this->username) && filled($this->password),
                 'cache_enabled' => Cache::getStore() !== null,
             ];
         } catch (\Exception $e) {

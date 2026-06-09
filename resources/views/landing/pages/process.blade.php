@@ -112,11 +112,7 @@
 {{-- HERO — EDITORIAL --}}
 <section class="section-v2 geo-motif bg-[var(--bg-raised)] border-b border-gray-200">
     <div class="container-wide">
-        <div class="chapter-mark">
-            <span class="chapter-mark__num">PROCESS</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'How We Work' : 'Cara Kerja Kami' }}</span>
-        </div>
+        <span class="eyebrow block mb-4">{{ $isEn ? 'How We Work' : 'Cara Kerja Kami' }}</span>
         <div class="editorial-split">
             <div>
                 <h1 class="display-xl mb-6" style="font-size: clamp(2.75rem, 6.5vw, 5rem);">
@@ -151,17 +147,17 @@
                 {{ $isEn ? 'Click any stage to expand details' : 'Klik tahap mana saja untuk melihat detail lengkap' }}
             </p>
         </div>
-        <div class="space-y-4" x-data="{ open: 0 }">
+        <div class="space-y-4 process-stages" x-data="{ open: 0 }">
             @foreach($stages as $i => $s)
-                <article class="premium-card cursor-pointer transition-all"
-                         @click="open = (open === {{ $i }} ? -1 : {{ $i }})"
+                <article class="premium-card transition-all"
                          :class="open === {{ $i }} ? 'shadow-lg' : ''"
-                         :style="open === {{ $i }} ? 'border-color: rgba(var(--accent-rgb),.4);' : ''"
-                         role="button"
-                         tabindex="0"
-                         :aria-expanded="(open === {{ $i }}).toString()"
-                         @keydown.enter.prevent="open = (open === {{ $i }} ? -1 : {{ $i }})"
-                         @keydown.space.prevent="open = (open === {{ $i }} ? -1 : {{ $i }})">
+                         :style="open === {{ $i }} ? 'border-color: rgba(var(--accent-rgb),.4);' : ''">
+                    <button type="button"
+                            class="w-full text-left p-0 bg-transparent border-0 cursor-pointer"
+                            @click="open = (open === {{ $i }} ? -1 : {{ $i }})"
+                            :aria-expanded="open === {{ $i }} ? 'true' : 'false'"
+                            aria-controls="process-stage-{{ $i }}-panel"
+                            id="process-stage-{{ $i }}-trigger">
                     {{-- Header row (always visible) --}}
                     <div class="grid lg:grid-cols-12 gap-6 items-start">
                         <div class="lg:col-span-3 flex items-center gap-4">
@@ -181,13 +177,14 @@
                             <p class="text-base leading-relaxed text-gray-600">{{ $s['desc'] }}</p>
                         </div>
 
-                        <div class="lg:col-span-1 flex justify-end">
+                        <div class="lg:col-span-1 flex justify-end pt-1">
                             <i class="fas fa-chevron-down text-lg transition-transform"
                                :class="open === {{ $i }} ? 'rotate-180' : ''"
                                style="color: var(--accent);"
                                aria-hidden="true"></i>
                         </div>
                     </div>
+                    </button>
 
                     {{-- Expandable details --}}
                     <div x-show="open === {{ $i }}"
@@ -195,6 +192,9 @@
                          x-transition:enter-start="opacity-0 -translate-y-2"
                          x-transition:enter-end="opacity-100 translate-y-0"
                          x-cloak
+                         id="process-stage-{{ $i }}-panel"
+                         role="region"
+                         aria-labelledby="process-stage-{{ $i }}-trigger"
                          class="grid md:grid-cols-2 gap-3 mt-5 pt-5"
                          style="border-top: 1px solid var(--border-subtle);">
                         <div class="rounded-lg p-3 bg-amber-500/10">
@@ -221,11 +221,7 @@
 {{-- TRUST BAND — EDITORIAL NUMBERS --}}
 <section class="section-v2-sm section-premium">
     <div class="container-wide">
-        <div class="chapter-mark mb-2 justify-center" style="justify-content:center;">
-            <span class="chapter-mark__num">GUARANTEE</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'What we guarantee' : 'Apa yang kami jamin' }}</span>
-        </div>
+        <span class="eyebrow block mb-4 text-center">{{ $isEn ? 'What we guarantee' : 'Apa yang kami jamin' }}</span>
         <div class="editorial-number-grid mt-6">
             <div class="editorial-number">
                 <div class="editorial-number__value"><span class="editorial-number__suffix" style="font-size:1em;letter-spacing:0;">{{ $isEn ? 'SLA' : 'SLA' }}</span></div>

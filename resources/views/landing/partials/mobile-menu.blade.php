@@ -138,12 +138,12 @@
                     <div class="flex gap-2">
                         <a href="{{ route('locale.set', 'id') }}"
                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition min-h-[44px] {{ app()->getLocale() === 'id' ? 'bg-white font-semibold text-[var(--color-primary)]' : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30' }}">
-                            <span>🇮🇩</span>
+                            <span class="font-bold text-sm">ID</span>
                             <span class="text-sm">Indonesia</span>
                         </a>
                         <a href="{{ route('locale.set', 'en') }}"
                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition min-h-[44px] {{ app()->getLocale() === 'en' ? 'bg-white font-semibold text-[var(--color-primary)]' : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30' }}">
-                            <span>🇬🇧</span>
+                            <span class="font-bold text-sm">EN</span>
                             <span class="text-sm">English</span>
                         </a>
                     </div>

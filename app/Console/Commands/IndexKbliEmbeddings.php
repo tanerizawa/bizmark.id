@@ -75,7 +75,7 @@ class IndexKbliEmbeddings extends Command
                 $vectorLiteral = EmbeddingService::toVectorLiteral($embedding);
 
                 DB::statement(
-                    'UPDATE kblis SET embedding = ?::vector WHERE id = ?',
+                    'UPDATE kbli SET embedding = ?::vector WHERE id = ?',
                     [$vectorLiteral, $kbli->id]
                 );
 

@@ -100,20 +100,22 @@ class AISettingService
      */
     protected static function logChange(AISetting $setting, $oldValue, $newValue, ?string $reason = null): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! ($user = auth()->user())) {
             return;
         }
+
+        $req = request();
 
         AISettingHistory::create([
             'setting_id' => $setting->id,
             'key' => $setting->key,
             'old_value' => $oldValue,
             'new_value' => is_array($newValue) ? json_encode($newValue) : (string) $newValue,
-            'changed_by_name' => auth()->user()->name,
+            'changed_by_name' => $user->name,
             'changed_by' => auth()->id(),
             'reason' => $reason,
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
+            'ip_address' => $req->ip() ?? '127.0.0.1',
+            'user_agent' => $req->userAgent() ?? 'console',
         ]);
     }
 

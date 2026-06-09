@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Edit Layanan: ' . ($service['title'] ?? ''))
 @section('page-title', 'Edit Layanan')
 

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Create Email Account')
 @section('content')
 <div style="display:flex;flex-direction:column;gap:16px">

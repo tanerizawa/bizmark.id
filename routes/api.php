@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AiAgentController;
 use App\Http\Controllers\Api\CivicStackController;
 use App\Http\Controllers\Api\ConsultationController;
 use App\Http\Controllers\Api\LandingStatsController;
@@ -93,4 +94,11 @@ Route::prefix('civic')->middleware('throttle:30,1')->group(function () {
     Route::get('bpjph-check', [CivicStackController::class, 'bpjphCheck']);   // Step 3: halal cert (F&B only)
     Route::get('nib-lookup', [CivicStackController::class, 'nibLookup']);    // Pre-step 1: auto-fill from NIB
     Route::get('jdih-search', [CivicStackController::class, 'jdihSearch']);   // Step 4: relevant regulations
+});
+
+// ─── AI SDK Agents — Laravel AI SDK endpoints ─────────────────────────────────
+Route::prefix('ai/agent')->middleware(['auth:sanctum', 'throttle:20,1'])->name('api.ai.agent.')->group(function () {
+    Route::post('perizinan', [AiAgentController::class, 'perizinan'])->name('perizinan');
+    Route::post('paraphrase', [AiAgentController::class, 'paraphrase'])->name('paraphrase');
+    Route::post('optimize-seo', [AiAgentController::class, 'optimizeSeo'])->name('optimize-seo');
 });

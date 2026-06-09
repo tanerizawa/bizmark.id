@@ -167,8 +167,8 @@
                     {{ $isEn ? 'AI maps requirements, agencies & timeline · Free · Just contact info (~30 sec)' : 'AI petakan syarat, instansi & timeline · Gratis · Cukup info kontak (~30 detik)' }}
                 </p>
 
-                {{-- Secondary CTAs --}}
-                 <div class="flex flex-wrap items-center gap-3 mb-8"
+                {{-- Secondary CTA --}}
+                <div class="flex flex-wrap items-center gap-3 mb-8"
                      data-aos="fade-up" data-aos-duration="600" data-aos-delay="380">
                     <a href="{{ $isEn ? route('services.index.en') : route('services.index.id') }}"
                        class="btn btn-ghost"
@@ -176,10 +176,6 @@
                        @click="if(window.trackEvent) trackEvent('CTA','click','hero_secondary')">
                         <i class="fas fa-layer-group" aria-hidden="true"></i>
                         <span>{{ $isEn ? 'Or browse services' : 'Atau lihat layanan' }}</span>
-                    </a>
-                    <a href="#ecosystem-heading" class="link-primary text-sm">
-                        {{ $isEn ? 'See all 4 free tools' : 'Lihat 4 alat gratis' }}
-                        <i class="fas fa-arrow-down text-xs ml-1" aria-hidden="true"></i>
                     </a>
                 </div>
 
@@ -201,13 +197,28 @@
                         <span><i class="fas fa-map-marked-alt" aria-hidden="true"></i> {{ $isEn ? 'Nationwide coverage' : 'Cakupan se-Indonesia' }}</span>
                         <span><i class="fas fa-globe" aria-hidden="true"></i> Bilingual ID / EN</span>
                     </div>
+                    </div>
                 </div>
-            </div>
+                <noscript>
+                    <form method="GET" action="{{ $isEn ? route('pma.inquiry.create') : route('landing.service-inquiry.create') }}"
+                          class="hero-quickcheck mb-3">
+                        <label for="hero-quickcheck-noscript" class="sr-only">{{ $isEn ? 'Describe your business type' : 'Jenis usaha Anda' }}</label>
+                        <span class="hero-quickcheck-icon" aria-hidden="true"><i class="fas fa-robot"></i></span>
+                        <input id="hero-quickcheck-noscript" type="text" name="q"
+                               placeholder="{{ $isEn ? 'Business type (e.g. coffee shop, packaging factory)' : 'Jenis usaha (cth: kafe, pabrik kemasan)' }}"
+                               class="hero-quickcheck-input" maxlength="120">
+                        <button type="submit" class="hero-quickcheck-btn">
+                            <span class="hidden sm:inline">{{ $isEn ? 'Check permits' : 'Cek izin' }}</span>
+                            <i class="fas fa-arrow-right text-sm" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </noscript>
 
             {{-- ── KOLOM KANAN: Dashboard Mockup ── --}}
-            <div class="hidden md:flex items-center justify-center dashboard-mockup-wrap mockup-float"
+            <figure class="hidden md:flex items-center justify-center dashboard-mockup-wrap mockup-float"
                  data-aos="fade-left" data-aos-duration="800" data-aos-delay="200"
-                 aria-hidden="true">
+                 role="img"
+                 aria-label="{{ $isEn ? 'Preview of Bizmark.ID permit tracking dashboard — illustrative mockup' : 'Pratinjau dashboard pelacakan izin Bizmark.ID — ilustrasi' }}">
                 <div class="dashboard-mockup-card w-full max-w-[500px]">
 
                     {{-- Top bar --}}
@@ -320,7 +331,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </figure>
             {{-- /kolom kanan --}}
 
         </div>

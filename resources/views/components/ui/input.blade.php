@@ -1,53 +1,68 @@
 @props([
     'name' => '',
-    'type' => 'text',         // text | email | number | password | tel | url
+    'type' => 'text',
     'label' => '',
     'placeholder' => '',
     'value' => '',
     'error' => null,
-    'size' => 'md',           // sm | md | lg
+    'hint' => null,
+    'prefix' => null,
+    'suffix' => null,
+    'size' => 'md',
+    'compact' => false,
     'required' => false,
     'disabled' => false,
-    'helperText' => '',
-    'leadingIcon' => null,    // Font Awesome class, e.g. 'fa-solid fa-envelope'
+    'leadingIcon' => null,
     'trailingIcon' => null,
     'class' => '',
 ])
 
 @php
-    $inputClasses = 'block w-full rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0';
+$inputBase = 'block w-full rounded-xl border transition-all duration-200 font-sans';
+$inputBase .= ' bg-[var(--surface)] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]';
+$inputBase .= ' focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)] focus:outline-none';
 
-    $sizeClasses = [
-        'sm' => 'px-3 py-1.5 text-sm',
-        'md' => 'px-4 py-2.5 text-sm',
-        'lg' => 'px-5 py-3.5 text-base',
-    ];
+$sizeClasses = [
+    'sm' => 'px-3 py-1.5 text-sm',
+    'md' => 'px-4 py-2.5 text-sm',
+    'lg' => 'px-5 py-3.5 text-base',
+];
 
-    $stateClasses = $error
-        ? 'border-red-300 dark:border-red-500 text-red-900 dark:text-red-400 focus:ring-red-500 focus:border-red-500 placeholder-red-300'
-        : 'border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] placeholder-gray-400 dark:placeholder-gray-500';
+$compactClasses = $compact ? 'px-2.5 py-1.5 text-[0.8125rem] rounded-md' : '';
 
-    $disabledClasses = $disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900' : '';
+$stateBorder = $error
+    ? 'border-[var(--color-error)] ring-1 ring-[var(--color-error)]'
+    : 'border-[var(--border-medium)]';
 
-    $leadingPadding = $leadingIcon ? ($size === 'sm' ? 'pl-8' : ($size === 'lg' ? 'pl-11' : 'pl-9')) : '';
-    $trailingPadding = $trailingIcon ? ($size === 'sm' ? 'pr-8' : ($size === 'lg' ? 'pr-11' : 'pr-9')) : '';
+$disabledClasses = $disabled ? 'opacity-50 cursor-not-allowed' : '';
 
-    $classes = trim("{$inputClasses} {$sizeClasses[$size]} {$stateClasses} {$disabledClasses} {$leadingPadding} {$trailingPadding} {$class}");
+$leadingPad = $prefix ? '' : ($leadingIcon ? ($size === 'sm' ? 'pl-8' : ($size === 'lg' ? 'pl-11' : 'pl-9')) : '');
+
+$inputClasses = trim($inputBase . ' ' . ($compact ? $compactClasses : $sizeClasses[$size]) . ' ' . $stateBorder . ' ' . $disabledClasses . ' ' . $leadingPad . ' ' . $class);
+
+$labelClasses = $compact
+    ? 'block text-xs font-medium text-[var(--text-secondary)] mb-1'
+    : 'block text-sm font-semibold text-[var(--text-primary)] mb-1.5';
 @endphp
 
 <div class="w-full">
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+        <label for="{{ $name }}" class="{{ $labelClasses }}">
             {{ $label }}
             @if($required)
-                <span class="text-red-500 ml-0.5">*</span>
+                <span class="text-[var(--color-error)] ml-0.5">*</span>
             @endif
         </label>
     @endif
 
-    <div class="relative">
-        @if($leadingIcon)
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+    <div class="relative flex items-center">
+        @if($prefix)
+            <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-[var(--border-medium)] bg-[var(--surface-warm)] text-[var(--text-secondary)] text-sm min-h-[44px]">
+                {{ $prefix }}
+            </span>
+        @endif
+        @if($leadingIcon && !$prefix)
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-[var(--text-tertiary)]">
                 <i class="{{ $leadingIcon }}"></i>
             </div>
         @endif
@@ -60,21 +75,29 @@
             placeholder="{{ $placeholder }}"
             @if($required) required @endif
             @if($disabled) disabled @endif
-            {{ $attributes->merge(['class' => $classes]) }}
+            {{ $attributes->merge(['class' => $inputClasses . ($prefix ? ' rounded-l-none' : '') . ($suffix ? ' rounded-r-none' : '')]) }}
         />
 
-        @if($trailingIcon)
-            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+        @if($suffix)
+            <span class="inline-flex items-center px-3 rounded-r-xl border border-l-0 border-[var(--border-medium)] bg-[var(--surface-warm)] text-[var(--text-secondary)] text-sm min-h-[44px]">
+                {{ $suffix }}
+            </span>
+        @endif
+        @if($trailingIcon && !$suffix)
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[var(--text-tertiary)]">
                 <i class="{{ $trailingIcon }}"></i>
             </div>
         @endif
     </div>
 
     @if($error)
-        <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $error }}</p>
+        <p class="mt-1.5 text-sm text-[var(--color-error)] flex items-center gap-1">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ $error }}
+        </p>
     @endif
 
-    @if($helperText && !$error)
-        <p class="mt-1.5 text-sm text-gray-500 dark:text-gray-400">{{ $helperText }}</p>
+    @if($hint && !$error)
+        <p class="mt-1.5 text-xs text-[var(--text-tertiary)]">{{ $hint }}</p>
     @endif
 </div>

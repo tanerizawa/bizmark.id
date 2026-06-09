@@ -6,7 +6,8 @@
     $primaryTools = [
         [
             'icon' => 'fa-robot',
-            'color' => 'var(--accent)',
+            'color' => '#b8860b',
+            'colorBg' => 'rgba(184,134,11,.1)',
             'title' => $isEn ? 'AI Permit Checker' : 'Cek Kebutuhan Izin (AI)',
             'desc' => $isEn
                 ? 'Tell us about your business and our AI instantly maps every permit you need — at no cost.'
@@ -19,7 +20,8 @@
         ],
         [
             'icon' => 'fa-brain',
-            'color' => 'var(--accent)',
+            'color' => '#047857',
+            'colorBg' => 'rgba(4,120,87,.1)',
             'title' => $isEn ? 'Permit Cost Estimator' : 'Estimasi Biaya Perizinan',
             'desc' => $isEn
                 ? 'Select your KBLI business code and get an instant breakdown of permit costs and processing timelines.'
@@ -32,7 +34,8 @@
         ],
         [
             'icon' => 'fa-draw-polygon',
-            'color' => 'var(--accent)',
+            'color' => '#1d4ed8',
+            'colorBg' => 'rgba(29,78,216,.1)',
             'title' => 'Polygon SHP Maker',
             'desc' => $isEn
                 ? 'Draw your business polygon on an interactive map and export an OSS-RBA ready SHP file in minutes.'
@@ -45,7 +48,8 @@
         ],
         [
             'icon' => 'fa-calculator',
-            'color' => 'var(--accent)',
+            'color' => '#b45309',
+            'colorBg' => 'rgba(180,83,9,.1)',
             'title' => $isEn ? 'Permit Cost Calculator' : 'Kalkulator Biaya Perizinan',
             'desc' => $isEn
                 ? 'A detailed cost breakdown by permit type, required documents, and expected processing time.'
@@ -76,11 +80,7 @@
 <section class="section-v2 ecosystem-hub relative" aria-labelledby="ecosystem-heading">
     <div class="container-wide">
         <div class="max-w-2xl mb-5">
-            <div class="chapter-mark" style="color: var(--tools);">
-                <span class="chapter-mark__num" style="color: var(--tools);">PLATFORM</span>
-                <span class="chapter-mark__rule" style="background: var(--tools);"></span>
-                <span>{{ $isEn ? 'Self-serve toolkit' : 'Toolkit Mandiri' }}</span>
-            </div>
+            <span class="eyebrow block mb-3" style="color: var(--color-tools);">{{ $isEn ? 'Self-serve toolkit' : 'Toolkit Mandiri' }}</span>
             <h2 id="ecosystem-heading" class="display-md mb-2">
                 {{ $isEn ? 'Use the platform yourself. Pay nothing.' : 'Pakai platformnya sendiri. Tanpa biaya.' }}
             </h2>
@@ -94,10 +94,11 @@
         {{-- Primary tools: Bento grid layout --}}
         <div class="bento-grid mb-4">
             @foreach($primaryTools as $index => $tool)
-                <a href="{{ $tool['href'] }}" class="tool-card is-tools {{ $index === 0 ? 'bento-featured' : ($index === 3 ? 'bento-wide' : 'bento-medium') }}">
+                <a href="{{ $tool['href'] }}" class="tool-card is-tools {{ $index === 0 ? 'bento-featured' : ($index === 3 ? 'bento-wide' : 'bento-medium') }}"
+                   style="--tool-accent: {{ $tool['color'] }}; --tool-accent-bg: {{ $tool['colorBg'] }};">
                     <div class="tool-card-copy">
                         <div class="flex items-start justify-between gap-4 flex-wrap">
-                            <span class="editorial-icon-badge">
+                            <span class="editorial-icon-badge" style="background: {{ $tool['colorBg'] }}; color: {{ $tool['color'] }};">
                                 <i class="fas {{ $tool['icon'] }} icon-xl" aria-hidden="true"></i>
                             </span>
                             <span class="tool-stat">{{ $tool['stat'] }}</span>

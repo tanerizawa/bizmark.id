@@ -192,11 +192,7 @@
 {{-- HERO — EDITORIAL --}}
 <section class="section-v2 geo-motif" style="background: linear-gradient(180deg, var(--bg-raised) 0%, transparent 100%);">
     <div class="container-wide">
-        <div class="chapter-mark">
-            <span class="chapter-mark__num">PRICING</span>
-            <span class="chapter-mark__rule"></span>
-            <span>{{ $isEn ? 'How we charge' : 'Cara kami menetapkan biaya' }}</span>
-        </div>
+        <span class="eyebrow block mb-4">{{ $isEn ? 'How we charge' : 'Cara kami menetapkan biaya' }}</span>
         <div class="editorial-split">
             <div>
                 <h1 class="display-xl mb-6" style="font-size: clamp(2.75rem, 6.5vw, 5rem);">
@@ -322,7 +318,7 @@
                 </thead>
                 <tbody>
                     @foreach($ranges as $row)
-                        <tr style="border-bottom: 1px solid var(--border);">
+                        <tr style="border-bottom: 1px solid var(--border); {{ $loop->even ? 'background: var(--surface-warm);' : '' }}">
                             <td class="px-5 py-4 font-semibold text-gray-800">{{ $row['service'] }}</td>
                             <td class="px-5 py-4" style="color: var(--accent-text); font-weight: 600;">{{ $row['range'] }}</td>
                             <td class="px-5 py-4 text-gray-600 hidden sm:table-cell">{{ $row['sla'] }}</td>
@@ -349,19 +345,19 @@
                 {{ $isEn ? 'Pricing questions' : 'Pertanyaan seputar harga' }}
             </h2>
         </div>
-        <div class="space-y-3" x-data="{ open: -1 }">
+        <div class="space-y-3" x-data="{ open: [] }">
             @foreach($faqs as $i => $faq)
                 <div class="premium-card p-0 overflow-hidden">
                     <button type="button"
-                            @click="open = (open === {{ $i }} ? -1 : {{ $i }})"
-                            :aria-expanded="open === {{ $i }}"
+                            @click="open.includes({{ $i }}) ? open = open.filter(x => x !== {{ $i }}) : open.push({{ $i }})"
+                            :aria-expanded="open.includes({{ $i }})"
                             class="w-full flex items-center justify-between gap-4 p-5 text-left hover:bg-gray-50 transition-colors">
                         <span class="font-display font-bold text-base">{{ $faq['q'] }}</span>
                         <i class="fas fa-chevron-down text-sm flex-shrink-0 transition-transform"
-                           :class="{ 'rotate-180': open === {{ $i }} }"
+                           :class="{ 'rotate-180': open.includes({{ $i }}) }"
                            style="color: var(--accent);"></i>
                     </button>
-                    <div x-show="open === {{ $i }}" x-cloak
+                    <div x-show="open.includes({{ $i }})" x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 -translate-y-1"
                          x-transition:enter-end="opacity-100 translate-y-0"
@@ -390,7 +386,7 @@
                 <i class="fas fa-calendar-check"></i>
                 {{ $isEn ? 'Book free scoping call' : 'Pesan scoping call gratis' }}
             </a>
-            <a href="{{ $whatsappLink }}" target="_blank" rel="noopener" class="btn btn-ghost btn-lg" style="border-radius: var(--radius-full);">
+            <a href="{{ $whatsappLink }}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg" style="border-radius: var(--radius-full);">
                 <i class="fab fa-whatsapp"></i> WhatsApp
             </a>
         </div>

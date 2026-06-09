@@ -1,10 +1,21 @@
+/* ═══════════════════════════════════════════════════════
+   FROZEN — Legacy Editorial Styles
+   ═══════════════════════════════════════════════════════
+   This file is kept for backward compatibility.
+   Do NOT add new styles here.
+   New components should use x-ui.* Blade components.
+   ============================================================ */
+
 /* ============================================
    LANDING PAGE - Tailwind CSS Build (v4)
    This file compiles via Vite into public/build/.
    ============================================ */
 
-/* Import Design Tokens (Single Source of Truth) */
+/* Import Design Tokens (Base tokens) */
 @import './design-tokens.css';
+
+/* Import Public Theme (OVERRIIDES design-tokens for public pages — navy #0f172a primary) */
+@import './public-theme.css';
 
 /* AOS (Animate On Scroll) — from npm, not CDN */
 @import 'aos/dist/aos.css';
@@ -40,9 +51,11 @@
     --color-primary-900: #020408;
 
     /* Secondary Colors — Editorial Gold */
-    --color-secondary:     #b8860b;
+    --color-secondary:     #8b6914;
     --color-secondary-600: #9a7209;
     --color-secondary-700: #7a5c07;
+    --color-accent-text: #8b6914;
+    --color-accent-text-light: #b8960a;
 
     /* Font Sizes */
     --font-size-hero: 4rem;
@@ -2071,4 +2084,44 @@
 @media (prefers-reduced-motion: reduce) {
     .tech-status::before { animation: none; }
     .tech-scanline::after { animation: none; opacity: 0; }
+}
+
+/* ============================================
+   PROCESS PAGE — Timeline connector + Scroll hint
+   ============================================ */
+
+/* Vertical timeline line connecting process stages (lg+) */
+.process-stages {
+    position: relative;
+}
+.process-stages::before {
+    content: '';
+    position: absolute;
+    left: 2.75rem;
+    top: 2.5rem;
+    bottom: 2.5rem;
+    width: 2px;
+    background: linear-gradient(
+        180deg,
+        var(--accent) 0%,
+        var(--accent-soft) 50%,
+        var(--border-subtle) 100%
+    );
+    display: none;
+}
+@media (min-width: 1024px) {
+    .process-stages::before { display: block; }
+}
+
+/* About page horizontal timeline scroll hint */
+.h-timeline-scroll-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 1rem;
+    border-radius: var(--radius-full);
+    background: var(--accent-glow);
+    color: var(--accent-text);
+    font-size: 0.75rem;
+    font-weight: 600;
 }

@@ -75,11 +75,7 @@
     <div class="container-wide">
         <div class="services-intro-row flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-5" data-aos="fade-up">
             <div class="services-intro-copy max-w-2xl">
-                <div class="chapter-mark">
-                    <span class="chapter-mark__num">03</span>
-                    <span class="chapter-mark__rule"></span>
-                    <span>{{ $isEn ? 'Core Services' : 'Layanan Utama' }}</span>
-                </div>
+                <span class="eyebrow block mb-3">{{ $isEn ? 'Core Services' : 'Layanan Utama' }}</span>
                 <h2 id="services-heading" class="display-md mb-2">
                     {{ $isEn ? 'Fully managed permits. Expert-backed.' : 'Perizinan dikelola penuh. Dijamin para ahli.' }}
                 </h2>

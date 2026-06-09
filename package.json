@@ -27,5 +27,24 @@
         "aos": "^2.3.4",
         "bootstrap": "^5.3.8",
         "chart.js": "^4.4.0"
-    }
+    },
+    "name": "bizmark.id",
+    "version": "1.0.0",
+    "description": "Sistem manajemen bisnis terintegrasi untuk konsultan perizinan Indonesia. Mengelola siklus lengkap proyek perizinan, finansial, SDM, legal, konten SEO, dan layanan konsultasi berbasis AI dalam satu platform.",
+    "main": "cloudflare-email-worker.js",
+    "directories": {
+        "doc": "docs",
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tanerizawa/bizmark-administration.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/tanerizawa/bizmark-administration/issues"
+    },
+    "homepage": "https://github.com/tanerizawa/bizmark-administration#readme"
 }

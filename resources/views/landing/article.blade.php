@@ -285,16 +285,19 @@
                 <div class="flex flex-wrap gap-4 article-share">
                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
                        target="_blank"
+                       rel="noopener noreferrer"
                        class="bg-slate-100 text-slate-700 hover:bg-slate-200">
                         <i class="fab fa-facebook-f text-primary"></i>Facebook
                     </a>
                     <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($article->title) }}"
                        target="_blank"
+                       rel="noopener noreferrer"
                        class="bg-slate-100 text-slate-700 hover:bg-slate-200">
                         <i class="fab fa-x-twitter text-slate-800"></i>X (Twitter)
                     </a>
                     <a href="https://wa.me/?text={{ urlencode($article->title . ' ' . url()->current()) }}"
                        target="_blank"
+                       rel="noopener noreferrer"
                        class="bg-slate-100 text-slate-700 hover:bg-slate-200">
                         <i class="fab fa-whatsapp text-green-600"></i>WhatsApp
                     </a>

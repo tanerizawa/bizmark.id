@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Evaluate Test - ' . $session->jobApplication->full_name)
 

@@ -47,11 +47,7 @@
 <section class="section-v2" aria-labelledby="process-heading" id="process">
     <div class="container-wide">
         <div class="max-w-2xl mb-5">
-            <div class="chapter-mark">
-                <span class="chapter-mark__num">04</span>
-                <span class="chapter-mark__rule"></span>
-                <span>{{ $isEn ? 'How We Work' : 'Cara Kerja Kami' }}</span>
-            </div>
+            <span class="eyebrow block mb-3">{{ $isEn ? 'How We Work' : 'Cara Kerja Kami' }}</span>
             <h2 id="process-heading" class="display-md mb-2">
                 {{ $isEn ? 'A process built for clarity and accountability.' : 'Proses yang mengutamakan kejelasan dan akuntabilitas.' }}
             </h2>

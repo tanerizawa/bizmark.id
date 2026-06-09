@@ -243,8 +243,8 @@ BLADE);
         $html = Blade::render('<x-ui.input name="email" :error="\'Email wajib diisi\'" />');
 
         $this->assertStringContainsString('Email wajib diisi', $html);
-        $this->assertStringContainsString('text-red-600', $html);
-        $this->assertStringContainsString('border-red-300', $html);
+        $this->assertStringContainsString('var(--apple-red,#FF3B30)', $html);
+        $this->assertStringContainsString('border-[var(--apple-red,#FF3B30)]', $html);
     }
 
     public function test_input_renders_required_indicator(): void

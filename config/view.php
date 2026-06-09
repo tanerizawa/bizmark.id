@@ -1,6 +1,6 @@
 <?php
 
-$defaultCompiled = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'bizmark-framework-views';
+$defaultCompiled = storage_path('framework/views');
 
 return [
     'paths' => [

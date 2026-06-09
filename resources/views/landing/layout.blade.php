@@ -104,6 +104,40 @@
             @click="window.scrollTo({top:0,behavior:'smooth'}); if(window.trackEvent) trackEvent('Navigation','scroll_to_top','fab');">
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
+
+    {{-- Sticky scroll CTA — appears when hero scrolls out (mobile only) --}}
+    <div x-data="scrollCta()" x-show="visible" x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="translate-y-full"
+         x-transition:enter-end="translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="translate-y-0"
+         x-transition:leave-end="translate-y-full"
+         class="fixed bottom-0 inset-x-0 z-40 bg-[var(--bg-raised)] border-t border-gray-200 shadow-soft-xl md:hidden"
+         aria-live="polite">
+        <div class="px-4 py-3 flex items-center gap-3">
+            <a href="{{ route('landing.service-inquiry.create') }}" class="btn btn-gold flex-1 justify-center text-sm py-2.5">
+                <i class="fas fa-robot"></i>
+                <span>{{ app()->getLocale() === 'en' ? 'Free Permit Check' : 'Cek Izin Gratis' }}</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('scrollCta', () => ({
+            visible: false,
+            init() {
+                const hero = document.querySelector('#hero-title');
+                if (!hero) return;
+                const observer = new IntersectionObserver(([entry]) => {
+                    this.visible = !entry.isIntersecting;
+                }, { threshold: 0 });
+                observer.observe(hero);
+            },
+        }));
+    });
+    </script>
     
     @include('landing.partials.scripts')
     

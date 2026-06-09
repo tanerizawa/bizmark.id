@@ -78,7 +78,7 @@ class ServiceInquiryController extends Controller
      */
     public function show(ServiceInquiry $serviceInquiry)
     {
-        $serviceInquiry->load(['client', 'convertedToApplication', 'contactedBy']);
+        $serviceInquiry->load(['client', 'convertedToApplication', 'contactedBy', 'shapefileProject']);
 
         return view('admin.service-inquiries.show', compact('serviceInquiry'));
     }

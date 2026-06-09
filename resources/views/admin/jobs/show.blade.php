@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', $vacancy->title . ' - Detail Lowongan')
 

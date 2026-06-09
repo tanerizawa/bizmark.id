@@ -39,11 +39,7 @@
     <div class="container-wide">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
             <div class="max-w-2xl">
-                <div class="chapter-mark">
-                    <span class="chapter-mark__num">06</span>
-                    <span class="chapter-mark__rule"></span>
-                    <span>{{ $isEn ? 'Insights & Expertise' : 'Wawasan & Pengetahuan' }}</span>
-                </div>
+                <span class="eyebrow block mb-3">{{ $isEn ? 'Insights & Expertise' : 'Wawasan & Pengetahuan' }}</span>
                 <h2 id="articles-heading" class="display-md mb-3">
                     {{ $isEn ? 'Regulatory insight, written by practitioners.' : 'Wawasan regulasi dari para praktisi perizinan.' }}
                 </h2>

@@ -1,0 +1,1296 @@
+/* ============================================
+   ADMIN PANEL DESIGN SYSTEM
+   Apple HIG-inspired Dark Theme
+   ============================================ */
+
+/* Import Design Tokens (Single Source of Truth) */
+@import './design-tokens.css';
+
+/* Import Tailwind CSS v4 */
+@import 'tailwindcss';
+
+/* Import Font Awesome locally (replaces CDN) */
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/regular.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+@import '@fortawesome/fontawesome-free/css/brands.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Make Tailwind's `dark:` variant work with admin's data-theme="dark" attribute */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ============================================
+   APPLE DESIGN SYSTEM VARIABLES & DARK THEME
+   ============================================ */
+
+:root {
+    /* Apple Design System Colors */
+    --apple-blue: #007AFF;
+    --apple-blue-dark: #0051D5;
+    --apple-green: #34C759;
+    --apple-orange: #FF9500;
+    --apple-red: #FF3B30;
+    --apple-purple: #AF52DE;
+    --apple-pink: #FF2D55;
+    --apple-teal: #5AC8FA;
+    --apple-indigo: #5856D6;
+    --apple-yellow: #FFD60A;
+
+    /* Dark Mode Colors */
+    --dark-bg: #000000;
+    --dark-bg-secondary: #1C1C1E;
+    --dark-bg-tertiary: #2C2C2E;
+    --dark-bg-elevated: rgba(28, 28, 30, 0.9);
+    --dark-separator: rgba(84, 84, 88, 0.35);
+    --dark-text-primary: #FFFFFF;
+    --dark-text-secondary: rgba(235, 235, 245, 0.6);
+    --dark-text-tertiary: rgba(235, 235, 245, 0.3);
+
+    /* Shadows */
+    --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.5);
+    --shadow-soft-lg: 0 10px 40px rgba(0, 0, 0, 0.6);
+    --shadow-soft-xl: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================
+   GLOBAL RESET
+   ============================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--dark-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Only lock overflow for authenticated layout */
+body.authenticated {
+    overflow: hidden;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+/* Ensure base text is visible in dark mode.
+   NOTE: span and div intentionally excluded so that
+   Tailwind text-color utilities (e.g. text-green-400)
+   on span/div elements are NOT overridden. */
+h1, h2, h3, h4, h5, h6, p, label, td, th {
+    color: var(--dark-text-primary);
+}
+
+small, .text-muted {
+    color: var(--dark-text-secondary);
+}
+
+a {
+    color: var(--apple-blue);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4DA3FF;
+}
+
+a.hover\:underline:hover {
+    text-decoration: underline;
+}
+
+p, span, div, label, a {
+    color: inherit;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+button, .btn {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 500;
+}
+
+.btn {
+    background: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-separator);
+    box-shadow: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-blue-dark) 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.6);
+}
+
+.btn-secondary {
+    background: var(--dark-bg-secondary);
+    color: var(--apple-blue);
+    border: 1px solid var(--dark-separator);
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 122, 255, 0.1);
+}
+
+button:not(.btn-primary):not(.navbar-toggler) {
+    background-color: var(--dark-bg-tertiary);
+    border: 1px solid var(--dark-separator);
+    color: var(--dark-text-primary);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:not(.btn-primary):not(.navbar-toggler):hover {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--apple-blue);
+    color: var(--dark-text-primary);
+}
+
+/* Button Size Variants */
+.btn-sm, .btn-primary-sm, .btn-secondary-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary-sm {
+    background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-blue-dark) 100%);
+    color: #FFFFFF;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.btn-primary-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.5);
+}
+
+.btn-secondary-sm {
+    background: rgba(142, 142, 147, 0.3);
+    color: rgba(235, 235, 245, 0.9);
+    border: 1px solid rgba(142, 142, 147, 0.5);
+}
+
+.btn-secondary-sm:hover {
+    background: rgba(142, 142, 147, 0.4);
+    border-color: rgba(142, 142, 147, 0.7);
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* Apple-style Buttons */
+.btn-primary-apple {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-blue-dark) 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary-apple:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 122, 255, 0.5);
+    color: #FFFFFF;
+}
+
+
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+
+label {
+    color: var(--dark-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+textarea,
+select {
+    background-color: var(--dark-bg-tertiary);
+    border: 1px solid rgba(84, 84, 88, 0.25);
+    color: var(--dark-text-primary);
+    border-radius: 10px;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    background-color: var(--dark-bg-secondary);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--dark-text-tertiary);
+}
+
+/* Select Dropdown */
+select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(235, 235, 245, 0.6)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+select option {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+}
+
+/* Checkbox and Radio */
+input[type="checkbox"],
+input[type="radio"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    background-color: var(--dark-bg-tertiary);
+    border: 2px solid var(--dark-separator);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input[type="radio"] {
+    border-radius: 50%;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    background-color: var(--apple-blue);
+    border-color: var(--apple-blue);
+}
+
+/* File Input */
+input[type="file"] {
+    color: var(--dark-text-secondary);
+}
+
+input[type="file"]::file-selector-button {
+    background-color: var(--dark-bg-tertiary);
+    border: 1px solid var(--dark-separator);
+    color: var(--dark-text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 1rem;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--apple-blue);
+}
+
+/* Disabled State */
+input:disabled,
+textarea:disabled,
+select:disabled,
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Focus Visible */
+*:focus-visible {
+    outline: 2px solid var(--apple-blue);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   CARD COMPONENTS
+   ============================================ */
+
+.card-elevated,
+.card {
+    background-color: var(--dark-bg-elevated);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--dark-separator);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.48);
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+
+
+/* ============================================
+   TABLE COMPONENTS
+   ============================================ */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead {
+    background-color: var(--dark-bg-secondary);
+}
+
+thead th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--dark-separator);
+}
+
+tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--dark-separator);
+    color: var(--dark-text-primary);
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--dark-bg-secondary);
+}
+
+.table-apple {
+    width: 100%;
+}
+
+.table-apple thead tr {
+    border-bottom: 1px solid var(--dark-separator);
+}
+
+.table-apple thead th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-apple tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.table-apple tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.table-apple tbody td {
+    padding: 0.75rem 1rem;
+    color: var(--dark-text-primary);
+    font-size: 0.875rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* ============================================
+   BADGE COMPONENTS
+   ============================================ */
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.badge-apple {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-warning {
+    background: rgba(255, 149, 0, 0.15);
+    color: var(--apple-orange);
+}
+
+/* ============================================
+   STAT CARD COMPONENTS
+   ============================================ */
+
+.stat-card-apple {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--dark-bg-elevated);
+    border: 1px solid var(--dark-separator);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.stat-card-apple:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.stat-icon-apple {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.25rem;
+}
+
+.stat-value-apple {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--dark-text-primary);
+}
+
+.stat-label-apple {
+    font-size: 0.875rem;
+    color: var(--dark-text-secondary);
+}
+
+/* ============================================
+   ALERT COMPONENTS
+   ============================================ */
+
+.alert {
+    border-radius: 10px;
+    border: 1px solid var(--dark-separator);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: rgba(52, 199, 89, 0.1);
+    border-color: rgba(52, 199, 89, 0.3);
+    color: var(--apple-green);
+}
+
+.alert-danger {
+    background-color: rgba(255, 59, 48, 0.1);
+    border-color: rgba(255, 59, 48, 0.3);
+    color: var(--apple-red);
+}
+
+.alert-warning {
+    background-color: rgba(255, 149, 0, 0.1);
+    border-color: rgba(255, 149, 0, 0.3);
+    color: var(--apple-orange);
+}
+
+.alert-info {
+    background-color: rgba(0, 122, 255, 0.1);
+    border-color: rgba(0, 122, 255, 0.3);
+    color: var(--apple-blue);
+}
+
+/* ============================================
+   MODAL COMPONENTS
+   ============================================ */
+
+.modal-content {
+    background-color: var(--dark-bg-elevated);
+    border: 1px solid var(--dark-separator);
+    border-radius: 12px;
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--dark-separator);
+}
+
+.modal-title {
+    color: var(--dark-text-primary);
+}
+
+/* ============================================
+   NAVBAR & DROPDOWN
+   ============================================ */
+
+.navbar {
+    background-color: var(--dark-bg-elevated);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--dark-separator);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48);
+}
+
+.navbar-brand, .nav-link {
+    color: var(--dark-text-primary);
+}
+
+.dropdown-menu {
+    background-color: var(--dark-bg-tertiary);
+    border: 1px solid var(--dark-separator);
+    border-radius: 10px;
+}
+
+.dropdown-item {
+    color: var(--dark-text-primary);
+}
+
+.dropdown-item:hover {
+    background-color: var(--dark-bg-secondary);
+    color: var(--apple-blue);
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-separator);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(84, 84, 88, 0.85);
+}
+
+/* ============================================
+   CUSTOM UTILITY CLASSES
+   ============================================ */
+
+/* Border Radius */
+.rounded-apple { border-radius: 10px; }
+.rounded-apple-lg { border-radius: 12px; }
+.rounded-apple-xl { border-radius: 16px; }
+
+/* Hover Effects */
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.64);
+}
+
+.hover\:bg-dark-elevated-2:hover {
+    background-color: rgba(58, 58, 60, 0.6);
+}
+
+.transition-apple {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark theme background color utilities */
+.bg-dark-bg { background-color: var(--dark-bg); }
+.bg-dark-bg-secondary { background-color: var(--dark-bg-secondary); }
+.bg-dark-bg-tertiary { background-color: var(--dark-bg-tertiary); }
+
+
+/* Text Color Utilities */
+.text-dark-text-primary { color: var(--dark-text-primary); }
+.text-dark-text-secondary { color: var(--dark-text-secondary); }
+.text-dark-text-tertiary { color: var(--dark-text-tertiary); }
+
+/* Apple Color Background Utilities */
+.bg-apple-blue { background-color: var(--apple-blue); }
+.bg-apple-green { background-color: var(--apple-green); }
+.bg-apple-orange { background-color: var(--apple-orange); }
+.bg-apple-red { background-color: var(--apple-red); }
+.bg-apple-purple { background-color: var(--apple-purple); }
+.bg-apple-teal { background-color: var(--apple-teal); }
+
+/* Opacity variants – replace hardcoded inline styles like style="background: rgba(...)" */
+/* Background opacity – full coverage for all Apple colors */
+.bg-apple-blue\/5 { background-color: rgba(0,122,255,0.05); }
+.bg-apple-blue\/8 { background-color: rgba(0,122,255,0.08); }
+.bg-apple-blue\/10 { background-color: rgba(0,122,255,0.10); }
+.bg-apple-blue\/12 { background-color: rgba(0,122,255,0.12); }
+.bg-apple-blue\/15 { background-color: rgba(0,122,255,0.15); }
+.bg-apple-blue\/20 { background-color: rgba(0,122,255,0.20); }
+.bg-apple-blue\/25 { background-color: rgba(0,122,255,0.25); }
+.bg-apple-green\/5 { background-color: rgba(52,199,89,0.05); }
+.bg-apple-green\/8 { background-color: rgba(52,199,89,0.08); }
+.bg-apple-green\/10 { background-color: rgba(52,199,89,0.10); }
+.bg-apple-green\/12 { background-color: rgba(52,199,89,0.12); }
+.bg-apple-green\/15 { background-color: rgba(52,199,89,0.15); }
+.bg-apple-green\/20 { background-color: rgba(52,199,89,0.20); }
+.bg-apple-green\/25 { background-color: rgba(52,199,89,0.25); }
+.bg-apple-red\/5 { background-color: rgba(255,59,48,0.05); }
+.bg-apple-red\/8 { background-color: rgba(255,59,48,0.08); }
+.bg-apple-red\/10 { background-color: rgba(255,59,48,0.10); }
+.bg-apple-red\/12 { background-color: rgba(255,59,48,0.12); }
+.bg-apple-red\/15 { background-color: rgba(255,59,48,0.15); }
+.bg-apple-red\/20 { background-color: rgba(255,59,48,0.20); }
+.bg-apple-red\/25 { background-color: rgba(255,59,48,0.25); }
+.bg-apple-orange\/5 { background-color: rgba(255,149,0,0.05); }
+.bg-apple-orange\/8 { background-color: rgba(255,149,0,0.08); }
+.bg-apple-orange\/10 { background-color: rgba(255,149,0,0.10); }
+.bg-apple-orange\/12 { background-color: rgba(255,149,0,0.12); }
+.bg-apple-orange\/15 { background-color: rgba(255,149,0,0.15); }
+.bg-apple-orange\/20 { background-color: rgba(255,149,0,0.20); }
+.bg-apple-orange\/25 { background-color: rgba(255,149,0,0.25); }
+.bg-apple-purple\/5 { background-color: rgba(175,82,222,0.05); }
+.bg-apple-purple\/8 { background-color: rgba(175,82,222,0.08); }
+.bg-apple-purple\/10 { background-color: rgba(175,82,222,0.10); }
+.bg-apple-purple\/12 { background-color: rgba(175,82,222,0.12); }
+.bg-apple-purple\/15 { background-color: rgba(175,82,222,0.15); }
+.bg-apple-purple\/20 { background-color: rgba(175,82,222,0.20); }
+.bg-apple-purple\/25 { background-color: rgba(175,82,222,0.25); }
+.bg-apple-teal\/5 { background-color: rgba(90,200,250,0.05); }
+.bg-apple-teal\/10 { background-color: rgba(90,200,250,0.10); }
+.bg-apple-teal\/15 { background-color: rgba(90,200,250,0.15); }
+.bg-apple-teal\/20 { background-color: rgba(90,200,250,0.20); }
+.bg-apple-teal\/25 { background-color: rgba(90,200,250,0.25); }
+
+/* Border opacity variants */
+.border-apple-red\/10 { border-color: rgba(255,59,48,0.10); }
+.border-apple-red\/15 { border-color: rgba(255,59,48,0.15); }
+.border-apple-red\/20 { border-color: rgba(255,59,48,0.20); }
+.border-apple-red\/25 { border-color: rgba(255,59,48,0.25); }
+.border-apple-red\/30 { border-color: rgba(255,59,48,0.30); }
+.border-apple-green\/10 { border-color: rgba(52,199,89,0.10); }
+.border-apple-green\/15 { border-color: rgba(52,199,89,0.15); }
+.border-apple-green\/20 { border-color: rgba(52,199,89,0.20); }
+.border-apple-green\/25 { border-color: rgba(52,199,89,0.25); }
+.border-apple-green\/30 { border-color: rgba(52,199,89,0.30); }
+.border-apple-blue\/10 { border-color: rgba(0,122,255,0.10); }
+.border-apple-blue\/15 { border-color: rgba(0,122,255,0.15); }
+.border-apple-blue\/20 { border-color: rgba(0,122,255,0.20); }
+.border-apple-blue\/25 { border-color: rgba(0,122,255,0.25); }
+.border-apple-blue\/30 { border-color: rgba(0,122,255,0.30); }
+.border-apple-orange\/10 { border-color: rgba(255,149,0,0.10); }
+.border-apple-orange\/15 { border-color: rgba(255,149,0,0.15); }
+.border-apple-orange\/20 { border-color: rgba(255,149,0,0.20); }
+.border-apple-orange\/25 { border-color: rgba(255,149,0,0.25); }
+.border-apple-orange\/30 { border-color: rgba(255,149,0,0.30); }
+
+/* Dark Theme Border Utilities */
+.border-dark-separator { border-color: var(--dark-separator); }
+
+/* Apple Yellow Utilities */
+.bg-apple-yellow { background-color: var(--apple-yellow); }
+.bg-apple-yellow\/5 { background-color: rgba(255,214,10,0.05); }
+.bg-apple-yellow\/8 { background-color: rgba(255,214,10,0.08); }
+.bg-apple-yellow\/10 { background-color: rgba(255,214,10,0.10); }
+.bg-apple-yellow\/12 { background-color: rgba(255,214,10,0.12); }
+.bg-apple-yellow\/15 { background-color: rgba(255,214,10,0.15); }
+.bg-apple-yellow\/20 { background-color: rgba(255,214,10,0.20); }
+.bg-apple-yellow\/25 { background-color: rgba(255,214,10,0.25); }
+.text-apple-yellow { color: var(--apple-yellow); }
+.text-apple-yellow\/85 { color: rgba(255,214,10,0.85); }
+.text-apple-yellow\/90 { color: rgba(255,214,10,0.90); }
+.text-apple-yellow\/95 { color: rgba(255,214,10,0.95); }
+.border-apple-yellow { border-color: var(--apple-yellow); }
+.border-apple-yellow\/10 { border-color: rgba(255,214,10,0.10); }
+.border-apple-yellow\/15 { border-color: rgba(255,214,10,0.15); }
+.border-apple-yellow\/20 { border-color: rgba(255,214,10,0.20); }
+.border-apple-yellow\/25 { border-color: rgba(255,214,10,0.25); }
+.border-apple-yellow\/30 { border-color: rgba(255,214,10,0.30); }
+
+/* White/Black Opacity Utilities (for subtle hover/background states) */
+.bg-white\/3 { background-color: rgba(255,255,255,0.03); }
+.bg-white\/4 { background-color: rgba(255,255,255,0.04); }
+.bg-white\/5 { background-color: rgba(255,255,255,0.05); }
+.bg-white\/8 { background-color: rgba(255,255,255,0.08); }
+.bg-white\/10 { background-color: rgba(255,255,255,0.10); }
+.text-white\/70 { color: rgba(255,255,255,0.70); }
+.text-white\/80 { color: rgba(255,255,255,0.80); }
+
+/* Apple Color Text Utilities */
+.text-apple-blue { color: var(--apple-blue); }
+.text-apple-blue-dark { color: var(--apple-blue-dark); }
+.text-apple-green { color: var(--apple-green); }
+.text-apple-orange { color: var(--apple-orange); }
+.text-apple-red { color: var(--apple-red); }
+.text-apple-purple { color: var(--apple-purple); }
+.text-apple-teal { color: var(--apple-teal); }
+
+/* Text opacity variants – match opacity values used in admin badges */
+.text-apple-red\/85 { color: rgba(255,59,48,0.85); }
+.text-apple-red\/90 { color: rgba(255,59,48,0.90); }
+.text-apple-red\/95 { color: rgba(255,59,48,0.95); }
+.text-apple-green\/85 { color: rgba(52,199,89,0.85); }
+.text-apple-green\/90 { color: rgba(52,199,89,0.90); }
+.text-apple-green\/95 { color: rgba(52,199,89,0.95); }
+.text-apple-blue\/85 { color: rgba(0,122,255,0.85); }
+.text-apple-blue\/90 { color: rgba(0,122,255,0.90); }
+.text-apple-blue\/95 { color: rgba(0,122,255,0.95); }
+.text-apple-orange\/85 { color: rgba(255,149,0,0.85); }
+.text-apple-orange\/90 { color: rgba(255,149,0,0.90); }
+.text-apple-orange\/95 { color: rgba(255,149,0,0.95); }
+.text-apple-purple\/85 { color: rgba(175,82,222,0.85); }
+.text-apple-purple\/90 { color: rgba(175,82,222,0.90); }
+.text-apple-purple\/95 { color: rgba(175,82,222,0.95); }
+
+/* Apple Color Border Utilities */
+.border-apple-red { border-color: var(--apple-red); }
+.border-apple-green { border-color: var(--apple-green); }
+.border-apple-blue { border-color: var(--apple-blue); }
+
+/* ============================================
+   APP SHELL LAYOUT
+   ============================================ */
+
+.app-shell {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--dark-bg);
+}
+
+.app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 256px;
+    height: 100vh;
+    background-color: var(--dark-bg-secondary);
+    border-right: 1px solid var(--dark-separator);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    height: 4rem;
+    min-height: 4rem;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--dark-separator);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1rem;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: var(--dark-separator);
+    border-radius: 10px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-text-tertiary);
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--dark-separator);
+    flex-shrink: 0;
+}
+
+.app-main {
+    position: absolute;
+    left: 256px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dark-bg);
+    overflow: hidden;
+}
+
+.app-topbar {
+    height: 4rem;
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    background-color: var(--dark-bg-elevated);
+    border-bottom: 1px solid var(--dark-separator);
+    flex-shrink: 0;
+}
+
+.app-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1.5rem;
+    background-color: var(--dark-bg);
+    height: 100%;
+}
+
+.app-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.app-content::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+.app-content::-webkit-scrollbar-thumb {
+    background: var(--dark-separator);
+    border-radius: 10px;
+}
+
+.app-content::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-text-tertiary);
+}
+
+/* ============================================
+   SIDEBAR NAVIGATION
+   ============================================ */
+
+.nav-section {
+    margin-bottom: 1.5rem;
+}
+
+.nav-section-title {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--dark-text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+}
+
+.nav-link.active {
+    background-color: var(--apple-blue);
+    color: #FFFFFF;
+}
+
+.nav-link-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-link i {
+    width: 1.25rem;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+.nav-badge {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+}
+
+.nav-link.active .nav-badge {
+    background-color: #FFFFFF;
+    color: var(--apple-blue);
+}
+
+.nav-link:not(.active) .nav-badge {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-secondary);
+}
+
+.nav-link:not(.active) .nav-badge.badge-alert {
+    background-color: #EF4444;
+    color: #FFFFFF;
+}
+
+.nav-link:not(.active) .nav-badge.badge-warning {
+    background-color: #F59E0B;
+    color: #FFFFFF;
+}
+
+/* ============================================
+   SUBMENU STYLES
+   ============================================ */
+
+.nav-submenu {
+    margin-bottom: 0.25rem;
+}
+
+.nav-submenu-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--dark-text-secondary);
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-submenu-toggle:hover {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+}
+
+.nav-submenu.active .nav-submenu-toggle {
+    background-color: rgba(0, 122, 255, 0.12);
+    color: var(--apple-blue);
+}
+
+.submenu-icon {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-submenu-content {
+    display: none;
+    padding-left: 2rem;
+    margin-top: 0.25rem;
+}
+
+.nav-sublink {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    color: var(--dark-text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin-bottom: 0.125rem;
+}
+
+.nav-sublink:hover {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+}
+
+.nav-sublink.active {
+    background-color: var(--apple-blue);
+    color: #FFFFFF;
+}
+
+.nav-sublink i {
+    width: 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   CUSTOM FORM COMPONENTS
+   ============================================ */
+
+.label-apple {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--dark-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.input-apple {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background: var(--dark-bg-tertiary);
+    border: 1px solid rgba(84, 84, 88, 0.3);
+    border-radius: 10px;
+    color: var(--dark-text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.input-apple:focus {
+    outline: none;
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+/* ============================================
+   MOBILE RESPONSIVENESS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .app-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 50;
+    }
+
+    .app-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .app-main {
+        left: 0;
+    }
+
+    .app-topbar {
+        padding: 0 1rem;
+    }
+}
+
+/* ============================================
+   ADMIN COMPACT DESIGN SYSTEM
+   Dense, professional admin interface
+   ============================================ */
+
+/* Typography Scale - Compact */
+.admin-section {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.admin-body {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.admin-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.admin-small {
+    font-size: 0.6875rem;
+    line-height: 1.4;
+}
+
+/* Compact Hero Section */
+.admin-hero {
+    padding: 0.875rem 1rem;
+}
+
+.admin-hero-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.admin-hero-subtitle {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    opacity: 0.5;
+    margin-bottom: 0.125rem;
+}
+
+.admin-hero-desc {
+    font-size: 0.8125rem;
+    opacity: 0.7;
+    margin-bottom: 0.5rem;
+}
+
+.admin-hero-meta {
+    font-size: 0.6875rem;
+    opacity: 0.6;
+}
+
+/* Compact Form Elements */
+.admin-input {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.8125rem;
+    border-radius: 6px;
+}
+
+.admin-select {
+    padding: 0.375rem 2rem 0.375rem 0.625rem;
+    font-size: 0.8125rem;
+}
+
+.admin-label-compact {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: rgba(235, 235, 245, 0.7);
+}
+
+/* Compact Buttons */
+.admin-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.admin-btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.admin-btn-primary {
+    background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-blue-dark) 100%);
+    color: #fff;
+    border: none;
+}
+
+/* Tab Navigation - Compact */
+.tab-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(235, 235, 245, 0.6);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    color: rgba(235, 235, 245, 0.9);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-button.active {
+    color: #fff;
+    background: var(--apple-blue);
+}
+
+.tab-button i {
+    font-size: 0.75rem;
+}
+
+/* Compact Tables */
+.admin-table thead th {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.6875rem;
+}
+
+.admin-table tbody td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+/* Compact Badges */
+.admin-badge {
+    padding: 0.125rem 0.375rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+/* Alert Compact */
+.admin-alert {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    border-radius: 6px;
+}
