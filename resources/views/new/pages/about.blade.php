@@ -14,15 +14,15 @@
             </div>
 
             <div class="grid sm:grid-cols-3 gap-5 mt-10">
-                <div class="bg-white rounded-xl border border-[#E5E0DB] p-5 text-center">
+                <div class="card-borderless p-5 text-center">
                     <div class="text-2xl font-bold text-[#0D9488]">12+</div>
                     <div class="text-sm text-[#6B6560] mt-1">Tahun Pengalaman</div>
                 </div>
-                <div class="bg-white rounded-xl border border-[#E5E0DB] p-5 text-center">
+                <div class="card-borderless p-5 text-center">
                     <div class="text-2xl font-bold text-[#0D9488]">20+</div>
                     <div class="text-sm text-[#6B6560] mt-1">Kota di Indonesia</div>
                 </div>
-                <div class="bg-white rounded-xl border border-[#E5E0DB] p-5 text-center">
+                <div class="card-borderless p-5 text-center">
                     <div class="text-2xl font-bold text-[#0D9488]">1000+</div>
                     <div class="text-sm text-[#6B6560] mt-1">Kode KBLI</div>
                 </div>

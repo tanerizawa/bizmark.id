@@ -1,14 +1,14 @@
 @extends('new.layouts.app')
 
-@section('title', 'Kontak — Bizmark.ID')
-@section('description', 'Hubungi tim Bizmark.ID untuk konsultasi perizinan usaha')
+@section('title', 'Contact — Bizmark.ID')
+@section('description', 'Contact the Bizmark.ID team for business licensing consultation.')
 
 @section('content')
 <section class="pt-28 pb-12 sm:pt-32 sm:pb-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl mb-10">
-            <h1 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-tight text-[#2D2A24] mb-4">Hubungi Kami</h1>
-            <p class="text-base text-[#6B6560]">Tim kami siap membantu Anda. Hubungi kami melalui saluran di bawah ini.</p>
+            <h1 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-tight text-[#2D2A24] mb-4">Contact Us</h1>
+            <p class="text-base text-[#6B6560]">Our team is ready to help. Reach us through any of the channels below.</p>
         </div>
 
         <div class="grid sm:grid-cols-3 gap-4 sm:gap-5">
@@ -24,7 +24,7 @@
                 <div class="w-10 h-10 rounded-xl bg-[#CCFBF1] flex items-center justify-center mx-auto mb-3">
                     <svg class="w-5 h-5 text-[#0D9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                 </div>
-                <h3 class="text-sm font-semibold text-[#2D2A24] mb-1">Telepon</h3>
+                <h3 class="text-sm font-semibold text-[#2D2A24] mb-1">Phone</h3>
                 <a href="tel:+6283879602855" class="text-sm text-[#0D9488] hover:text-[#0F766E]">+62 838 7960 2855</a>
             </div>
 

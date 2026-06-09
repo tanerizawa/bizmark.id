@@ -14,7 +14,7 @@
         @if(isset($articles) && $articles->count() > 0)
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             @foreach($articles as $article)
-            <a href="/blog/{{ $article->slug }}" class="group bg-white rounded-xl border border-[#E5E0DB] overflow-hidden hover:border-[#0D9488]/20 hover:shadow-sm transition-all duration-200">
+            <a href="/blog/{{ $article->slug }}" class="card-borderless overflow-hidden group">
                 @if($article->featured_image)
                 <div class="aspect-[16/10] overflow-hidden bg-[#F0ECE6]">
                     <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">

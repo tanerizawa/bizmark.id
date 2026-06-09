@@ -71,9 +71,24 @@ class NewLandingController extends Controller
         return view('new.pages.tools');
     }
 
+    public function toolsEn()
+    {
+        return view('new.pages.en.tools');
+    }
+
     public function contact()
     {
         return view('new.pages.contact');
+    }
+
+    public function contactEn()
+    {
+        return view('new.pages.en.contact');
+    }
+
+    public function homeEn()
+    {
+        return view('new.pages.en.home');
     }
 
     public function article($slug)

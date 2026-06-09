@@ -14,14 +14,14 @@
         @if(isset($services) && count($services) > 0)
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             @foreach($services as $service)
-            <div class="bg-white rounded-xl border border-[#E5E0DB] p-5 hover:border-[#0D9488]/20 hover:shadow-sm transition-all duration-200">
+            <a href="/layanan/{{ $service['slug'] ?? '#' }}" class="card-hover-icon card-borderless p-5 flex flex-col group">
                 <h3 class="text-base font-bold text-[#2D2A24] mb-2">{{ $service['title'] ?? $service['name'] ?? 'Layanan' }}</h3>
-                <p class="text-sm text-[#6B6560] leading-relaxed">{{ $service['description'] ?? Str::limit(($service['excerpt'] ?? ''), 120) }}</p>
-                <a href="/layanan/{{ $service['slug'] ?? '#' }}" class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0D9488] hover:text-[#0F766E] transition-colors">
+                <p class="text-sm text-[#6B6560] leading-relaxed flex-1">{{ $service['description'] ?? Str::limit(($service['excerpt'] ?? ''), 120) }}</p>
+                <div class="mt-3 flex items-center gap-1.5 text-sm font-semibold text-[#0D9488] group-hover:gap-2.5 transition-all duration-200">
                     Detail
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </a>
-            </div>
+                    <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </a>
             @endforeach
         </div>
         @else

@@ -53,7 +53,6 @@ Route::middleware('locale:id')->group(function () {
     Route::get('/faq/{topicSlug}', [FaqAggregationController::class, 'show'])->name('faq.show');
     Route::get('/panduan', [PillarPageController::class, 'index'])->name('pillar.index');
     Route::get('/panduan/{pillarSlug}', [PillarPageController::class, 'show'])->name('pillar.show');
-    Route::get('/blog', [PublicArticleController::class, 'index'])->name('blog.index.id');
     Route::get('/blog/kategori/{category}', [PublicArticleController::class, 'category'])->name('blog.category.id');
     Route::get('/blog/tag/{tag}', [PublicArticleController::class, 'tag'])->name('blog.tag.id');
     Route::get('/blog/{slug}', [App\Http\Controllers\NewLandingController::class, 'article'])->name('blog.article.id');
@@ -67,19 +66,6 @@ Route::middleware('locale:id')->group(function () {
         return view('legal.terms');
     })->name('terms.conditions.id');
 
-    // Static Pages (ID)
-    Route::get('/proses', function () {
-        return view('landing.pages.process', ['locale' => 'id']);
-    })->name('process.id');
-
-    Route::get('/tentang', function () {
-        return view('landing.pages.about', ['locale' => 'id']);
-    })->name('about.id');
-
-    Route::get('/harga', function () {
-        return view('landing.pages.pricing', ['locale' => 'id']);
-    })->name('pricing.id');
-
     Route::get('/status', function () {
         return view('landing.pages.status', ['locale' => 'id']);
     })->name('status.id');
@@ -87,11 +73,7 @@ Route::middleware('locale:id')->group(function () {
 
 // English/PMA Landing Page (Explicit) - Responsive (No Mobile Redirect)
 Route::prefix('en')->middleware('locale:en')->group(function () {
-    Route::get('/', function (\Illuminate\Http\Request $request) {
-        // Fully responsive landing page — serves all devices
-        // Manual mobile override handled by DeviceDetection middleware (?mobile=1)
-        return app(PublicArticleController::class)->landing($request);
-    })->name('landing.en');
+    Route::get('/', [App\Http\Controllers\NewLandingController::class, 'homeEn'])->name('landing.en');
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index.en');
     Route::get('/services/category/{categorySlug}', [ServiceController::class, 'showCategory'])->name('services.category.en');
     Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show.en');
@@ -133,6 +115,10 @@ Route::prefix('en')->middleware('locale:en')->group(function () {
     Route::get('/status', function () {
         return view('landing.pages.status', ['locale' => 'en']);
     })->name('status.en');
+
+    // New Design EN Routes
+    Route::get('/tools', [App\Http\Controllers\NewLandingController::class, 'toolsEn'])->name('tools.en');
+    Route::get('/contact', [App\Http\Controllers\NewLandingController::class, 'contactEn'])->name('contact.en');
 });
 
 // Redirect old /id URLs to root for backward compatibility
