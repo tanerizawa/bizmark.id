@@ -16,6 +16,9 @@ class AiProviderSettingsSeeder extends Seeder
                     'providers.ollama.key' => ['data_type' => 'string', 'is_encrypted' => true, 'default' => env('OLLAMA_API_KEY', ''), 'order' => 0],
                     'providers.ollama.url' => ['data_type' => 'string', 'is_encrypted' => false, 'default' => env('OLLAMA_URL', 'http://localhost:11434'), 'order' => 1],
                 ],
+                'models' => [
+                    'models.ollama.default' => ['data_type' => 'string', 'is_encrypted' => false, 'default' => env('OLLAMA_MODEL', 'llama3'), 'order' => 10],
+                ],
             ],
             'openrouter' => [
                 'driver' => 'openrouter',
