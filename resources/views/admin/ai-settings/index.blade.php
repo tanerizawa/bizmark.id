@@ -18,6 +18,11 @@
                onmouseover="this.style.background='color-mix(in srgb,var(--apple-blue) 20%,transparent)'" onmouseout="this.style.background='color-mix(in srgb,var(--apple-blue) 12%,transparent)'">
                 <i class="fas fa-history" style="font-size:0.72rem"></i>Riwayat Perubahan
             </a>
+            <a href="{{ route('admin.ai-settings.sdk-status') }}"
+               style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:color-mix(in srgb,var(--apple-purple) 12%,transparent);color:var(--apple-purple);border:1px solid color-mix(in srgb,var(--apple-purple) 25%,transparent);border-radius:9px;font-size:0.78rem;font-weight:700;text-decoration:none;transition:background .15s"
+               onmouseover="this.style.background='color-mix(in srgb,var(--apple-purple) 20%,transparent)'" onmouseout="this.style.background='color-mix(in srgb,var(--apple-purple) 12%,transparent)'">
+                <i class="fas fa-server" style="font-size:0.72rem"></i>SDK Status
+            </a>
             <form action="{{ route('admin.ai-settings.clear-cache') }}" method="POST" class="inline"
                   onsubmit="return confirm('Ini akan menghapus cache kalkulasi harga & parameter AI di server (bukan browser). Lanjutkan?')">
                 @csrf
@@ -55,8 +60,8 @@
     <div style="background:var(--dark-bg-secondary);border:1px solid var(--dark-separator);border-radius:16px;padding:8px">
         <nav style="display:flex;flex-wrap:wrap;gap:4px">
             @php
-                $catIcons = ['pricing'=>'fa-dollar-sign','global'=>'fa-cog','model'=>'fa-brain','service'=>'fa-server','cache'=>'fa-database'];
-                $catColors = ['pricing'=>'var(--apple-green)','global'=>'var(--apple-blue)','model'=>'var(--apple-purple)','service'=>'var(--apple-orange)','cache'=>'var(--apple-teal)'];
+                $catIcons = ['provider'=>'fa-cloud','pricing'=>'fa-dollar-sign','global'=>'fa-cog','model'=>'fa-brain','service'=>'fa-server','cache'=>'fa-database'];
+                $catColors = ['provider'=>'var(--apple-purple)','pricing'=>'var(--apple-green)','global'=>'var(--apple-blue)','model'=>'var(--apple-purple)','service'=>'var(--apple-orange)','cache'=>'var(--apple-teal)'];
             @endphp
             @foreach($categories as $cat)
             @php
