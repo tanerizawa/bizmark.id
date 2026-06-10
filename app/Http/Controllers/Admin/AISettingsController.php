@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AISetting;
 use App\Models\AISettingHistory;
+use App\Services\AiRuntimeConfigService;
 use App\Services\AISettingService;
 use Illuminate\Http\Request;
 
 class AISettingsController extends Controller
 {
+    public function __construct(
+        private AiRuntimeConfigService $aiRuntime,
+    ) {}
+
     /**
      * Show AI settings by category
      */
@@ -51,12 +56,18 @@ class AISettingsController extends Controller
                     continue;
                 }
 
-                // Validate based on data type
                 if (! $this->validateValue($value, $setting->data_type, $setting->validation_rules)) {
                     return back()->withErrors(['settings.'.$key => "Invalid value for {$key}"]);
                 }
 
-                AISettingService::set($key, $value, 'Updated via admin panel by '.auth()->user()->name);
+                $reason = 'Updated via admin panel by '.auth()->user()->name;
+
+                if ($setting->category === 'provider') {
+                    $this->aiRuntime->applyProviderChange($key, $value, $reason);
+                } else {
+                    AISettingService::set($key, $value, $reason);
+                }
+
                 $updatedCount++;
             }
 
@@ -124,6 +135,28 @@ class AISettingsController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Failed to clear cache: '.$e->getMessage()]);
         }
+    }
+
+    public function testProvider(Request $request, string $provider)
+    {
+        $validProviders = array_keys(config('ai.providers', []));
+        if (! in_array($provider, $validProviders)) {
+            return response()->json([
+                'success' => false,
+                'error' => "Unknown provider: {$provider}",
+            ], 404);
+        }
+
+        $result = $this->aiRuntime->testProviderConnection($provider);
+
+        return response()->json($result);
+    }
+
+    public function sdkStatus()
+    {
+        $status = $this->aiRuntime->getSdkStatus();
+
+        return view('admin.ai-settings.sdk-status', compact('status'));
     }
 
     /**

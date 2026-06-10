@@ -39,9 +39,70 @@ Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])
     ->name('locale.set')
     ->where('locale', 'id|en');
 
-// Indonesian Landing Page (Root - Default)
-Route::middleware('locale:id')->group(function () {
-    Route::get('/layanan', [ServiceController::class, 'index'])->name('services.index.id');
+// Root auto-detection: redirect to preferred locale
+Route::get('/', function (\Illuminate\Http\Request $request) {
+    // Serve Indonesian content to search engine crawlers regardless of Accept-Language
+    $ua = strtolower($request->userAgent() ?? '');
+    if (preg_match('/bot|crawler|spider|googlebot|bingbot|slurp|duckduckbot|baiduspider/i', $ua)) {
+        return redirect('/id/' . ($request->getQueryString() ? '?' . $request->getQueryString() : ''), 301);
+    }
+
+    $locale = $request->getPreferredLanguage(config('app.available_locales', ['id', 'en']));
+    $locale = $locale ?: 'id';
+
+    $query = $request->getQueryString();
+    $queryStr = $query ? '?'.$query : '';
+
+    return redirect("/{$locale}/{$queryStr}", 301);
+})->name('root');
+
+// ========================================
+// 301 REDIRECTS: old root-level ID → /id/ prefix
+// (preserve SEO equity for previously indexed URLs)
+// ========================================
+Route::redirect('/layanan/kota/{citySlug}', '/id/layanan/kota/{citySlug}', 301);
+Route::redirect('/layanan/perbandingan', '/id/layanan/perbandingan', 301);
+Route::redirect('/layanan/perbandingan/{comparisonSlug}', '/id/layanan/perbandingan/{comparisonSlug}', 301);
+Route::redirect('/layanan/kategori/{categorySlug}', '/id/layanan/kategori/{categorySlug}', 301);
+Route::redirect('/layanan/{serviceSlug}/sub/{subSlug}', '/id/layanan/{serviceSlug}/sub/{subSlug}', 301);
+Route::redirect('/layanan/{serviceSlug}/{citySlug}', '/id/layanan/{serviceSlug}/{citySlug}', 301);
+Route::redirect('/layanan/{slug}', '/id/layanan/{slug}', 301);
+Route::redirect('/layanan', '/id/layanan', 301);
+Route::redirect('/proses', '/id/proses', 301);
+Route::redirect('/harga', '/id/harga', 301);
+Route::redirect('/tentang', '/id/tentang', 301);
+Route::redirect('/alat', '/id/alat', 301);
+Route::redirect('/kontak', '/id/kontak', 301);
+Route::redirect('/faq', '/id/faq', 301);
+Route::redirect('/faq/{topicSlug}', '/id/faq/{topicSlug}', 301);
+Route::redirect('/panduan', '/id/panduan', 301);
+Route::redirect('/panduan/{pillarSlug}', '/id/panduan/{pillarSlug}', 301);
+Route::redirect('/blog/kategori/{category}', '/id/blog/kategori/{category}', 301);
+Route::redirect('/blog/tag/{tag}', '/id/blog/tag/{tag}', 301);
+Route::redirect('/blog/{slug}', '/id/blog/{slug}', 301);
+Route::redirect('/blog', '/id/blog', 301);
+Route::redirect('/kebijakan-privasi', '/id/kebijakan-privasi', 301);
+Route::redirect('/syarat-ketentuan', '/id/syarat-ketentuan', 301);
+Route::redirect('/status', '/id/status', 301);
+
+// ========================================
+// INDONESIAN ROUTES (/id/ prefix)
+// ========================================
+Route::prefix('id')->middleware('locale:id')->group(function () {
+
+    // Landing Page
+    Route::get('/', [App\Http\Controllers\NewLandingController::class, 'home'])->name('landing.id');
+
+    // New Design Subpages
+    Route::get('/layanan', [App\Http\Controllers\NewLandingController::class, 'services'])->name('services.index.id');
+    Route::get('/proses', [App\Http\Controllers\NewLandingController::class, 'process'])->name('process.id');
+    Route::get('/harga', [App\Http\Controllers\NewLandingController::class, 'pricing'])->name('pricing.id');
+    Route::get('/tentang', [App\Http\Controllers\NewLandingController::class, 'about'])->name('about.id');
+    Route::get('/alat', [App\Http\Controllers\NewLandingController::class, 'tools'])->name('tools.id');
+    Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog.index.id');
+    Route::get('/kontak', [App\Http\Controllers\NewLandingController::class, 'contact'])->name('contact.new');
+
+    // Service routes (detail, category, comparison, sub-services)
     Route::get('/layanan/kota/{citySlug}', [ProgrammaticSeoController::class, 'cityIndex'])->name('programmatic.city.id');
     Route::get('/layanan/perbandingan', [ServiceComparisonController::class, 'index'])->name('comparison.index');
     Route::get('/layanan/perbandingan/{comparisonSlug}', [ServiceComparisonController::class, 'show'])->name('comparison.show');
@@ -49,11 +110,19 @@ Route::middleware('locale:id')->group(function () {
     Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('services.show.id');
     Route::get('/layanan/{serviceSlug}/sub/{subSlug}', [ServiceController::class, 'showSub'])->name('services.sub.id');
     Route::get('/layanan/{serviceSlug}/{citySlug}', [ProgrammaticSeoController::class, 'serviceLocation'])->name('programmatic.service-location.id');
+
+    // FAQ
     Route::get('/faq', [FaqAggregationController::class, 'index'])->name('faq.index');
     Route::get('/faq/{topicSlug}', [FaqAggregationController::class, 'show'])->name('faq.show');
+
+    // Panduan (Pillar Pages)
     Route::get('/panduan', [PillarPageController::class, 'index'])->name('pillar.index');
     Route::get('/panduan/{pillarSlug}', [PillarPageController::class, 'show'])->name('pillar.show');
-    Route::get('/blog/kategori/{category}', [PublicArticleController::class, 'category'])->name('blog.category.id');
+
+    // Blog sub-routes (must come after /blog index)
+    Route::get('/blog/kategori/{category}', function ($category) {
+        return redirect()->to('/id/blog?category=' . urlencode($category), 301);
+    })->name('blog.category.id');
     Route::get('/blog/tag/{tag}', [PublicArticleController::class, 'tag'])->name('blog.tag.id');
     Route::get('/blog/{slug}', [App\Http\Controllers\NewLandingController::class, 'article'])->name('blog.article.id');
 
@@ -69,24 +138,89 @@ Route::middleware('locale:id')->group(function () {
     Route::get('/status', function () {
         return view('landing.pages.status', ['locale' => 'id']);
     })->name('status.id');
+
+    // Indonesian-only tool pages & public services
+    Route::get('/konsultasi-gratis', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'create'])
+        ->name('landing.service-inquiry.create');
+    Route::post('/konsultasi-gratis', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('landing.service-inquiry.store');
+    Route::get('/konsultasi-gratis/hasil/{inquiryNumber}', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'result'])
+        ->name('landing.service-inquiry.result');
+    Route::get('/konsultasi-gratis/api/status/{inquiryNumber}', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'show'])
+        ->name('landing.service-inquiry.show');
+    Route::post('/konsultasi-gratis/api/check-rate-limit', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'checkRateLimit'])
+        ->middleware('throttle:30,1')
+        ->name('landing.service-inquiry.check-rate-limit');
+
+    Route::get('/estimasi-biaya', [App\Http\Controllers\ConsultationPageController::class, 'index'])->name('consultation.index');
+    Route::get('/estimasi-biaya/hasil/{requestId}', [App\Http\Controllers\ConsultationPageController::class, 'result'])->name('consultation.result');
+    Route::get('/estimasi-biaya/pdf/{requestId}', [App\Http\Controllers\ConsultationPageController::class, 'downloadPdf'])->name('consultation.pdf');
+
+    Route::prefix('permohonan')->group(function () {
+        Route::get('/', [App\Http\Controllers\ServiceCostRequestController::class, 'index'])->name('permohonan.index');
+        Route::post('/', [App\Http\Controllers\ServiceCostRequestController::class, 'store'])
+            ->middleware('throttle:10,1')
+            ->name('permohonan.store');
+        Route::post('/api/generate-letter-draft', [App\Http\Controllers\ServiceCostRequestController::class, 'generateLetterDraft'])
+            ->middleware('throttle:5,1')
+            ->name('permohonan.generate-letter-draft');
+        Route::get('/hasil/{requestNumber}', [App\Http\Controllers\ServiceCostRequestController::class, 'result'])->name('permohonan.result');
+        Route::get('/api/status/{requestNumber}', [App\Http\Controllers\ServiceCostRequestController::class, 'checkStatus'])->name('permohonan.status');
+    });
+
+    Route::get('/kalkulator-perizinan', [App\Http\Controllers\CalculatorController::class, 'index'])->name('calculator.index');
+    Route::post('/kalkulator-perizinan/calculate', [App\Http\Controllers\CalculatorController::class, 'calculate'])
+        ->middleware('throttle:20,1')
+        ->name('calculator.calculate');
+
+    Route::prefix('checklist-dokumen')->name('checklist.')->group(function () {
+        Route::get('/', [App\Http\Controllers\ChecklistGeneratorController::class, 'index'])->name('index');
+        Route::post('/generate', [App\Http\Controllers\ChecklistGeneratorController::class, 'generate'])->name('generate')->middleware('throttle:10,1');
+        Route::get('/hasil/{checklist}', [App\Http\Controllers\ChecklistGeneratorController::class, 'result'])->name('result');
+        Route::get('/download/{checklist}', [App\Http\Controllers\ChecklistGeneratorController::class, 'download'])->name('download');
+    });
+
+    Route::get('/polygon-shp-maker', [App\Modules\Perizinan\Controllers\Public\PolygonToolController::class, 'index'])->name('polygon.shp.index');
+
+    Route::get('/karir', [App\Modules\HRM\Controllers\Public\JobVacancyController::class, 'index'])->name('career.index');
+    Route::get('/karir/{slug}', [App\Modules\HRM\Controllers\Public\JobVacancyController::class, 'show'])->name('career.show');
+    Route::get('/karir/{vacancy_id}/apply', [App\Modules\HRM\Controllers\Public\JobApplicationController::class, 'create'])->name('career.apply');
+    Route::post('/karir/apply', [App\Modules\HRM\Controllers\Public\JobApplicationController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('career.apply.store');
+
+    Route::get('/simulasi-timeline', [App\Http\Controllers\TimelineSimulatorController::class, 'index'])->name('timeline-simulator.index');
+    Route::post('/simulasi-timeline/hitung', [App\Http\Controllers\TimelineSimulatorController::class, 'simulate'])->name('timeline-simulator.simulate');
 });
 
-// English/PMA Landing Page (Explicit) - Responsive (No Mobile Redirect)
+// ========================================
+// ENGLISH ROUTES (/en/ prefix)
+// ========================================
 Route::prefix('en')->middleware('locale:en')->group(function () {
     Route::get('/', [App\Http\Controllers\NewLandingController::class, 'homeEn'])->name('landing.en');
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index.en');
+
+    // Service Comparisons (English) — must be before parameterized routes
+    Route::get('/services/comparison', [App\Http\Controllers\ServiceComparisonController::class, 'index'])->name('comparison.index.en');
+    Route::get('/services/comparison/{comparisonSlug}', [App\Http\Controllers\ServiceComparisonController::class, 'show'])->name('comparison.show.en');
+
+    Route::get('/services/city/{citySlug}', [App\Http\Controllers\ProgrammaticSeoController::class, 'cityIndex'])->name('programmatic.city.en');
     Route::get('/services/category/{categorySlug}', [ServiceController::class, 'showCategory'])->name('services.category.en');
+    Route::get('/services/{serviceSlug}/{citySlug}', [App\Http\Controllers\ProgrammaticSeoController::class, 'serviceLocation'])->name('programmatic.service-location.en');
     Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show.en');
     Route::get('/services/{serviceSlug}/sub/{subSlug}', [ServiceController::class, 'showSub'])->name('services.sub.en');
-    Route::get('/blog', [PublicArticleController::class, 'index'])->name('blog.index.en');
-    Route::get('/blog/category/{category}', [PublicArticleController::class, 'category'])->name('blog.category.en');
+    Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog.index.en');
+    Route::get('/blog/category/{category}', function ($category) {
+        return redirect()->to('/en/blog?category=' . urlencode($category), 301);
+    })->name('blog.category.en');
     Route::get('/blog/tag/{tag}', [PublicArticleController::class, 'tag'])->name('blog.tag.en');
     Route::get('/blog/{slug}', [App\Http\Controllers\NewLandingController::class, 'article'])->name('blog.article.en');
 
     // PMA Inquiry Form (English)
     Route::get('/inquiry', [App\Http\Controllers\PMAInquiryController::class, 'create'])->name('pma.inquiry.create');
     Route::post('/inquiry', [App\Http\Controllers\PMAInquiryController::class, 'store'])
-        ->middleware('throttle:10,1') // 10 submissions per minute per IP
+        ->middleware('throttle:10,1')
         ->name('pma.inquiry.store');
     Route::get('/inquiry/result/{inquiryNumber}', [App\Http\Controllers\PMAInquiryController::class, 'result'])->name('pma.inquiry.result');
 
@@ -108,96 +242,67 @@ Route::prefix('en')->middleware('locale:en')->group(function () {
         return view('landing.pages.status', ['locale' => 'en']);
     })->name('status.en');
 
+    // FAQ (English)
+    Route::get('/faq', [App\Http\Controllers\FaqAggregationController::class, 'index'])->name('faq.index.en');
+    Route::get('/faq/{topicSlug}', [App\Http\Controllers\FaqAggregationController::class, 'show'])->name('faq.show.en');
+
+    // Guides / Pillar Pages (English)
+    Route::get('/guides', [App\Http\Controllers\PillarPageController::class, 'index'])->name('pillar.index.en');
+    Route::get('/guides/{pillarSlug}', [App\Http\Controllers\PillarPageController::class, 'show'])->name('pillar.show.en');
+
     // New Design EN Routes
     Route::get('/tools', [App\Http\Controllers\NewLandingController::class, 'toolsEn'])->name('tools.en');
     Route::get('/contact', [App\Http\Controllers\NewLandingController::class, 'contactEn'])->name('contact.en');
 });
 
-// Redirect old /id URLs to root for backward compatibility
-Route::redirect('/id', '/', 301);
-Route::redirect('/id/layanan', '/layanan', 301);
-Route::redirect('/id/blog', '/blog', 301);
+// ========================================
+// SHARED / NON-LOCALIZED PUBLIC ROUTES
+// ========================================
+
+// Slug normalization fallback for service routes
+Route::get('/id/layanan/{any}', function (string $any) {
+    $normalized = \Str::slug($any);
+    $services = config('services_data', []);
+    if (isset($services[$normalized])) {
+        return redirect("/id/layanan/{$normalized}", 301);
+    }
+    abort(404);
+})->name('services.fallback.id');
+
+Route::get('/en/services/{any}', function (string $any) {
+    $normalized = \Str::slug($any);
+    $services = config('services_data', []);
+    if (isset($services[$normalized])) {
+        return redirect("/en/services/{$normalized}", 301);
+    }
+    abort(404);
+})->name('services.fallback.en');
 
 // Contact Page
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'submit'])
-    ->middleware('throttle:5,1') // 5 submissions per minute per IP
+    ->middleware('throttle:5,1')
     ->name('contact.submit');
 
-// Consultation Request / Cost Estimate (Public)
-Route::get('/estimasi-biaya', [App\Http\Controllers\ConsultationPageController::class, 'index'])->name('consultation.index');
-Route::get('/estimasi-biaya/hasil/{requestId}', [App\Http\Controllers\ConsultationPageController::class, 'result'])->name('consultation.result');
-Route::get('/estimasi-biaya/pdf/{requestId}', [App\Http\Controllers\ConsultationPageController::class, 'downloadPdf'])->name('consultation.pdf');
-
-// Permohonan Penghitungan Biaya Jasa (Service Cost Request)
-Route::prefix('permohonan')->group(function () {
-    Route::get('/', [App\Http\Controllers\ServiceCostRequestController::class, 'index'])->name('permohonan.index');
-    Route::post('/', [App\Http\Controllers\ServiceCostRequestController::class, 'store'])
-        ->middleware('throttle:10,1') // 10 submissions per minute per IP (may include file uploads)
-        ->name('permohonan.store');
-    Route::post('/api/generate-letter-draft', [App\Http\Controllers\ServiceCostRequestController::class, 'generateLetterDraft'])
-        ->middleware('throttle:5,1') // 5 AI letter generations per minute per IP (prevents AI API abuse)
-        ->name('permohonan.generate-letter-draft');
-    Route::get('/hasil/{requestNumber}', [App\Http\Controllers\ServiceCostRequestController::class, 'result'])->name('permohonan.result');
-    Route::get('/api/status/{requestNumber}', [App\Http\Controllers\ServiceCostRequestController::class, 'checkStatus'])->name('permohonan.status');
-});
-
-// === MIGRATED: New Design Routes (now at root) ===
-
-// Landing Page
-Route::middleware('locale:id')->get('/', [App\Http\Controllers\NewLandingController::class, 'home'])->name('landing.id');
-
-// Subpages (with backward-compatible old route names for existing templates)
-Route::middleware('locale:id')->group(function () {
-    Route::get('/layanan', [App\Http\Controllers\NewLandingController::class, 'services'])->name('services.index.id');
-    Route::get('/proses', [App\Http\Controllers\NewLandingController::class, 'process'])->name('process.id');
-    Route::get('/harga', [App\Http\Controllers\NewLandingController::class, 'pricing'])->name('pricing.id');
-    Route::get('/tentang', [App\Http\Controllers\NewLandingController::class, 'about'])->name('about.id');
-    Route::get('/alat', [App\Http\Controllers\NewLandingController::class, 'tools'])->name('tools.id');
-    Route::get('/blog', [App\Http\Controllers\NewLandingController::class, 'blog'])->name('blog.index.id');
-    Route::get('/kontak', [App\Http\Controllers\NewLandingController::class, 'contact'])->name('contact.new');
-});
-
-// Service Inquiry - Free AI Analysis (Landing Page Lead Generation)
-Route::prefix('konsultasi-gratis')->group(function () {
-    Route::get('/', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'create'])
-        ->name('landing.service-inquiry.create');
-    Route::post('/', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'store'])
-        ->middleware('throttle:10,1') // 10 submissions per minute per IP (also has app-level per-email limiter)
-        ->name('landing.service-inquiry.store');
-    Route::get('/hasil/{inquiryNumber}', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'result'])
-        ->name('landing.service-inquiry.result');
-    Route::get('/api/status/{inquiryNumber}', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'show'])
-        ->name('landing.service-inquiry.show');
-    Route::post('/api/check-rate-limit', [App\Http\Controllers\Landing\ServiceInquiryController::class, 'checkRateLimit'])
-        ->middleware('throttle:30,1') // rate limit check endpoint itself
-        ->name('landing.service-inquiry.check-rate-limit');
-});
-
-// Permit Calculator Tool (Public)
-Route::get('/kalkulator-perizinan', [App\Http\Controllers\CalculatorController::class, 'index'])->name('calculator.index');
-Route::post('/kalkulator-perizinan/calculate', [App\Http\Controllers\CalculatorController::class, 'calculate'])
-    ->middleware('throttle:20,1') // 20 calculations per minute per IP
-    ->name('calculator.calculate');
-
-// Document Checklist AI Generator (Public)
-Route::prefix('checklist-dokumen')->name('checklist.')->group(function () {
-    Route::get('/', [App\Http\Controllers\ChecklistGeneratorController::class, 'index'])->name('index');
-    Route::post('/generate', [App\Http\Controllers\ChecklistGeneratorController::class, 'generate'])->name('generate')->middleware('throttle:10,1');
-    Route::get('/hasil/{checklist}', [App\Http\Controllers\ChecklistGeneratorController::class, 'result'])->name('result');
-    Route::get('/download/{checklist}', [App\Http\Controllers\ChecklistGeneratorController::class, 'download'])->name('download');
-});
-
-// Polygon SHP Maker Tool (Public)
-Route::get('/polygon-shp-maker', [App\Modules\Perizinan\Controllers\Public\PolygonToolController::class, 'index'])->name('polygon.shp.index');
-
-// Career/Jobs Pages (Public)
-Route::get('/karir', [App\Modules\HRM\Controllers\Public\JobVacancyController::class, 'index'])->name('career.index');
-Route::get('/karir/{slug}', [App\Modules\HRM\Controllers\Public\JobVacancyController::class, 'show'])->name('career.show');
-Route::get('/karir/{vacancy_id}/apply', [App\Modules\HRM\Controllers\Public\JobApplicationController::class, 'create'])->name('career.apply');
-Route::post('/karir/apply', [App\Modules\HRM\Controllers\Public\JobApplicationController::class, 'store'])
-    ->middleware('throttle:10,1') // 10 submissions per minute per IP
-    ->name('career.apply.store');
+Route::redirect('/konsultasi-gratis/hasil/{inquiryNumber}', '/id/konsultasi-gratis/hasil/{inquiryNumber}', 301);
+Route::redirect('/konsultasi-gratis/api/status/{inquiryNumber}', '/id/konsultasi-gratis/api/status/{inquiryNumber}', 301);
+Route::redirect('/konsultasi-gratis/api/check-rate-limit', '/id/konsultasi-gratis/api/check-rate-limit', 301);
+Route::any('/konsultasi-gratis', fn() => redirect('/id/konsultasi-gratis', 301));
+Route::redirect('/kalkulator-perizinan', '/id/kalkulator-perizinan', 301);
+Route::redirect('/estimasi-biaya', '/id/estimasi-biaya', 301);
+Route::redirect('/estimasi-biaya/hasil/{requestId}', '/id/estimasi-biaya/hasil/{requestId}', 301);
+Route::redirect('/estimasi-biaya/pdf/{requestId}', '/id/estimasi-biaya/pdf/{requestId}', 301);
+Route::any('/permohonan', fn() => redirect('/id/permohonan', 301));
+Route::redirect('/permohonan/hasil/{requestNumber}', '/id/permohonan/hasil/{requestNumber}', 301);
+Route::redirect('/permohonan/api/status/{requestNumber}', '/id/permohonan/api/status/{requestNumber}', 301);
+Route::redirect('/checklist-dokumen', '/id/checklist-dokumen', 301);
+Route::redirect('/checklist-dokumen/hasil/{checklist}', '/id/checklist-dokumen/hasil/{checklist}', 301);
+Route::redirect('/checklist-dokumen/download/{checklist}', '/id/checklist-dokumen/download/{checklist}', 301);
+Route::redirect('/polygon-shp-maker', '/id/polygon-shp-maker', 301);
+Route::redirect('/simulasi-timeline', '/id/simulasi-timeline', 301);
+Route::redirect('/karir', '/id/karir', 301);
+Route::redirect('/karir/{slug}', '/id/karir/{slug}', 301);
+Route::redirect('/karir/{vacancy_id}/apply', '/id/karir/{vacancy_id}/apply', 301);
 
 // Newsletter Subscription (Public)
 Route::post('/subscribe', [App\Http\Controllers\SubscriberController::class, 'subscribe'])
@@ -400,6 +505,10 @@ Route::middleware(['auth', 'permission:ai.manage_settings'])->prefix('admin')->n
         ->name('ai-settings.reset');
     Route::post('ai-settings/clear-cache', [App\Http\Controllers\Admin\AISettingsController::class, 'clearCache'])
         ->name('ai-settings.clear-cache');
+    Route::get('ai-settings/test-provider/{provider}', [App\Http\Controllers\Admin\AISettingsController::class, 'testProvider'])
+        ->name('ai-settings.test-provider');
+    Route::get('ai-settings/sdk-status', [App\Http\Controllers\Admin\AISettingsController::class, 'sdkStatus'])
+        ->name('ai-settings.sdk-status');
 });
 
 // Multi-User Email System Routes dipindah ke App\Modules\Email\routes.php (EmailServiceProvider)
@@ -571,10 +680,6 @@ Route::prefix('api/kbli')->group(function () {
     Route::get('/search', [App\Modules\Perizinan\Controllers\Api\KbliController::class, 'search'])->name('api.kbli.search');
     Route::get('/{code}', [App\Modules\Perizinan\Controllers\Api\KbliController::class, 'show'])->name('api.kbli.show');
 });
-
-// P9 — Permit Timeline Simulator (public tool)
-Route::get('/simulasi-timeline', [App\Http\Controllers\TimelineSimulatorController::class, 'index'])->name('timeline-simulator.index');
-Route::post('/simulasi-timeline/hitung', [App\Http\Controllers\TimelineSimulatorController::class, 'simulate'])->name('timeline-simulator.simulate');
 
 // ============================================================================
 // RECRUITMENT SYSTEM ROUTES
