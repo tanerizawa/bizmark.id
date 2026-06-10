@@ -97,6 +97,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Conversations
+    |--------------------------------------------------------------------------
+    |
+    | Below you may configure the tables and connection used by the agent
+    | conversation persistence system (RemembersConversations trait).
+    |
+    */
+
+    'conversations' => [
+        'connection' => env('AI_CONVERSATIONS_CONNECTION'),
+        'tables' => [
+            'conversations' => 'agent_conversations',
+            'messages' => 'agent_conversation_messages',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | AI Providers
     |--------------------------------------------------------------------------
     |
