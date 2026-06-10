@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AISetting;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Laravel\Ai\AiManager;
 
@@ -48,29 +49,46 @@ class AiRuntimeConfigService
     }
 
     /**
-     * Test a provider connection by sending a minimal chat completion request.
+     * Test a provider connection by verifying the provider resolves
+     * and sending a lightweight ping to the configured endpoint.
      */
     public function testProviderConnection(string $providerName): array
     {
         try {
             $this->aiManager->purge($providerName);
-
             $provider = $this->aiManager->instance($providerName);
 
-            $result = $provider->chat()->create([
-                'model' => config("ai.models.{$providerName}.default", 'openrouter/free'),
-                'messages' => [
-                    ['role' => 'user', 'content' => 'Respond with exactly: OK'],
-                ],
-                'max_tokens' => 10,
-            ]);
+            $url = rtrim((string) ($provider->additionalConfiguration()['url'] ?? ''), '/');
+            $key = $provider->providerCredentials()['key'] ?? '';
 
-            $content = $result['choices'][0]['message']['content'] ?? '';
-            $success = str_contains($content, 'OK');
+            if (empty($url) || empty($key)) {
+                return [
+                    'success' => false,
+                    'error' => 'Provider is not configured — missing URL or API key',
+                ];
+            }
+
+            $response = Http::timeout(10)
+                ->withToken($key)
+                ->post("{$url}/chat/completions", [
+                    'model' => config("ai.models.{$providerName}.default", 'openrouter/free'),
+                    'messages' => [['role' => 'user', 'content' => 'Respond with exactly: OK']],
+                    'max_tokens' => 10,
+                ]);
+
+            if ($response->failed()) {
+                return [
+                    'success' => false,
+                    'error' => "HTTP {$response->status()}: {$response->body()}",
+                ];
+            }
+
+            $data = $response->json();
+            $content = $data['choices'][0]['message']['content'] ?? '';
 
             return [
-                'success' => $success,
-                'model' => $result['model'] ?? null,
+                'success' => true,
+                'model' => $data['model'] ?? null,
             ];
         } catch (\Throwable $e) {
             return [
