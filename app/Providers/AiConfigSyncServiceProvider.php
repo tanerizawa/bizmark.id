@@ -27,7 +27,7 @@ class AiConfigSyncServiceProvider extends ServiceProvider
 
     private function syncProviderSettings(): void
     {
-        $settings = AISetting::where('category', 'provider')->get(['key', 'value', 'data_type']);
+        $settings = AISetting::where('category', 'provider')->get(['key', 'value']);
 
         foreach ($settings as $setting) {
             if ($setting->key === 'default_provider') {
