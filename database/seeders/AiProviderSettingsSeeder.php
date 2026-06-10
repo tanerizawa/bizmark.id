@@ -96,9 +96,9 @@ class AiProviderSettingsSeeder extends Seeder
                     ['key' => $key],
                     [
                         'category' => 'provider',
+                        'is_encrypted' => $spec['is_encrypted'],
                         'value' => $spec['default'],
                         'data_type' => $spec['data_type'],
-                        'is_encrypted' => $spec['is_encrypted'],
                         'default_value' => $spec['default'],
                         'description' => str_replace(':provider', $providerName, $descriptionTemplates[$label]),
                         'group_name' => $providerName,
@@ -115,9 +115,9 @@ class AiProviderSettingsSeeder extends Seeder
                         ['key' => $key],
                         [
                             'category' => 'provider',
+                            'is_encrypted' => $spec['is_encrypted'],
                             'value' => $spec['default'],
                             'data_type' => $spec['data_type'],
-                            'is_encrypted' => $spec['is_encrypted'],
                             'default_value' => $spec['default'],
                             'description' => str_replace(
                                 ':provider',
@@ -137,9 +137,9 @@ class AiProviderSettingsSeeder extends Seeder
             ['key' => 'default_provider'],
             [
                 'category' => 'provider',
+                'is_encrypted' => false,
                 'value' => config('ai.default', 'omniroute'),
                 'data_type' => 'string',
-                'is_encrypted' => false,
                 'default_value' => 'omniroute',
                 'description' => 'Default AI provider used when no specific provider is specified',
                 'group_name' => '_general',
